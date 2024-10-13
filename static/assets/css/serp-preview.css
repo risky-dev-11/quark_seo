@@ -1,0 +1,79 @@
+.serp-preview-container {
+    font: normal 17px / 1.5em "Montserrat", sans-serif;
+    -webkit-text-size-adjust: 100%;
+    color: #3e4348;
+    -webkit-font-smoothing: antialiased;
+    font-size: 0.9411764706rem;
+    list-style: none;
+    text-align: left !important;
+    font-family: arial,sans-serif;
+    letter-spacing: initial;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: #b0b0b2 #eff2f5;
+    width: 600px;
+    line-height: 1.2em;
+    position: relative;
+    background: #fff;
+}
+
+.serp-preview-url {
+    font: normal 17px / 1.5em "Montserrat", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    list-style: none;
+    text-align: left !important;
+    font-family: arial,sans-serif;
+    letter-spacing: initial;
+    line-height: 1.2em;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: #b0b0b2 #eff2f5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #5f6368 !important;
+    font-size: 14px !important;
+    cursor: pointer;
+    max-width: 100%;
+    padding-bottom: 1px;
+    padding-top: 1px;
+    margin-top: 2px;
+}
+
+.serp-preview-title {
+    font: normal 17px / 1.5em "Montserrat", sans-serif;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    list-style: none;
+    text-align: left !important;
+    font-family: arial,sans-serif;
+    letter-spacing: initial;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: #b0b0b2 #eff2f5;
+    color: #1a0dab;
+    min-height: 20px;
+    font-size: 20px;
+    line-height: 1.3;
+    cursor: pointer;
+    display: inline-block;
+    max-width: 600px;
+    margin-top: 4px;
+    margin-bottom: 3px;
+}
+
+.serp-preview-description {
+    font: normal 17px / 1.5em "Montserrat", sans-serif;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    list-style: none;
+    text-align: left !important;
+    font-family: arial,sans-serif;
+    letter-spacing: initial;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: #b0b0b2 #eff2f5;
+    color: #4d5156;
+    font-size: 14px;
+    line-height: 1.58;
+}
