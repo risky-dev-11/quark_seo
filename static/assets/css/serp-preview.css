@@ -1,4 +1,5 @@
-.serp-preview-container {
+.serp-preview-container-desktop {
+    width: 600px;
     font: normal 17px / 1.5em "Montserrat", sans-serif;
     -webkit-text-size-adjust: 100%;
     color: #3e4348;
@@ -11,7 +12,24 @@
     box-sizing: border-box;
     scrollbar-width: thin;
     scrollbar-color: #b0b0b2 #eff2f5;
-    width: 600px;
+    line-height: 1.2em;
+    position: relative;
+    background: #fff;
+}
+.serp-preview-container-mobile {
+    width: 360px;
+    font: normal 17px / 1.5em "Montserrat", sans-serif;
+    -webkit-text-size-adjust: 100%;
+    color: #3e4348;
+    -webkit-font-smoothing: antialiased;
+    font-size: 0.9411764706rem;
+    list-style: none;
+    text-align: left !important;
+    font-family: arial,sans-serif;
+    letter-spacing: initial;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: #b0b0b2 #eff2f5;
     line-height: 1.2em;
     position: relative;
     background: #fff;
