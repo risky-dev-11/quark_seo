@@ -96,8 +96,14 @@
                 event.preventDefault();
                 
                 // Get the URL input value
-                const inputUrl = document.getElementById('url-input').value;
-            
+                let inputUrl = document.getElementById('url-input').value;
+                // bring the URL to the correct format
+                if (!inputUrl.startsWith('http://') && !inputUrl.startsWith('https://')) {
+                  inputUrl = 'http://' + inputUrl;
+                }
+                if (!inputUrl.endsWith('/')) {
+                  inputUrl += '/';
+                }
                 // open the loading page
                 if (inputUrl) {
                   const encodedUrl = encodeURIComponent(inputUrl);
