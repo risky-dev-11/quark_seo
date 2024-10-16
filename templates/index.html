@@ -1,447 +1,312 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Quark SEO</title>
-  <meta name="description" content="">
-  <meta name="keywords" content="">
+{% block title %}Quark SEO{% endblock %}
+{% block content %}
 
-  <!-- Favicons -->
-  <link href="../static/assets/img/favicon.png" rel="icon">
-  <link href="../static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+<!-- Hero Section -->
+<section id="hero" class="hero section dark-background">
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <img src="../static/assets/img/world-dotted-map.png" alt="" class="hero-bg" data-aos="fade-in">
 
-  <!-- Vendor CSS Files -->
-  <link href="../static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../static/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="../static/assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="../static/assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-  <link href="../static/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="../static/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <div class="container">
+    <div class="row gy-4 d-flex justify-content-between">
+      <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+        <h2 data-aos="fade-up">Suchmaschinen-Optimierung leicht gemacht</h2>
+        <p data-aos="fade-up" data-aos-delay="100">Mit unserem Tool kannst du ganz einfach die Sichtbarkeit deiner Website in Suchmaschinen verbessern. Es analysiert automatisch die wichtigsten SEO-Faktoren und gibt dir gezielte Empfehlungen, um besser in den Suchergebnissen aufzutauchen und mehr potenzielle Kunden zu erreichen.</p>
 
-  <!-- Main CSS File -->
-  <link href="../static/assets/css/main.css" rel="stylesheet">
 
-</head>
+        <form id="url-form" class="form-search d-flex align-items-stretch mb-3" data-aos="fade-up" data-aos-delay="200">
+          <input type="text" id="url-input" class="form-control" placeholder="Die URL deiner Webseite" required>
+          <button type="submit" class="btn btn-primary">Analyse starten</button>
+        </form>
+        <script>
+          document.getElementById('url-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Get the URL input value
+            let inputUrl = document.getElementById('url-input').value;
+            // bring the URL to the correct format
+            if (!inputUrl.startsWith('http://') && !inputUrl.startsWith('https://')) {
+              inputUrl = 'http://' + inputUrl;
+            }
+            if (!inputUrl.endsWith('/')) {
+              inputUrl += '/';
+            }
+            // open the loading page
+            if (inputUrl) {
+              const encodedUrl = encodeURIComponent(inputUrl);
+              const newTabUrl = `/seo/analyze/${encodedUrl}`;
+              window.open(newTabUrl, '_blank');
+            }
+          });
+        </script>
 
-<body class="/-page">
+        <div class="row gy-4 mt-1" data-aos="fade-up" data-aos-delay="300">
 
-  <header id="header" class="header d-flex align-items-center fixed-top">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+          <div class="col-lg-3 col-6">
+            <div class="stats-item text-center w-100 h-100">
+              <span data-purecounter-start="0" data-purecounter-end="15451" data-purecounter-duration="1" class="purecounter">15451</span>
+              <p>analysierte Webseiten</p>
+            </div>
+          </div><!-- End Stats Item -->
 
-      <a href="/" class="logo d-flex align-items-center me-auto">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="../static/assets/img/logo.png" alt=""> -->
-        <h1 class="sitename">Quark SEO</h1>
-      </a>
+          <div class="col-lg-3 col-6">
+            <div class="stats-item text-center w-100 h-100">
+              <span data-purecounter-start="0" data-purecounter-end="1233" data-purecounter-duration="1" class="purecounter">1233</span>
+              <p>zufriedene Kunden</p>
+            </div>
+          </div><!-- End Stats Item -->
 
-      <nav id="navmenu" class="navmenu">
+          <div class="col-lg-3 col-6">
+            <div class="stats-item text-center w-100 h-100">
+              <span data-purecounter-start="0" data-purecounter-end="99000" data-purecounter-duration="1" class="purecounter">99.000</span>
+                <p>Google-Suchen pro Sekunde</p>
+            </div>
+          </div><!-- End Stats Item -->
+
+          <div class="col-lg-3 col-6">
+            <div class="stats-item text-center w-100 h-100">
+              <span>5,4 Mrd.</span>
+              <p>Internetnutzer weltweit</p>
+            </div>
+          </div><!-- End Stats Item -->
+
+        </div>
+
+      </div>
+
+        <div class="col-lg-5 order-1 order-lg-2 hero-img d-flex align-items-center" data-aos="zoom-out">
+        <img src="../static/assets/img/hero-img.png" class="img-fluid mb-3 mb-lg-0" alt="">
+      </div>
+
+    </div>
+  </div>
+
+</section><!-- /Hero Section -->
+
+<!-- Featured Services Section -->
+<section id="featured-services" class="featured-services section">
+
+  <div class="container">
+
+    <div class="row gy-4">
+
+      <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="100">
+        <div class="icon flex-shrink-0"><i class="fa-sharp fa-solid fa-s"></i></div>
+        <div>
+          <h4 class="title">Search</h4>
+          <p class="description">Erhalten Sie tiefere Einblicke in die Leistung Ihrer Website und identifizieren Sie Bereiche, die das Suchmaschinenranking beeinflussen. Mit unserer Lösung finden Sie die besten Keywords und können Ihre Sichtbarkeit steigern.</p>
+          <a href="#" class="readmore stretched-link"><span>Mehr erfahren</span><i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      <!-- End Service Item -->
+      
+      <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="200">
+        <div class="icon flex-shrink-0"><i class="fa-sharp fa-solid fa-e"></i></div>
+        <div>
+          <h4 class="title">Engine</h4>
+          <p class="description">Nutzen Sie unser automatisiertes Tool, um ungenutztes Potenzial zu erschließen. Wir bieten Ihnen detaillierte Vorschläge zur Verbesserung der Performance und Sichtbarkeit Ihrer Website.</p>
+          <a href="#" class="readmore stretched-link"><span>Mehr erfahren</span><i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      <!-- End Service Item -->
+      
+      <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="300">
+        <div class="icon flex-shrink-0"><i class="fa-sharp fa-solid fa-o"></i></div>
+        <div>
+          <h4 class="title">Optimization</h4>
+          <p class="description">Optimieren Sie Ihre Website mit modernen SEO-Techniken, um von Suchmaschinen besser erfasst zu werden. Erhöhen Sie Ihre Chance, von Ihrer Zielgruppe schneller gefunden zu werden.</p>
+          <a href="#" class="readmore stretched-link"><span>Mehr erfahren</span><i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      <!-- End Service Item -->
+      
+
+    </div>
+
+  </div>
+
+</section><!-- /Featured Services Section -->
+
+<!-- About Section -->
+<section id="about" class="about section">
+
+  <div class="container">
+
+    <div class="row gy-4">
+
+      <div class="col-lg-6 position-relative align-self-start order-lg-last order-first" data-aos="fade-up" data-aos-delay="200">
+        <img src="../static/assets/img/about.jpg" class="img-fluid" alt="">
+      </div>
+
+      <div class="col-lg-6 content order-last  order-lg-first" data-aos="fade-up" data-aos-delay="100">
+        <h3>Über uns</h3>
+        <p>
+          Quark steht für Quality, Universal, Automation, Results und Knowledge – unser Leitbild für erfolgreiche SEO-Optimierung.
+        </p>
         <ul>
-          <li><a href="/" class="active">Home<br></a></li>
-          <li><a href="about">About</a></li>
-          <li><a href="pricing">Pricing</a></li>
-          <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="#">Dropdown 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                <ul>
-                  <li><a href="#">Deep Dropdown 1</a></li>
-                  <li><a href="#">Deep Dropdown 2</a></li>
-                  <li><a href="#">Deep Dropdown 3</a></li>
-                  <li><a href="#">Deep Dropdown 4</a></li>
-                  <li><a href="#">Deep Dropdown 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Dropdown 2</a></li>
-              <li><a href="#">Dropdown 3</a></li>
-              <li><a href="#">Dropdown 4</a></li>
-            </ul>
+          <li>
+          <i class="fa-sharp fa-solid fa-q" style="align-self: center;"></i>
+          <div>
+          <h5>Quality</h5>
+          <p>Wir bieten höchste Qualität für eine nachhaltige und erfolgreiche Webpräsenz.</p>
+          </div>
           </li>
-          <li><a href="contact">Contact</a></li>
+          <li>
+          <i class="fa-sharp fa-solid fa-u" style="align-self: center;"></i>
+            <div>
+            <h5>Universal</h5>
+            <p>Unsere Lösungen sind vielseitig und plattformübergreifend einsetzbar.</p>
+            </div>
+          </li>
+          <li>
+          <i class="fa-sharp fa-solid fa-a" style="align-self: center;"></i>
+          <div>
+          <h5>Automation</h5>
+          <p>Unsere automatisierten Prozesse sparen Ihnen wertvolle Zeit und Ressourcen.</p>
+          </div>
+          </li>
+          <li>
+          <i class="fa-sharp fa-solid fa-r" style="align-self: center;"></i>
+          <div>
+          <h5>Results</h5>
+          <p>Wir legen den Fokus auf messbare und nachhaltige Erfolge.</p>
+          </div>
+          </li>
+          <li>
+          <i class="fa-sharp fa-solid fa-k" style="align-self: center;"></i>
+          <div>
+          <h5>Knowledge</h5>
+          <p>Unser umfassendes SEO-Wissen sorgt für optimalen Traffic und Sichtbarkeit.</p>
+          </div>
+          </li>
         </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
+      </div>          
+    </div>
+  </div>
+</section><!-- /About Section -->
 
-      <a class="btn-getstarted" href="get-a-quote">Get a Quote</a>
+<!-- Pricing Section -->
+<section id="pricing" class="pricing section">
+
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up">
+    <span>Preise</span>
+    <h2>Preise</h2>
+    <p>Wählen Sie den Plan, der am besten zu Ihren Bedürfnissen passt und beginnen Sie noch heute mit der Optimierung Ihrer Website.</p>
+  </div><!-- End Section Title -->
+
+  <div class="container">
+
+    <div class="row gy-4 justify-content-center">
+
+      <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
+        <div class="pricing-item">
+            <h3>Kostenloser Plan</h3>
+          <h4><sup>€</sup>0<span> / Monat</span></h4>
+          <ul>
+            <li><i class="bi bi-check"></i> Grundlegende SEO-Analysefunktionen</li>
+            <li><i class="bi bi-check"></i> Analyse von Meta-Tags und technischen SEO-Aspekten</li>
+            <li><i class="bi bi-check"></i> Ladezeiten- und Performance-Berichte</li>
+            <li class="na"><i class="bi bi-x"></i> KI-basierte Textanalyse und Keyword-Bewertung</li>
+            <li class="na"><i class="bi bi-x"></i> Automatische Optimierungsvorschläge</li>
+          </ul>
+          <a href="#" class="buy-btn">Dein aktueller Plan</a>
+        </div>
+      </div><!-- End Pricing Item -->
+
+      <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
+        <div class="pricing-item">
+          <h3>Entwickler Plan</h3>
+          <h4><sup>€</sup>7<span> / Monat</span></h4>
+          <ul>
+            <li><i class="bi bi-check"></i> Zugriff auf alle SEO-Analysefunktionen</li>
+            <li><i class="bi bi-check"></i> Analyse von Meta-Tags und technischen SEO-Aspekten</li>
+            <li><i class="bi bi-check"></i> Ladezeiten- und Performance-Berichte</li>
+            <li><i class="bi bi-check"></i> KI-basierte Textanalyse und Keyword-Bewertung</li>
+            <li><i class="bi bi-check"></i> Automatische Optimierungsvorschläge</li>
+          </ul>
+          <a href="#" class="buy-btn">Bald verfügbar</a>
+        </div>
+      </div><!-- End Pricing Item -->
 
     </div>
-  </header>
 
-  <main class="main">
+  </div>
 
-    <!-- Hero Section -->
-    <section id="hero" class="hero section dark-background">
+</section><!-- /Pricing Section -->
 
-      <img src="../static/assets/img/world-dotted-map.png" alt="" class="hero-bg" data-aos="fade-in">
+<!-- Faq Section -->
+<section id="faq" class="faq section">
 
-      <div class="container">
-        <div class="row gy-4 d-flex justify-content-between">
-          <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
-            <h2 data-aos="fade-up">Suchmaschinen-Optimierung leicht gemacht</h2>
-            <p data-aos="fade-up" data-aos-delay="100">Mit unserem Tool kannst du ganz einfach die Sichtbarkeit deiner Website in Suchmaschinen verbessern. Es analysiert automatisch die wichtigsten SEO-Faktoren und gibt dir gezielte Empfehlungen, um besser in den Suchergebnissen aufzutauchen und mehr potenzielle Kunden zu erreichen.</p>
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up">
+    <span>Häufig gestellte Fragen</span>
+    <h2>Häufig gestellte Fragen</h2>
+    <p>Hier findest du Antworten auf die häufigsten Fragen zu unseren Dienstleistungen und Produkten.</p>
+  </div><!-- End Section Title -->
 
+  <div class="container">
 
-            <form id="url-form" class="form-search d-flex align-items-stretch mb-3" data-aos="fade-up" data-aos-delay="200">
-              <input type="text" id="url-input" class="form-control" placeholder="Die URL deiner Webseite" required>
-              <button type="submit" class="btn btn-primary">Analyse starten</button>
-            </form>
-            <script>
-              document.getElementById('url-form').addEventListener('submit', function(event) {
-                event.preventDefault();
-                
-                // Get the URL input value
-                let inputUrl = document.getElementById('url-input').value;
-                // bring the URL to the correct format
-                if (!inputUrl.startsWith('http://') && !inputUrl.startsWith('https://')) {
-                  inputUrl = 'http://' + inputUrl;
-                }
-                if (!inputUrl.endsWith('/')) {
-                  inputUrl += '/';
-                }
-                // open the loading page
-                if (inputUrl) {
-                  const encodedUrl = encodeURIComponent(inputUrl);
-                  const newTabUrl = `/seo/analyze/${encodedUrl}`;
-                  window.open(newTabUrl, '_blank');
-                }
-              });
-            </script>
+    <div class="row justify-content-center">
 
-            <div class="row gy-4 mt-1" data-aos="fade-up" data-aos-delay="300">
+      <div class="col-lg-10">
 
-              <div class="col-lg-3 col-6">
-                <div class="stats-item text-center w-100 h-100">
-                  <span data-purecounter-start="0" data-purecounter-end="15451" data-purecounter-duration="1" class="purecounter">15451</span>
-                  <p>analysierte Webseiten</p>
-                </div>
-              </div><!-- End Stats Item -->
+        <div class="faq-container">
 
-              <div class="col-lg-3 col-6">
-                <div class="stats-item text-center w-100 h-100">
-                  <span data-purecounter-start="0" data-purecounter-end="1233" data-purecounter-duration="1" class="purecounter">1233</span>
-                  <p>zufriedene Kunden</p>
-                </div>
-              </div><!-- End Stats Item -->
-
-              <div class="col-lg-3 col-6">
-                <div class="stats-item text-center w-100 h-100">
-                  <span data-purecounter-start="0" data-purecounter-end="99000" data-purecounter-duration="1" class="purecounter">99.000</span>
-                    <p>Google-Suchen pro Sekunde</p>
-                </div>
-              </div><!-- End Stats Item -->
-
-              <div class="col-lg-3 col-6">
-                <div class="stats-item text-center w-100 h-100">
-                  <span>5,4 Mrd.</span>
-                  <p>Internetnutzer weltweit</p>
-                </div>
-              </div><!-- End Stats Item -->
-
+          <div class="faq-item faq-active" data-aos="fade-up" data-aos-delay="200">
+            <i class="faq-icon bi bi-question-circle"></i>
+            <h3>Was ist Quark SEO und wie funktioniert es?</h3>
+            <div class="faq-content">
+                <p>Quark SEO ist ein fortschrittliches Tool zur Verbesserung deiner Online-Sichtbarkeit. Es analysiert umfassend die SEO-Elemente deiner Website und liefert dir präzise Empfehlungen zur Optimierung. So kannst du gezielt Schwachstellen beheben und deine Position in den Suchergebnissen nachhaltig verbessern.</p>
             </div>
+            <i class="faq-toggle bi bi-chevron-right"></i>
+          </div><!-- End Faq item-->
 
-          </div>
-
-            <div class="col-lg-5 order-1 order-lg-2 hero-img d-flex align-items-center" data-aos="zoom-out">
-            <img src="../static/assets/img/hero-img.png" class="img-fluid mb-3 mb-lg-0" alt="">
-          </div>
-
-        </div>
-      </div>
-
-    </section><!-- /Hero Section -->
-
-    <!-- Featured Services Section -->
-    <section id="featured-services" class="featured-services section">
-
-      <div class="container">
-
-        <div class="row gy-4">
-
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="100">
-            <div class="icon flex-shrink-0"><i class="fa-sharp fa-solid fa-s"></i></div>
-            <div>
-              <h4 class="title">Search</h4>
-              <p class="description">Erhalten Sie tiefere Einblicke in die Leistung Ihrer Website und identifizieren Sie Bereiche, die das Suchmaschinenranking beeinflussen. Mit unserer Lösung finden Sie die besten Keywords und können Ihre Sichtbarkeit steigern.</p>
-              <a href="#" class="readmore stretched-link"><span>Mehr erfahren</span><i class="bi bi-arrow-right"></i></a>
+          <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
+            <i class="faq-icon bi bi-question-circle"></i>
+            <h3>Welche Funktionen sind im Freemium-Modell enthalten?</h3>
+            <div class="faq-content">
+              <p>Im Freemium-Modell sind die meisten Analysefunktionen kostenlos verfügbar. Um detaillierte Optimierungsvorschläge zu erhalten und weitere Funktionen freizuschalten, kannst du ein Upgrade auf die Premium-Version durchführen.</p>
             </div>
-          </div>
-          <!-- End Service Item -->
-          
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="200">
-            <div class="icon flex-shrink-0"><i class="fa-sharp fa-solid fa-e"></i></div>
-            <div>
-              <h4 class="title">Engine</h4>
-              <p class="description">Nutzen Sie unser automatisiertes Tool, um ungenutztes Potenzial zu erschließen. Wir bieten Ihnen detaillierte Vorschläge zur Verbesserung der Performance und Sichtbarkeit Ihrer Website.</p>
-              <a href="#" class="readmore stretched-link"><span>Mehr erfahren</span><i class="bi bi-arrow-right"></i></a>
-            </div>
-          </div>
-          <!-- End Service Item -->
-          
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="300">
-            <div class="icon flex-shrink-0"><i class="fa-sharp fa-solid fa-o"></i></div>
-            <div>
-              <h4 class="title">Optimization</h4>
-              <p class="description">Optimieren Sie Ihre Website mit modernen SEO-Techniken, um von Suchmaschinen besser erfasst zu werden. Erhöhen Sie Ihre Chance, von Ihrer Zielgruppe schneller gefunden zu werden.</p>
-              <a href="#" class="readmore stretched-link"><span>Mehr erfahren</span><i class="bi bi-arrow-right"></i></a>
-            </div>
-          </div>
-          <!-- End Service Item -->
-          
+            <i class="faq-toggle bi bi-chevron-right"></i>
+          </div><!-- End Faq item-->
 
-        </div>
+          <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
+            <i class="faq-icon bi bi-question-circle"></i>
+            <h3>Wie unterscheiden sich die Analyse- und Optimierungsfunktionen?</h3>
+            <div class="faq-content">
+              <p>Die Analysefunktionen überprüfen die SEO-Aspekte deiner Website und identifizieren Verbesserungspotenziale. Die Optimierungsfunktionen liefern konkrete Vorschläge zur Verbesserung dieser Aspekte, die dir helfen, deine Website in Suchmaschinen sichtbarer zu machen.</p>
+            </div>
+            <i class="faq-toggle bi bi-chevron-right"></i>
+          </div><!-- End Faq item-->
+
+          <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
+            <i class="faq-icon bi bi-question-circle"></i>
+            <h3>Benötige ich SEO-Kenntnisse, um Quark SEO zu nutzen?</h3>
+            <div class="faq-content">
+              <p>Nein, Quark SEO ist so gestaltet, dass es sowohl für SEO-Neulinge als auch für erfahrene Anwender leicht verständlich ist. Unser Tool bietet dir klare Anleitungen und Erklärungen, sodass du auch ohne Vorkenntnisse deine Website optimieren kannst.</p>
+            </div>
+            <i class="faq-toggle bi bi-chevron-right"></i>
+          </div><!-- End Faq item-->
+
+          <div class="faq-item" data-aos="fade-up" data-aos-delay="600">
+            <i class="faq-icon bi bi-question-circle"></i>
+            <h3>Wie schnell sehe ich Verbesserungen in meinem Ranking?</h3>
+            <div class="faq-content">
+              <p>Die Verbesserung des Suchmaschinenrankings hängt von vielen Faktoren ab, einschließlich der Umsetzung der Optimierungsvorschläge. In der Regel können erste Ergebnisse innerhalb weniger Wochen sichtbar werden, je nachdem wie stark die SEO-Maßnahmen sind und wie oft Suchmaschinen deine Website crawlen.</p>
+            </div>
+            <i class="faq-toggle bi bi-chevron-right"></i>
+          </div><!-- End Faq item-->
+
+        </div><!-- End Faq container -->
 
       </div>
 
-    </section><!-- /Featured Services Section -->
-
-    <!-- About Section -->
-    <section id="about" class="about section">
-
-      <div class="container">
-
-        <div class="row gy-4">
-
-          <div class="col-lg-6 position-relative align-self-start order-lg-last order-first" data-aos="fade-up" data-aos-delay="200">
-            <img src="../static/assets/img/about.jpg" class="img-fluid" alt="">
-          </div>
-
-          <div class="col-lg-6 content order-last  order-lg-first" data-aos="fade-up" data-aos-delay="100">
-            <h3>Über uns</h3>
-            <p>
-              Quark steht für Quality, Universal, Automation, Results und Knowledge – unser Leitbild für erfolgreiche SEO-Optimierung.
-            </p>
-            <ul>
-              <li>
-              <i class="fa-sharp fa-solid fa-q" style="align-self: center;"></i>
-              <div>
-              <h5>Quality</h5>
-              <p>Wir bieten höchste Qualität für eine nachhaltige und erfolgreiche Webpräsenz.</p>
-              </div>
-              </li>
-              <li>
-              <i class="fa-sharp fa-solid fa-u" style="align-self: center;"></i>
-                <div>
-                <h5>Universal</h5>
-                <p>Unsere Lösungen sind vielseitig und plattformübergreifend einsetzbar.</p>
-                </div>
-              </li>
-              <li>
-              <i class="fa-sharp fa-solid fa-a" style="align-self: center;"></i>
-              <div>
-              <h5>Automation</h5>
-              <p>Unsere automatisierten Prozesse sparen Ihnen wertvolle Zeit und Ressourcen.</p>
-              </div>
-              </li>
-              <li>
-              <i class="fa-sharp fa-solid fa-r" style="align-self: center;"></i>
-              <div>
-              <h5>Results</h5>
-              <p>Wir legen den Fokus auf messbare und nachhaltige Erfolge.</p>
-              </div>
-              </li>
-              <li>
-              <i class="fa-sharp fa-solid fa-k" style="align-self: center;"></i>
-              <div>
-              <h5>Knowledge</h5>
-              <p>Unser umfassendes SEO-Wissen sorgt für optimalen Traffic und Sichtbarkeit.</p>
-              </div>
-              </li>
-            </ul>
-          </div>          
-        </div>
-      </div>
-    </section><!-- /About Section -->
-
-    <!-- Pricing Section -->
-    <section id="pricing" class="pricing section">
-
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <span>Preise</span>
-        <h2>Preise</h2>
-        <p>Wählen Sie den Plan, der am besten zu Ihren Bedürfnissen passt und beginnen Sie noch heute mit der Optimierung Ihrer Website.</p>
-      </div><!-- End Section Title -->
-
-      <div class="container">
-
-        <div class="row gy-4 justify-content-center">
-
-          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
-            <div class="pricing-item">
-                <h3>Kostenloser Plan</h3>
-              <h4><sup>€</sup>0<span> / Monat</span></h4>
-              <ul>
-                <li><i class="bi bi-check"></i> Grundlegende SEO-Analysefunktionen</li>
-                <li><i class="bi bi-check"></i> Analyse von Meta-Tags und technischen SEO-Aspekten</li>
-                <li><i class="bi bi-check"></i> Ladezeiten- und Performance-Berichte</li>
-                <li class="na"><i class="bi bi-x"></i> KI-basierte Textanalyse und Keyword-Bewertung</li>
-                <li class="na"><i class="bi bi-x"></i> Automatische Optimierungsvorschläge</li>
-              </ul>
-              <a href="#" class="buy-btn">Dein aktueller Plan</a>
-            </div>
-          </div><!-- End Pricing Item -->
-
-          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
-            <div class="pricing-item">
-              <h3>Entwickler Plan</h3>
-              <h4><sup>€</sup>7<span> / Monat</span></h4>
-              <ul>
-                <li><i class="bi bi-check"></i> Zugriff auf alle SEO-Analysefunktionen</li>
-                <li><i class="bi bi-check"></i> Analyse von Meta-Tags und technischen SEO-Aspekten</li>
-                <li><i class="bi bi-check"></i> Ladezeiten- und Performance-Berichte</li>
-                <li><i class="bi bi-check"></i> KI-basierte Textanalyse und Keyword-Bewertung</li>
-                <li><i class="bi bi-check"></i> Automatische Optimierungsvorschläge</li>
-              </ul>
-              <a href="#" class="buy-btn">Bald verfügbar</a>
-            </div>
-          </div><!-- End Pricing Item -->
-
-        </div>
-
-      </div>
-
-    </section><!-- /Pricing Section -->
-
-    <!-- Faq Section -->
-    <section id="faq" class="faq section">
-
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <span>Häufig gestellte Fragen</span>
-        <h2>Häufig gestellte Fragen</h2>
-        <p>Hier findest du Antworten auf die häufigsten Fragen zu unseren Dienstleistungen und Produkten.</p>
-      </div><!-- End Section Title -->
-
-      <div class="container">
-
-        <div class="row justify-content-center">
-
-          <div class="col-lg-10">
-
-            <div class="faq-container">
-
-              <div class="faq-item faq-active" data-aos="fade-up" data-aos-delay="200">
-                <i class="faq-icon bi bi-question-circle"></i>
-                <h3>Was ist Quark SEO und wie funktioniert es?</h3>
-                <div class="faq-content">
-                    <p>Quark SEO ist ein fortschrittliches Tool zur Verbesserung deiner Online-Sichtbarkeit. Es analysiert umfassend die SEO-Elemente deiner Website und liefert dir präzise Empfehlungen zur Optimierung. So kannst du gezielt Schwachstellen beheben und deine Position in den Suchergebnissen nachhaltig verbessern.</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
-              <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
-                <i class="faq-icon bi bi-question-circle"></i>
-                <h3>Welche Funktionen sind im Freemium-Modell enthalten?</h3>
-                <div class="faq-content">
-                  <p>Im Freemium-Modell sind die meisten Analysefunktionen kostenlos verfügbar. Um detaillierte Optimierungsvorschläge zu erhalten und weitere Funktionen freizuschalten, kannst du ein Upgrade auf die Premium-Version durchführen.</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
-              <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
-                <i class="faq-icon bi bi-question-circle"></i>
-                <h3>Wie unterscheiden sich die Analyse- und Optimierungsfunktionen?</h3>
-                <div class="faq-content">
-                  <p>Die Analysefunktionen überprüfen die SEO-Aspekte deiner Website und identifizieren Verbesserungspotenziale. Die Optimierungsfunktionen liefern konkrete Vorschläge zur Verbesserung dieser Aspekte, die dir helfen, deine Website in Suchmaschinen sichtbarer zu machen.</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
-              <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
-                <i class="faq-icon bi bi-question-circle"></i>
-                <h3>Benötige ich SEO-Kenntnisse, um Quark SEO zu nutzen?</h3>
-                <div class="faq-content">
-                  <p>Nein, Quark SEO ist so gestaltet, dass es sowohl für SEO-Neulinge als auch für erfahrene Anwender leicht verständlich ist. Unser Tool bietet dir klare Anleitungen und Erklärungen, sodass du auch ohne Vorkenntnisse deine Website optimieren kannst.</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
-              <div class="faq-item" data-aos="fade-up" data-aos-delay="600">
-                <i class="faq-icon bi bi-question-circle"></i>
-                <h3>Wie schnell sehe ich Verbesserungen in meinem Ranking?</h3>
-                <div class="faq-content">
-                  <p>Die Verbesserung des Suchmaschinenrankings hängt von vielen Faktoren ab, einschließlich der Umsetzung der Optimierungsvorschläge. In der Regel können erste Ergebnisse innerhalb weniger Wochen sichtbar werden, je nachdem wie stark die SEO-Maßnahmen sind und wie oft Suchmaschinen deine Website crawlen.</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
-            </div><!-- End Faq container -->
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section><!-- /Faq Section -->
-
-  </main>
-
-  <footer id="footer" class="footer dark-background">
-
-    <div class="container footer-top">
-      <div class="row gy-4">
-        <div class="col-lg-5 col-md-12 footer-about">
-          <a href="/" class="logo d-flex align-items-center">
-            <span class="sitename">Quark SEO</span>
-          </a>
-            <p><strong>Q</strong>uality, <strong>U</strong>niversal, <strong>A</strong>utomation, <strong>R</strong>esults und <strong>K</strong>nowledge – unser Leitbild für erfolgreiche SEO-Optimierung.</p>
-          <div class="social-links d-flex mt-4">
-            <a href=""><i class="bi bi-twitter-x"></i></a>
-            <a href=""><i class="bi bi-facebook"></i></a>
-            <a href=""><i class="bi bi-instagram"></i></a>
-            <a href=""><i class="bi bi-linkedin"></i></a>
-          </div>
-        </div>
-
-        <!-- empty placeholder -->
-        <div class="col-lg-2 col-6 footer-links"> 
-        </div>
-        <!-- empty placeholder -->
-        <div class="col-lg-2 col-6 footer-links">
-        </div>
-
-        <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-          <h4>Kontakt</h4>
-          <p>Vischerstraße 2</p>
-          <p>70563 Stuttgart</p>
-          <p>Deutschland</p>
-          <p class="mt-4"><strong>Mobil:</strong> <span>+49 176 72730347</span></p>
-          <p><strong>Email:</strong> <span>niklas.werthmann@mercedes-benz.com</span></p>
-        </div>
-
-      </div>
     </div>
 
-    <div class="container copyright text-center mt-4">
-      <p>© <span>Quark GmbH</span></p>
-    </div>
+  </div>
 
-  </footer>
+</section><!-- /Faq Section -->
 
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Preloader -->
-  <div id="preloader"></div>
-
-  <!-- Vendor JS Files -->
-  <script src="../static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../static/assets/vendor/php-email-form/validate.js"></script>
-  <script src="../static/assets/vendor/aos/aos.js"></script>
-  <script src="../static/assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="../static/assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="../static/assets/vendor/swiper/swiper-bundle.min.js"></script>
-
-  <!-- Main JS File -->
-  <script src="../static/assets/js/main.js"></script>
-
-</body>
-
-</html>
+{% endblock %}

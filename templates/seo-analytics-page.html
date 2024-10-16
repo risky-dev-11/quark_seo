@@ -1,613 +1,455 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Quark SEO - Analyzing Results</title>
-  <meta name="description" content="">
-  <meta name="keywords" content="">
+{% block title %}Anmelden{% endblock %}
+{% block content %}
 
-  <!-- Favicons -->
-  <link href="../static/assets/img/favicon.png" rel="icon">
-  <link href="../static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+<!-- Page Title -->
+<div class="page-title dark-background" data-aos="fade" style="background-image: url(../static/assets/img/page-title-bg.jpg);">
+  <div class="container position-relative">
+    <h1>SEO Analyse von </h1>
+    <p>Wir haben die Webseite unter die Lupe genommen und sind zu folgenden Ergebnissen gekommen</p>
+  </div>
+</div><!-- End Page Title -->
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<!-- About Section -->
+<section id="about" class="about section">
 
-  <!-- Vendor CSS Files -->
-  <link href="../static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../static/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="../static/assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="../static/assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-  <link href="../static/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="../static/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+<div class="container">
 
-  <!-- Main CSS File -->
-  <link href="../static/assets/css/main.css" rel="stylesheet">
-  <link href="../static/assets/css/serp-preview.css" rel="stylesheet">
-</head>
+  <div class="row gy-4">
 
-<body class="services-page">
-
-  <header id="header" class="header d-flex align-items-center fixed-top">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center">
-
-      <a href="/" class="logo d-flex align-items-center me-auto">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="../static/assets/img/logo.png" alt=""> -->
-        <h1 class="sitename">Quark SEO</h1>
-      </a>
-
-      <nav id="navmenu" class="navmenu">
-        <ul>
-            <li><a href="/">Home<br></a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/pricing">Pricing</a></li>
-          <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="#">Dropdown 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                <ul>
-                  <li><a href="#">Deep Dropdown 1</a></li>
-                  <li><a href="#">Deep Dropdown 2</a></li>
-                  <li><a href="#">Deep Dropdown 3</a></li>
-                  <li><a href="#">Deep Dropdown 4</a></li>
-                  <li><a href="#">Deep Dropdown 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Dropdown 2</a></li>
-              <li><a href="#">Dropdown 3</a></li>
-              <li><a href="#">Dropdown 4</a></li>
-            </ul>
-          </li>
-          <li><a href="contact">Contact</a></li>
-        </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
-
-      <a class="btn-getstarted" href="get-a-quote">Get a Quote</a>
-
-    </div>
-  </header>
-
-  <main class="main">
-
-    <!-- Page Title -->
-    <div class="page-title dark-background" data-aos="fade" style="background-image: url(../static/assets/img/page-title-bg.jpg);">
-      <div class="container position-relative">
-        <h1>SEO Analyse von </h1>
-        <p>Wir haben die Webseite unter die Lupe genommen und sind zu folgenden Ergebnissen gekommen</p>
-      </div>
-    </div><!-- End Page Title -->
-
-  <!-- About Section -->
-  <section id="about" class="about section">
-
-    <div class="container">
-
-      <div class="row gy-4">
-
-        <div class="col-lg-6 position-relative align-self-center order-lg-last order-first" data-aos="fade-up" data-aos-delay="200">
-          <div class="container">
-
-            <div class="row gy-4 justify-content-center">
-              <!-- Overall Rating -->
-              <div class="col-lg-4 col-md-6 service-item d-flex align-items-center" data-aos="fade-up" data-aos-delay="100" style="width: 100%;">
-                <div class="icon flex-shrink-0">
-                  <svg id="overallRatingSvg" width="200" height="200" viewBox="-25 -25 250 250" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">
-                    <circle r="90" cx="100" cy="100" fill="transparent" stroke="#e0e0e0" stroke-width="16px" stroke-dasharray="565.48px" stroke-dashoffset="0"></circle>
-                    <circle id="overallRatingCircle" r="90" cx="100" cy="100" stroke="#0d6efd" stroke-width="16px" stroke-linecap="round" stroke-dashoffset="0px" fill="transparent" stroke-dasharray="565.48px"></circle>
-                    <text id="overallRatingValue" x="73px" y="117px" fill="#0d6efd" font-size="52px" font-weight="bold" style="transform:rotate(90deg) translate(0px, -196px)"></text>
-                  </svg>
-                </div>
-                <div>
-                  <h4 class="title">Gesamtergebnis</h4>
-                  <p id="overallRatingText" class="description"></p>
-                    <a href="#services" class="readmore stretched-link"><span>Mehr erfahren</span><i class="bi bi-arrow-right"></i></a>
-                </div>
-              </div>
-              <!-- End Overall Rating -->
-            
-              <!-- Improvements -->
-              <div class="col-lg-4 col-md-6 service-item d-flex align-items-center" data-aos="fade-up" data-aos-delay="200" style="width: 100%;">
-                <div class="icon flex-shrink-0">
-                  <svg id="improvementSvg" width="200" height="200" viewBox="-25 -25 250 250" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">
-                    <circle r="90" cx="100" cy="100" fill="transparent" stroke="#e0e0e0" stroke-width="16px" stroke-dasharray="565.48px" stroke-dashoffset="0"></circle>
-                    <circle id="improvementCircle" r="90" cx="100" cy="100" stroke="#000" stroke-width="16px" stroke-linecap="round" stroke-dashoffset="0px" fill="transparent" stroke-dasharray="565.48px"></circle>
-                    <text id="improvementCountValue" x="73px" y="117px" fill="#000" font-size="52px" font-weight="bold" style="transform:rotate(90deg) translate(0px, -196px)"></text>
-                  </svg>
-                </div>
-                <div>
-                  <h4 class="title">Verbesserungsmöglichkeiten</h4>
-                  <p id="improvementCountText" class="description"></p>
-                  <a href="#" class="readmore stretched-link"><span>Mehr erfahren</span><i class="bi bi-arrow-right"></i></a>
-                </div>
-              </div>
-              <!-- End Improvements -->
-            </div>            
-    
-          </div>
-        </div>
-
-        <div class="col-lg-6 content order-last order-lg-first mt-0 mb-0" data-aos="fade-up" data-aos-delay="100">
-          <ul id="generalResults">
-            <li style="margin-top: 35px;">
-              <i class="bi bi-stopwatch"></i>
-              <div>
-                <h5 id="generalResultsResponseTimeTitle">Antwortzeit</h5>
-                <p id="generalResultsResponseTimeText"></p>
-              </div>
-            </li>
-            <li style="margin-top: 35px;">
-              <i class="bi bi-file-code"></i>
-              <div>
-                <h5 id="generalResultsFileSizeTitle">Dateigröße</h5>
-                <p id="generalResultsFileSizeText"></p>
-              </div>
-            </li>
-            <li style="margin-top: 35px;">
-              <i class="bi bi-body-text"></i>
-              <div>
-                <h5 id="generalResultsWordCountTitle">Wörter</h5>
-                <p id="generalResultsWordCountText"></p>
-              </div>
-            </li>
-            <li style="margin-top: 35px;">
-              <i class="bi bi-image-alt"></i>
-              <div>
-                <h5 id="generalResultsMediaCountTitle">Medien</h5>
-                <p id="generalResultsMediaCountText"></p>
-              </div>
-            </li>
-            <li style="margin-top: 35px;">
-              <i class="bi bi-link"></i>
-              <div>
-                <h5 id="generalResultsLinkCountTitle">Links</h5>
-                <p id="generalResultsLinkCountText"></p>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-      </div>
-
-    </div>
-
-  </section><!-- /About Section -->
-
-    <!-- Services Section -->
-    <section id="services" class="services section" style="padding-top: 30px;">
-
-      <div class="container">
-
-        <div class="row gy-4">
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-            <div class="card">
-              <div class="progress" style="border-radius: 0;">
-                <div class="progress-bar" id="metadataResultsProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-              <h3><a href="#" class="stretched-link">Metaangaben</a></h3>
-          
-              <!-- Title Section -->
-              <div class="card-body">
-                <h3 class="card-title">Titel</h3>
-                <p class="card-text" id="metadataResultsTitleMissing"></p>
-                <p class="card-text" id="metadataResultsMetaTitle"></p>
-                <p class="card-text" id="metadataResultsDomainInTitle"></p>
-                <p class="card-text" id="metadataResultsTitleLength"></p>
-                <p class="card-text mb-0" id="metadataResultsTitleRepetition"></p>
-                
-              </div>
-          
-              <!-- Description Section -->
-              <div class="card-body">
-                <h3 class="card-title">Beschreibung</h3>
-                <p class="card-text" id="metadataResultsDescriptionMissing"></p>
-                <p class="card-text mb-2" id="metadataResultsDescriptionHeaderNotFromAPI">Die Beschreibung deiner Webseite:</p>
-                <p class="card-text" id="metadataResultsDescriptionText" style="font-style: italic; font-size: 0.8em;"></p>
-                <p class="card-text mb-0" id="metadataResultsDescriptionLength"></p>
-                
-              </div>
-          
-              <!-- Language Section -->
-              <div class="card-body">
-                <h3 class="card-title">Sprache</h3>
-                <p class="card-text" id="metadataResultsMetatagLanguage"></p>
-                <p class="card-text" id="metadataResultsTextLanguage"></p>
-                <p class="card-text" id="metadataResultsServerLocation"></p>
-                <p class="card-text mb-0" id="metadataResultsLanguageMatch"></p>
-              </div>
-          
-              <!-- Favicon Section -->
-              <div class="card-body">
-                <h3 class="card-title">Favicon</h3>
-                <p class="card-text" id="metadataResultsFaviconStatus"></p>
-              </div>
-            </div>
-          </div><!-- End Card Item -->
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="card">
-              <div class="progress" style="border-radius: 0;">
-                <div class="progress-bar" id="pagequalityResultsProgressBar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-              <h3><a href="#" class="stretched-link">Seitenqualität</a></h3>
-              
-              <div class="card-body">
-                <h3 class="card-title">Inhalt</h3>
-                <p class="card-text" id="pagequalityResultsComparisonTitleText"></p>
-                <p class="card-text" id="pagequalityResultsWordCount"></p>
-                <p class="card-text mb-0" id="pagequalityResultsDuplicateText"></p>
-              </div>
-
-              <div class="card-body">
-                <h3 class="card-title">Medien</h3>
-                <p class="card-text" id="pagequalityResultsMissingAlts"></p>
-              </div>
-            </div>
-
-            <div class="card mt-3">
-              <div class="progress" style="border-radius: 0;">
-                <div class="progress-bar" id="linksResultsProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" ></div>
-              </div>
-              <h3><a href="#" class="stretched-link">Verlinkung</a></h3>
-
-              <div class="card-body">
-                <h3 class="card-title">Interne Links</h3>
-                <p class="card-text" id="linksResultsInternalCount"></p>
-                <p class="card-text" id="linksResultsInternalLength"></p>
-                <p class="card-text" id="linksResultsInternalNoText"></p>
-                <p class="card-text mb-0" id="linksResultsInternalRepetitions"></p>
-              </div>
-          
-              <div class="card-body">
-                <h3 class="card-title">Externe Links</h3>
-                <p class="card-text" id="linksResultsExternalCount"></p>
-                <p class="card-text" id="linksResultsExternalLength"></p>
-                <p class="card-text" id="linksResultsExternalNoText"></p>
-                <p class="card-text" id="linksResultsExternalRepetitions"></p>
-              </div>
-
-            </div>
-          </div><!-- End Card Item -->
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-            <div class="card">
-              <div class="progress" style="border-radius: 0;">
-                <div class="progress-bar"  id="pagestructureResultsProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" ></div>
-              </div>
-              <h3><a href="#" class="stretched-link">Seitenstruktur</a></h3>
-              <div class="card-body">
-                <h3 class="card-title">Überschriften</h3>
-                <p class="card-text" id="pagestructureResultsH1Heading"></p>
-                <p class="card-text" id="pagestructureResultsStructure"></p>
-              </div>
-            </div>
-
-            <div class="card mt-3">
-              <div class="progress" style="border-radius: 0;">
-                <div class="progress-bar" role="progressbar" id="serverResultsProgressBar" aria-valuemin="0" aria-valuemax="100" ></div>
-              </div>
-              <h3>Server</h3>
-              
-              <div class="card-body">
-                <h3 class="card-title">HTTP Redirect</h3>
-                <p class="card-text" id="serverResultsRedirects"></p>
-                <p class="card-text mb-0" id="serverResultsRedirectingWWW"></p>
-              </div>
-          
-              <div class="card-body">
-                <h3 class="card-title">HTTP Header</h3>
-                <p class="card-text mb-0" id="serverResultsCompression"></p>
-              </div>
-          
-              <div class="card-body">
-                <h3 class="card-title">Performance</h3>
-                <p class="card-text" id="serverResultsResponseTime"></p>
-                <p class="card-text" id="serverResultsFileSize"></p>
-              </div>
-
-            </div>
-
-            <div class="card mt-3">
-              <div class="progress" style="border-radius: 0;">
-                <div class="progress-bar" id="externalFactorsResultsProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" ></div>
-              </div>
-              <h3><a href="#" class="stretched-link">Externe Faktoren</a></h3>
-              
-              <div class="card-body">
-                <h3 class="card-title">Blacklists</h3>
-                <p class="card-text mb-0" id="externalFactorsResultsBlacklist"></p>
-              </div>
-          
-              <div class="card-body">
-                <h3 class="card-title">Backlinks</h3>
-                <p class="card-text" id="externalFactorsResultsBacklinks"></p>
-              </div>
-
-            </div>
-          </div><!-- End Card Item -->
-
-        </div>
-
-      </div>
-
-    </section><!-- /Services Section -->
-
-    <!-- Featured Services Section -->
-  <section id="featured-services" class="featured-services section">
-
-    <div class="container">
-      <div class="row gy-4 justify-content-center" style="gap: 20px;">
-        <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="200" style="align-self: center; margin: 0;">
-          <div class="icon flex-shrink-0">
-            <svg width="200" height="200" viewBox="-25 -25 250 250" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">
-              <circle r="90" cx="100" cy="100" fill="transparent" stroke="#e0e0e0" stroke-width="16px" stroke-dasharray="565.48px" stroke-dashoffset="0"></circle>
-              <circle r="90" cx="100" cy="100" stroke="#0d6efd" stroke-width="16px" stroke-linecap="round" stroke-dashoffset="79px" fill="transparent" stroke-dasharray="565.48px"></circle>
-              <text x="73px" y="117px" fill="#0d6efd" font-size="52px" font-weight="bold" style="transform:rotate(90deg) translate(0px, -196px)">86</text>
-            </svg>
-          </div>
-          <div style="align-self: center;">
-            <h4 class="title">SERP Vorschau</h4>
-            <p class="description">SERP steht für <strong>S</strong>earch <strong>E</strong>ngine <strong>R</strong>esults <strong>P</strong>age und zeigt, wie Ihre Webseite in den Suchergebnissen erscheint.</p>
-            <a href="#" class="readmore stretched-link"><span>Learn More</span><i class="bi bi-arrow-right"></i></a>
-          </div>
-        </div><!-- End Service Item -->
-
-        <div class="col-lg-4 col-md-6 service-item d-flex flex-column" data-aos="fade-up" data-aos-delay="100" style="width: fit-content; align-self: center; margin: 0;">
-          <h4 class="title">Desktop Ansicht</h4>
-          <div class="serp-preview-container-desktop mb-5">
-            <div class="serp-preview-url">
-              https://mangools.com/free-seo-tools/serp-simulator
-            </div>
-            <div class="serp-preview-title">
-              Title gizfeifew gifwe bhiojke
-            </div>
-            <div class="serp-preview-description">
-              title will be cut after 600px description will be cut after 960px (desktop) or 680px (mobile) -> roughly 158 characters
-            </div>
-          </div>
-          <h4 class="title">Mobile Ansicht</h4>
-          <div class="serp-preview-container-mobile">
-            <div class="serp-preview-url">
-              https://mangools.com/free-seo-tools/serp-simulator
-            </div>
-            <div class="serp-preview-title">
-              Title gizfeifew gifwe bhiojke
-            </div>
-            <div class="serp-preview-description">
-              title will be cut after 600px description will be cut after 960px (desktop) or 680px (mobile) -> roughly 158 characters
-            </div>
-          </div>
-        </div>
-          <!-- End Service Item -->
-      </div>
-
-    </div>
-
-  </section><!-- /Featured Services Section -->
-
-    <!-- Features Section -->
-    <section id="features" class="features section">
-
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <span>Optimierungsvorschläge</span>
-        <h2>Optimierungsvorschläge</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
-      </div><!-- End Section Title -->
-      <div class="alert alert-warning" role="alert" style="width: fit-content; margin-left: auto; margin-right: auto;">
-        <h5>Um Optimierungsvorschläge zu erhalten, upgraden Sie auf den Entwicklerplan.</h5>
-      </div>    
-
-    </section><!-- /Features Section -->
-
-
-   <!-- Pricing Section -->
-    <section id="pricing" class="pricing section" style="padding-top: 0;">
-
+    <div class="col-lg-6 position-relative align-self-center order-lg-last order-first" data-aos="fade-up" data-aos-delay="200">
       <div class="container">
 
         <div class="row gy-4 justify-content-center">
-
-          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
-            <div class="pricing-item">
-                <h3>Kostenloser Plan</h3>
-              <h4><sup>€</sup>0<span> / Monat</span></h4>
-              <ul>
-                <li><i class="bi bi-check"></i> Grundlegende SEO-Analysefunktionen</li>
-                <li><i class="bi bi-check"></i> Analyse von Meta-Tags und technischen SEO-Aspekten</li>
-                <li><i class="bi bi-check"></i> Ladezeiten- und Performance-Berichte</li>
-                <li class="na"><i class="bi bi-x"></i> KI-basierte Textanalyse und Keyword-Bewertung</li>
-                <li class="na"><i class="bi bi-x"></i> Automatische Optimierungsvorschläge</li>
-              </ul>
-              <a href="#" class="buy-btn">Dein aktueller Plan</a>
+          <!-- Overall Rating -->
+          <div class="col-lg-4 col-md-6 service-item d-flex align-items-center" data-aos="fade-up" data-aos-delay="100" style="width: 100%;">
+            <div class="icon flex-shrink-0">
+              <svg id="overallRatingSvg" width="200" height="200" viewBox="-25 -25 250 250" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">
+                <circle r="90" cx="100" cy="100" fill="transparent" stroke="#e0e0e0" stroke-width="16px" stroke-dasharray="565.48px" stroke-dashoffset="0"></circle>
+                <circle id="overallRatingCircle" r="90" cx="100" cy="100" stroke="#0d6efd" stroke-width="16px" stroke-linecap="round" stroke-dashoffset="0px" fill="transparent" stroke-dasharray="565.48px"></circle>
+                <text id="overallRatingValue" x="73px" y="117px" fill="#0d6efd" font-size="52px" font-weight="bold" style="transform:rotate(90deg) translate(0px, -196px)"></text>
+              </svg>
             </div>
-          </div><!-- End Pricing Item -->
-
-          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
-            <div class="pricing-item">
-              <h3>Entwickler Plan</h3>
-              <h4><sup>€</sup>7<span> / Monat</span></h4>
-              <ul>
-                <li><i class="bi bi-check"></i> Zugriff auf alle SEO-Analysefunktionen</li>
-                <li><i class="bi bi-check"></i> Analyse von Meta-Tags und technischen SEO-Aspekten</li>
-                <li><i class="bi bi-check"></i> Ladezeiten- und Performance-Berichte</li>
-                <li><i class="bi bi-check"></i> KI-basierte Textanalyse und Keyword-Bewertung</li>
-                <li><i class="bi bi-check"></i> Automatische Optimierungsvorschläge</li>
-              </ul>
-              <a href="#" class="buy-btn">Bald verfügbar</a>
+            <div>
+              <h4 class="title">Gesamtergebnis</h4>
+              <p id="overallRatingText" class="description"></p>
+                <a href="#services" class="readmore stretched-link"><span>Mehr erfahren</span><i class="bi bi-arrow-right"></i></a>
             </div>
-          </div><!-- End Pricing Item -->
-
-        </div>
-
-      </div>
-
-    </section><!-- /Pricing Section -->
-
-
-    <!-- Faq Section -->
-    <section id="faq" class="faq section">
-
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <span>Frequently Asked Questions</span>
-        <h2>Frequently Asked Questions</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
-      </div><!-- End Section Title -->
-
-      <div class="container">
-
-        <div class="row justify-content-center">
-
-          <div class="col-lg-10">
-
-            <div class="faq-container">
-
-              <div class="faq-item faq-active" data-aos="fade-up" data-aos-delay="200">
-                <i class="faq-icon bi bi-question-circle"></i>
-                <h3>Non consectetur a erat nam at lectus urna duis?</h3>
-                <div class="faq-content">
-                  <p>Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id volutpat lacus laoreet non curabitur gravida. Venenatis lectus magna fringilla urna porttitor rhoncus dolor purus non.</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
-              <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
-                <i class="faq-icon bi bi-question-circle"></i>
-                <h3>Feugiat scelerisque varius morbi enim nunc faucibus a pellentesque?</h3>
-                <div class="faq-content">
-                  <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
-              <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
-                <i class="faq-icon bi bi-question-circle"></i>
-                <h3>Dolor sit amet consectetur adipiscing elit pellentesque?</h3>
-                <div class="faq-content">
-                  <p>Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus pulvinar elementum integer enim. Sem nulla pharetra diam sit amet nisl suscipit. Rutrum tellus pellentesque eu tincidunt. Lectus urna duis convallis convallis tellus. Urna molestie at elementum eu facilisis sed odio morbi quis</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
-              <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
-                <i class="faq-icon bi bi-question-circle"></i>
-                <h3>Ac odio tempor orci dapibus. Aliquam eleifend mi in nulla?</h3>
-                <div class="faq-content">
-                  <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
-              <div class="faq-item" data-aos="fade-up" data-aos-delay="600">
-                <i class="faq-icon bi bi-question-circle"></i>
-                <h3>Tempus quam pellentesque nec nam aliquam sem et tortor consequat?</h3>
-                <div class="faq-content">
-                  <p>Molestie a iaculis at erat pellentesque adipiscing commodo. Dignissim suspendisse in est ante in. Nunc vel risus commodo viverra maecenas accumsan. Sit amet nisl suscipit adipiscing bibendum est. Purus gravida quis blandit turpis cursus in</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
-            </div>
-
           </div>
-
-        </div>
-
-      </div>
-
-    </section><!-- /Faq Section -->
-
-  </main>
-
-  <footer id="footer" class="footer dark-background">
-
-    <div class="container footer-top">
-      <div class="row gy-4">
-        <div class="col-lg-5 col-md-12 footer-about">
-          <a href="/" class="logo d-flex align-items-center">
-            <span class="sitename">Logis</span>
-          </a>
-          <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellus.</p>
-          <div class="social-links d-flex mt-4">
-            <a href=""><i class="bi bi-twitter-x"></i></a>
-            <a href=""><i class="bi bi-facebook"></i></a>
-            <a href=""><i class="bi bi-instagram"></i></a>
-            <a href=""><i class="bi bi-linkedin"></i></a>
+          <!-- End Overall Rating -->
+        
+          <!-- Improvements -->
+          <div class="col-lg-4 col-md-6 service-item d-flex align-items-center" data-aos="fade-up" data-aos-delay="200" style="width: 100%;">
+            <div class="icon flex-shrink-0">
+              <svg id="improvementSvg" width="200" height="200" viewBox="-25 -25 250 250" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">
+                <circle r="90" cx="100" cy="100" fill="transparent" stroke="#e0e0e0" stroke-width="16px" stroke-dasharray="565.48px" stroke-dashoffset="0"></circle>
+                <circle id="improvementCircle" r="90" cx="100" cy="100" stroke="#000" stroke-width="16px" stroke-linecap="round" stroke-dashoffset="0px" fill="transparent" stroke-dasharray="565.48px"></circle>
+                <text id="improvementCountValue" x="73px" y="117px" fill="#000" font-size="52px" font-weight="bold" style="transform:rotate(90deg) translate(0px, -196px)"></text>
+              </svg>
+            </div>
+            <div>
+              <h4 class="title">Verbesserungsmöglichkeiten</h4>
+              <p id="improvementCountText" class="description"></p>
+              <a href="#" class="readmore stretched-link"><span>Mehr erfahren</span><i class="bi bi-arrow-right"></i></a>
+            </div>
           </div>
-        </div>
-
-        <div class="col-lg-2 col-6 footer-links">
-          <h4>Useful Links</h4>
-          <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About us</a></li>
-            <li><a href="#">Services</a></li>
-            <li><a href="#">Terms of service</a></li>
-            <li><a href="#">Privacy policy</a></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-2 col-6 footer-links">
-          <h4>Our Services</h4>
-          <ul>
-            <li><a href="#">Web Design</a></li>
-            <li><a href="#">Web Development</a></li>
-            <li><a href="#">Product Management</a></li>
-            <li><a href="#">Marketing</a></li>
-            <li><a href="#">Graphic Design</a></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-          <h4>Contact Us</h4>
-          <p>A108 Adam Street</p>
-          <p>New York, NY 535022</p>
-          <p>United States</p>
-          <p class="mt-4"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
-          <p><strong>Email:</strong> <span>info@example.com</span></p>
-        </div>
+          <!-- End Improvements -->
+        </div>            
 
       </div>
     </div>
 
-    <div class="container copyright text-center mt-4">
-      <p>© <span>Copyright</span> <strong class="px-1 sitename">Logis</strong> <span>All Rights Reserved</span></p>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you've purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-      </div>
+    <div class="col-lg-6 content order-last order-lg-first mt-0 mb-0" data-aos="fade-up" data-aos-delay="100">
+      <ul id="generalResults">
+        <li style="margin-top: 35px;">
+          <i class="bi bi-stopwatch"></i>
+          <div>
+            <h5 id="generalResultsResponseTimeTitle">Antwortzeit</h5>
+            <p id="generalResultsResponseTimeText"></p>
+          </div>
+        </li>
+        <li style="margin-top: 35px;">
+          <i class="bi bi-file-code"></i>
+          <div>
+            <h5 id="generalResultsFileSizeTitle">Dateigröße</h5>
+            <p id="generalResultsFileSizeText"></p>
+          </div>
+        </li>
+        <li style="margin-top: 35px;">
+          <i class="bi bi-body-text"></i>
+          <div>
+            <h5 id="generalResultsWordCountTitle">Wörter</h5>
+            <p id="generalResultsWordCountText"></p>
+          </div>
+        </li>
+        <li style="margin-top: 35px;">
+          <i class="bi bi-image-alt"></i>
+          <div>
+            <h5 id="generalResultsMediaCountTitle">Medien</h5>
+            <p id="generalResultsMediaCountText"></p>
+          </div>
+        </li>
+        <li style="margin-top: 35px;">
+          <i class="bi bi-link"></i>
+          <div>
+            <h5 id="generalResultsLinkCountTitle">Links</h5>
+            <p id="generalResultsLinkCountText"></p>
+          </div>
+        </li>
+      </ul>
     </div>
 
-  </footer>
+  </div>
 
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+</div>
 
-  <!-- Preloader -->
-  <div id="preloader"></div>
+</section><!-- /About Section -->
 
-  <!-- Vendor JS Files -->
-  <script src="../static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../static/assets/vendor/php-email-form/validate.js"></script>
-  <script src="../static/assets/vendor/aos/aos.js"></script>
-  <script src="../static/assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="../static/assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="../static/assets/vendor/swiper/swiper-bundle.min.js"></script>
+<!-- Services Section -->
+<section id="services" class="services section" style="padding-top: 30px;">
 
-  <!-- Main JS File -->
-  <script src="../static/assets/js/main.js"></script>
-  <script src="../static/assets/js/api.js"></script>
-  
-</body>
+  <div class="container">
 
-</html>
+    <div class="row gy-4">
+
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="card">
+          <div class="progress" style="border-radius: 0;">
+            <div class="progress-bar" id="metadataResultsProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <h3><a href="#" class="stretched-link">Metaangaben</a></h3>
+      
+          <!-- Title Section -->
+          <div class="card-body">
+            <h3 class="card-title">Titel</h3>
+            <p class="card-text" id="metadataResultsTitleMissing"></p>
+            <p class="card-text" id="metadataResultsMetaTitle"></p>
+            <p class="card-text" id="metadataResultsDomainInTitle"></p>
+            <p class="card-text" id="metadataResultsTitleLength"></p>
+            <p class="card-text mb-0" id="metadataResultsTitleRepetition"></p>
+            
+          </div>
+      
+          <!-- Description Section -->
+          <div class="card-body">
+            <h3 class="card-title">Beschreibung</h3>
+            <p class="card-text" id="metadataResultsDescriptionMissing"></p>
+            <p class="card-text mb-2" id="metadataResultsDescriptionHeaderNotFromAPI">Die Beschreibung deiner Webseite:</p>
+            <p class="card-text" id="metadataResultsDescriptionText" style="font-style: italic; font-size: 0.8em;"></p>
+            <p class="card-text mb-0" id="metadataResultsDescriptionLength"></p>
+            
+          </div>
+      
+          <!-- Language Section -->
+          <div class="card-body">
+            <h3 class="card-title">Sprache</h3>
+            <p class="card-text" id="metadataResultsMetatagLanguage"></p>
+            <p class="card-text" id="metadataResultsTextLanguage"></p>
+            <p class="card-text" id="metadataResultsServerLocation"></p>
+            <p class="card-text mb-0" id="metadataResultsLanguageMatch"></p>
+          </div>
+      
+          <!-- Favicon Section -->
+          <div class="card-body">
+            <h3 class="card-title">Favicon</h3>
+            <p class="card-text" id="metadataResultsFaviconStatus"></p>
+          </div>
+        </div>
+      </div><!-- End Card Item -->
+
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+        <div class="card">
+          <div class="progress" style="border-radius: 0;">
+            <div class="progress-bar" id="pagequalityResultsProgressBar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <h3><a href="#" class="stretched-link">Seitenqualität</a></h3>
+          
+          <div class="card-body">
+            <h3 class="card-title">Inhalt</h3>
+            <p class="card-text" id="pagequalityResultsComparisonTitleText"></p>
+            <p class="card-text" id="pagequalityResultsWordCount"></p>
+            <p class="card-text mb-0" id="pagequalityResultsDuplicateText"></p>
+          </div>
+
+          <div class="card-body">
+            <h3 class="card-title">Medien</h3>
+            <p class="card-text" id="pagequalityResultsMissingAlts"></p>
+          </div>
+        </div>
+
+        <div class="card mt-3">
+          <div class="progress" style="border-radius: 0;">
+            <div class="progress-bar" id="linksResultsProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" ></div>
+          </div>
+          <h3><a href="#" class="stretched-link">Verlinkung</a></h3>
+
+          <div class="card-body">
+            <h3 class="card-title">Interne Links</h3>
+            <p class="card-text" id="linksResultsInternalCount"></p>
+            <p class="card-text" id="linksResultsInternalLength"></p>
+            <p class="card-text" id="linksResultsInternalNoText"></p>
+            <p class="card-text mb-0" id="linksResultsInternalRepetitions"></p>
+          </div>
+      
+          <div class="card-body">
+            <h3 class="card-title">Externe Links</h3>
+            <p class="card-text" id="linksResultsExternalCount"></p>
+            <p class="card-text" id="linksResultsExternalLength"></p>
+            <p class="card-text" id="linksResultsExternalNoText"></p>
+            <p class="card-text" id="linksResultsExternalRepetitions"></p>
+          </div>
+
+        </div>
+      </div><!-- End Card Item -->
+
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+        <div class="card">
+          <div class="progress" style="border-radius: 0;">
+            <div class="progress-bar"  id="pagestructureResultsProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" ></div>
+          </div>
+          <h3><a href="#" class="stretched-link">Seitenstruktur</a></h3>
+          <div class="card-body">
+            <h3 class="card-title">Überschriften</h3>
+            <p class="card-text" id="pagestructureResultsH1Heading"></p>
+            <p class="card-text" id="pagestructureResultsStructure"></p>
+          </div>
+        </div>
+
+        <div class="card mt-3">
+          <div class="progress" style="border-radius: 0;">
+            <div class="progress-bar" role="progressbar" id="serverResultsProgressBar" aria-valuemin="0" aria-valuemax="100" ></div>
+          </div>
+          <h3>Server</h3>
+          
+          <div class="card-body">
+            <h3 class="card-title">HTTP Redirect</h3>
+            <p class="card-text" id="serverResultsRedirects"></p>
+            <p class="card-text mb-0" id="serverResultsRedirectingWWW"></p>
+          </div>
+      
+          <div class="card-body">
+            <h3 class="card-title">HTTP Header</h3>
+            <p class="card-text mb-0" id="serverResultsCompression"></p>
+          </div>
+      
+          <div class="card-body">
+            <h3 class="card-title">Performance</h3>
+            <p class="card-text" id="serverResultsResponseTime"></p>
+            <p class="card-text" id="serverResultsFileSize"></p>
+          </div>
+
+        </div>
+
+        <div class="card mt-3">
+          <div class="progress" style="border-radius: 0;">
+            <div class="progress-bar" id="externalFactorsResultsProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" ></div>
+          </div>
+          <h3><a href="#" class="stretched-link">Externe Faktoren</a></h3>
+          
+          <div class="card-body">
+            <h3 class="card-title">Blacklists</h3>
+            <p class="card-text mb-0" id="externalFactorsResultsBlacklist"></p>
+          </div>
+      
+          <div class="card-body">
+            <h3 class="card-title">Backlinks</h3>
+            <p class="card-text" id="externalFactorsResultsBacklinks"></p>
+          </div>
+
+        </div>
+      </div><!-- End Card Item -->
+
+    </div>
+
+  </div>
+
+</section><!-- /Services Section -->
+
+<!-- Featured Services Section -->
+<section id="featured-services" class="featured-services section">
+
+<div class="container">
+  <div class="row gy-4 justify-content-center" style="gap: 20px;">
+    <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="200" style="align-self: center; margin: 0;">
+      <div class="icon flex-shrink-0">
+        <svg width="200" height="200" viewBox="-25 -25 250 250" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">
+          <circle r="90" cx="100" cy="100" fill="transparent" stroke="#e0e0e0" stroke-width="16px" stroke-dasharray="565.48px" stroke-dashoffset="0"></circle>
+          <circle r="90" cx="100" cy="100" stroke="#0d6efd" stroke-width="16px" stroke-linecap="round" stroke-dashoffset="79px" fill="transparent" stroke-dasharray="565.48px"></circle>
+          <text x="73px" y="117px" fill="#0d6efd" font-size="52px" font-weight="bold" style="transform:rotate(90deg) translate(0px, -196px)">86</text>
+        </svg>
+      </div>
+      <div style="align-self: center;">
+        <h4 class="title">SERP Vorschau</h4>
+        <p class="description">SERP steht für <strong>S</strong>earch <strong>E</strong>ngine <strong>R</strong>esults <strong>P</strong>age und zeigt, wie Ihre Webseite in den Suchergebnissen erscheint.</p>
+        <a href="#" class="readmore stretched-link"><span>Learn More</span><i class="bi bi-arrow-right"></i></a>
+      </div>
+    </div><!-- End Service Item -->
+
+    <div class="col-lg-4 col-md-6 service-item d-flex flex-column" data-aos="fade-up" data-aos-delay="100" style="width: fit-content; align-self: center; margin: 0;">
+      <h4 class="title">Desktop Ansicht</h4>
+      <div class="serp-preview-container-desktop mb-5">
+        <div class="serp-preview-url">
+          https://mangools.com/free-seo-tools/serp-simulator
+        </div>
+        <div class="serp-preview-title">
+          Title gizfeifew gifwe bhiojke
+        </div>
+        <div class="serp-preview-description">
+          title will be cut after 600px description will be cut after 960px (desktop) or 680px (mobile) -> roughly 158 characters
+        </div>
+      </div>
+      <h4 class="title">Mobile Ansicht</h4>
+      <div class="serp-preview-container-mobile">
+        <div class="serp-preview-url">
+          https://mangools.com/free-seo-tools/serp-simulator
+        </div>
+        <div class="serp-preview-title">
+          Title gizfeifew gifwe bhiojke
+        </div>
+        <div class="serp-preview-description">
+          title will be cut after 600px description will be cut after 960px (desktop) or 680px (mobile) -> roughly 158 characters
+        </div>
+      </div>
+    </div>
+      <!-- End Service Item -->
+  </div>
+
+</div>
+
+</section><!-- /Featured Services Section -->
+
+<!-- Features Section -->
+<section id="features" class="features section">
+
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up">
+    <span>Optimierungsvorschläge</span>
+    <h2>Optimierungsvorschläge</h2>
+    <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+  </div><!-- End Section Title -->
+  <div class="alert alert-warning" role="alert" style="width: fit-content; margin-left: auto; margin-right: auto;">
+    <h5>Um Optimierungsvorschläge zu erhalten, upgraden Sie auf den Entwicklerplan.</h5>
+  </div>    
+
+</section><!-- /Features Section -->
+
+
+<!-- Pricing Section -->
+<section id="pricing" class="pricing section" style="padding-top: 0;">
+
+  <div class="container">
+
+    <div class="row gy-4 justify-content-center">
+
+      <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
+        <div class="pricing-item">
+            <h3>Kostenloser Plan</h3>
+          <h4><sup>€</sup>0<span> / Monat</span></h4>
+          <ul>
+            <li><i class="bi bi-check"></i> Grundlegende SEO-Analysefunktionen</li>
+            <li><i class="bi bi-check"></i> Analyse von Meta-Tags und technischen SEO-Aspekten</li>
+            <li><i class="bi bi-check"></i> Ladezeiten- und Performance-Berichte</li>
+            <li class="na"><i class="bi bi-x"></i> KI-basierte Textanalyse und Keyword-Bewertung</li>
+            <li class="na"><i class="bi bi-x"></i> Automatische Optimierungsvorschläge</li>
+          </ul>
+          <a href="#" class="buy-btn">Dein aktueller Plan</a>
+        </div>
+      </div><!-- End Pricing Item -->
+
+      <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
+        <div class="pricing-item">
+          <h3>Entwickler Plan</h3>
+          <h4><sup>€</sup>7<span> / Monat</span></h4>
+          <ul>
+            <li><i class="bi bi-check"></i> Zugriff auf alle SEO-Analysefunktionen</li>
+            <li><i class="bi bi-check"></i> Analyse von Meta-Tags und technischen SEO-Aspekten</li>
+            <li><i class="bi bi-check"></i> Ladezeiten- und Performance-Berichte</li>
+            <li><i class="bi bi-check"></i> KI-basierte Textanalyse und Keyword-Bewertung</li>
+            <li><i class="bi bi-check"></i> Automatische Optimierungsvorschläge</li>
+          </ul>
+          <a href="#" class="buy-btn">Bald verfügbar</a>
+        </div>
+      </div><!-- End Pricing Item -->
+
+    </div>
+
+  </div>
+
+</section><!-- /Pricing Section -->
+
+
+<!-- Faq Section -->
+<section id="faq" class="faq section">
+
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up">
+    <span>Frequently Asked Questions</span>
+    <h2>Frequently Asked Questions</h2>
+    <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+  </div><!-- End Section Title -->
+
+  <div class="container">
+
+    <div class="row justify-content-center">
+
+      <div class="col-lg-10">
+
+        <div class="faq-container">
+
+          <div class="faq-item faq-active" data-aos="fade-up" data-aos-delay="200">
+            <i class="faq-icon bi bi-question-circle"></i>
+            <h3>Non consectetur a erat nam at lectus urna duis?</h3>
+            <div class="faq-content">
+              <p>Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id volutpat lacus laoreet non curabitur gravida. Venenatis lectus magna fringilla urna porttitor rhoncus dolor purus non.</p>
+            </div>
+            <i class="faq-toggle bi bi-chevron-right"></i>
+          </div><!-- End Faq item-->
+
+          <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
+            <i class="faq-icon bi bi-question-circle"></i>
+            <h3>Feugiat scelerisque varius morbi enim nunc faucibus a pellentesque?</h3>
+            <div class="faq-content">
+              <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
+            </div>
+            <i class="faq-toggle bi bi-chevron-right"></i>
+          </div><!-- End Faq item-->
+
+          <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
+            <i class="faq-icon bi bi-question-circle"></i>
+            <h3>Dolor sit amet consectetur adipiscing elit pellentesque?</h3>
+            <div class="faq-content">
+              <p>Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus pulvinar elementum integer enim. Sem nulla pharetra diam sit amet nisl suscipit. Rutrum tellus pellentesque eu tincidunt. Lectus urna duis convallis convallis tellus. Urna molestie at elementum eu facilisis sed odio morbi quis</p>
+            </div>
+            <i class="faq-toggle bi bi-chevron-right"></i>
+          </div><!-- End Faq item-->
+
+          <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
+            <i class="faq-icon bi bi-question-circle"></i>
+            <h3>Ac odio tempor orci dapibus. Aliquam eleifend mi in nulla?</h3>
+            <div class="faq-content">
+              <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
+            </div>
+            <i class="faq-toggle bi bi-chevron-right"></i>
+          </div><!-- End Faq item-->
+
+          <div class="faq-item" data-aos="fade-up" data-aos-delay="600">
+            <i class="faq-icon bi bi-question-circle"></i>
+            <h3>Tempus quam pellentesque nec nam aliquam sem et tortor consequat?</h3>
+            <div class="faq-content">
+              <p>Molestie a iaculis at erat pellentesque adipiscing commodo. Dignissim suspendisse in est ante in. Nunc vel risus commodo viverra maecenas accumsan. Sit amet nisl suscipit adipiscing bibendum est. Purus gravida quis blandit turpis cursus in</p>
+            </div>
+            <i class="faq-toggle bi bi-chevron-right"></i>
+          </div><!-- End Faq item-->
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section><!-- /Faq Section -->
+
+{% endblock %}

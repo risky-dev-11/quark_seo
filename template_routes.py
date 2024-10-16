@@ -17,9 +17,6 @@ def contact():
 @template_routes.route('/get-a-quote')
 def get_a_quote():
     return render_template('get-a-quote.html')
-@template_routes.route('/')
-def index():
-    return render_template('index.html')
 @template_routes.route('/pricing')
 def pricing():
     return render_template('pricing.html')

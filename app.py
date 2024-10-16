@@ -1,22 +1,45 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask
 from flask_cors import CORS
-from urllib.parse import urlparse
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_login import LoginManager
+from flask_bcrypt import Bcrypt
 
-app = Flask(__name__)
+db = SQLAlchemy()
 
-# import the api & template endpoints
-from api import api
-from template_routes import template_routes
+def create_app():
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 
-# add the api & template endpoints to the app
-app.register_blueprint(api)
-app.register_blueprint(template_routes)
+    app.secret_key  = 'super secret key'
 
-# enable CORS
-CORS(app)
+    db.init_app(app)
 
-if __name__ == "__main__":
-    #from waitress import serve
-    #serve(app, host="0.0.0.0", port=5000) # for prod
-    app.run(debug=True) #for development
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    migrate = Migrate(app, db)
+
+    from models import User
+    @login_manager.user_loader
+    def load_user(uuid):
+        return User.query.get(uuid)
+
+    bycrypt = Bcrypt(app)
+
+    from routes import register_routes
+    register_routes(app, db, bycrypt)
+
+    # import the api & template endpoints
+    from api import api
+    from template_routes import template_routes
+
+    # add the api & template endpoints to the app
+    app.register_blueprint(api)
+    app.register_blueprint(template_routes)
+
+    # enable CORS
+    #CORS(app)
+
+    return app
+
    
