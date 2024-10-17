@@ -44,4 +44,8 @@ def register_routes(app, db, bcrypt):
     @login_required
     def secret():
         return "This is a secret page"
+
+    @app.login_manager.unauthorized_handler
+    def unauthorized_callback():
+        return redirect(url_for('unauthorized'))
  
