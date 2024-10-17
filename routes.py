@@ -13,10 +13,12 @@ def register_routes(app, db, bcrypt):
         if request.method == 'GET':
             return render_template('signup.html')
         elif request.method == 'POST':
+            first_name = request.form['first_name']
+            last_name = request.form['last_name']
             email = request.form['email']
             password = request.form['password']
             hashed_password = bcrypt.generate_password_hash(password)
-            user = User(email=email, password=hashed_password)
+            user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password)
             db.session.add(user)
             db.session.commit()
             return redirect(url_for('index')) #maybe redirect elsewhere - or determe if redirect to results page!!!!!
@@ -47,5 +49,5 @@ def register_routes(app, db, bcrypt):
 
     @app.login_manager.unauthorized_handler
     def unauthorized_callback():
-        return redirect(url_for('unauthorized'))
+        return render_template('unauthorized.html')
  

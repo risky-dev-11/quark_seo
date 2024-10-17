@@ -295,6 +295,7 @@ h6 {
 --------------------------------------------------------------*/
 /* Navmenu - Desktop */
 @media (min-width: 1200px) {
+  
   .navmenu {
     padding: 0;
   }
@@ -1922,32 +1923,36 @@ section,
 /*--------------------------------------------------------------
 # Get A Quote Section
 --------------------------------------------------------------*/
-.get-a-quote .quote-bg {
+.login-signup-section .quote-bg {
   min-height: 500px;
   background-size: cover;
   background-position: center;
 }
 
-.get-a-quote .php-email-form {
+.login-signup-section .login-signup-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background: color-mix(in srgb, var(--default-color), transparent 97%);
   padding: 30px;
   height: 100%;
 }
 
 @media (max-width: 575px) {
-  .get-a-quote .php-email-form {
+  .login-signup-section .login-signup-form {
     padding: 20px;
   }
 }
 
-.get-a-quote .php-email-form h3 {
-  font-size: 14px;
+.login-signup-section .login-signup-form h3 {
+  font-size: 30px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-.get-a-quote .php-email-form h4 {
+.login-signup-section .login-signup-form h4 {
   font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
@@ -1955,14 +1960,15 @@ section,
   margin: 20px 0 0 0;
 }
 
-.get-a-quote .php-email-form p {
+.login-signup-section .login-signup-form p {
   font-size: 14px;
   margin-bottom: 20px;
 }
 
-.get-a-quote .php-email-form input[type=text],
-.get-a-quote .php-email-form input[type=email],
-.get-a-quote .php-email-form textarea {
+.login-signup-section .login-signup-form input[type=text],
+.login-signup-section .login-signup-form input[type=email],
+.login-signup-section .login-signup-form input[type=password],
+.login-signup-section .login-signup-form textarea {
   font-size: 14px;
   padding: 10px 15px;
   box-shadow: none;
@@ -1972,19 +1978,21 @@ section,
   border-color: color-mix(in srgb, var(--default-color), transparent 80%);
 }
 
-.get-a-quote .php-email-form input[type=text]:focus,
-.get-a-quote .php-email-form input[type=email]:focus,
-.get-a-quote .php-email-form textarea:focus {
+.login-signup-section .login-signup-form input[type=text]:focus,
+.login-signup-section .login-signup-form input[type=email]:focus,
+.login-signup-section .login-signup-form input[type=password]:focus,
+.login-signup-section .login-signup-form textarea:focus {
   border-color: var(--accent-color);
 }
 
-.get-a-quote .php-email-form input[type=text]::placeholder,
-.get-a-quote .php-email-form input[type=email]::placeholder,
-.get-a-quote .php-email-form textarea::placeholder {
+.login-signup-section .login-signup-form input[type=text]::placeholder,
+.login-signup-section .login-signup-form input[type=email]::placeholder,
+.login-signup-section .login-signup-form input[type=password]::placeholder,
+.login-signup-section .login-signup-form textarea::placeholder {
   color: color-mix(in srgb, var(--default-color), transparent 70%);
 }
 
-.get-a-quote .php-email-form button[type=submit] {
+.login-signup-section .login-signup-form button[type=submit] {
   color: var(--contrast-color);
   background: var(--accent-color);
   border: 0;
@@ -1993,7 +2001,7 @@ section,
   border-radius: 4px;
 }
 
-.get-a-quote .php-email-form button[type=submit]:hover {
+.login-signup-section .login-signup-form button[type=submit]:hover {
   background: color-mix(in srgb, var(--accent-color), transparent 20%);
 }
 

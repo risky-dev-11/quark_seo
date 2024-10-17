@@ -12,7 +12,7 @@ def init_db():
         
         # Create an example user
         hashed_password = bcrypt.generate_password_hash('Timer640').decode('utf-8')
-        example_user = User(email='n11werthmann@gmail.com', password=hashed_password, role='user')
+        example_user = User(first_name='Niklas', last_name='Werthmann', email='n11werthmann@gmail.com', password=hashed_password, role='user')
         db.session.add(example_user)
         db.session.commit()
         print("Example user created.")

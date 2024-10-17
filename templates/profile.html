@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Anmelden{% endblock %}
+{% block content %}
+
+ <!-- Page Title -->
+ <div class="page-title dark-background" data-aos="fade" style="background-image: url(../static/assets/img/page-title-bg.jpg);">
+    <div class="container position-relative">
+      <h1>Hey, {{ current_user.first_name }}!</h1>
+    <p>Willkommen auf Ihrem Profil! Hier können Sie Ihre persönlichen Informationen einsehen und bearbeiten.</p>
+    </div>
+  </div><!-- End Page Title -->
+
+  <!-- ======= Profile Section ======= -->
+   <section>
+      <div class="container"></div>
+        <div class="row">
+          <div class="col-md-6">
+            <h2>Persönliche Informationen</h2>
+            <ul>
+              <li><strong>Name:</strong> {{ current_user.first_name }} {{ current_user.last_name }}</li>
+              <li><strong>Email:</strong> {{ current_user.email }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+   </section>
+{% endblock %}

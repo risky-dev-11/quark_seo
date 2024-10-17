@@ -18,15 +18,43 @@
     </div>
 </div><!-- End Page Title -->
 
-<section >
+<section id="login-signup-section" class="login-signup-section section">
 
-    <h1>Login Page</h1>
-    <form action="{{ url_for('login') }}" method="post">
-        <input type="text" name="email" placeholder="Email" required="required"><br>
-        <input type="password" name="password" placeholder="Password" required="required"><br>
-        <input type="submit" value="Login">
-    </form>
+  <div class="container">
 
-</section>
+    <div class="row g-0" data-aos="fade-up" data-aos-delay="100">
+
+      <div class="col-lg-5 quote-bg" style="background-image: url(../static/assets/img/quote-bg.jpg);"></div>
+
+      <div class="col-lg-7" data-aos="fade-up" data-aos-delay="200">
+        <form action="{{ url_for('login') }}" method="post" class="login-signup-form">
+          <h3>Anmelden</h3>
+          <p>Melde dich mit deiner Email und deinem Passwort an</p>
+
+          <div class="row gy-4" style="flex-direction: column; align-items: center;">
+            <div class="col-md-6" style="width: 80%;">
+              <input type="text" name="email" placeholder="Email" required="required" style="width: 100%;">
+            </div>
+
+            <div class="col-md-6" style="width: 80%;">
+              <input type="password" name="password" placeholder="Password" required="required" style="width: 100%;">
+            </div>
+            
+            <div class="col-12" style="justify-content: center; display: flex;">
+              <button type="submit" value="Login">Anmelden</button>
+            </div>
+
+            <div class="col-lg-12">
+              <h4>Du hast noch kein Konto? <a href="{{ url_for('signup') }}">Jetzt registrieren</a></h4>
+            </div>
+          </div>
+        </form>
+      </div><!-- End Quote Form -->
+
+    </div>
+
+  </div>
+
+</section><!-- Login Section -->
 
 {% endblock %}

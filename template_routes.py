@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, redirect, render_template, url_for
+from flask_login import login_required
 
 template_routes = Blueprint('template_routes_blueprint', __name__)
 
@@ -8,6 +9,10 @@ def show_results(url):
 @template_routes.route('/seo/analyze/<path:url>', methods=['GET'])
 def show_loading_page(url):
     return render_template("seo-analytics-loading-page.html")
+@template_routes.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html')
 @template_routes.route('/about')
 def about():
     return render_template('about.html')
@@ -26,5 +31,3 @@ def service_details():
 @template_routes.route('/starter-page')
 def starter_page():
     return render_template('starter-page.html')
-
-
