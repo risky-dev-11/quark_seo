@@ -15,3 +15,15 @@ class User(db.Model, UserMixin):
     
     def get_id(self):
         return (self.uuid)
+
+class AnalyzedWebsite(db.Model, UserMixin):
+    __tablename__ = 'analyzed_websites'
+    uuid = db.Column(db.Integer, primary_key=True)
+    url = db.Column(db.String)
+    results = db.Column(db.JSON)
+
+    def __repr__(self):
+        return f'<AnalyzedWebsite {self.website}>'
+
+    def get_id(self):
+        return (self.uuid)

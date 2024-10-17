@@ -26,11 +26,9 @@
             // Get the URL input value
             let inputUrl = document.getElementById('url-input').value;
             // bring the URL to the correct format
-            if (!inputUrl.startsWith('http://') && !inputUrl.startsWith('https://')) {
-              inputUrl = 'http://' + inputUrl;
-            }
-            if (!inputUrl.endsWith('/')) {
-              inputUrl += '/';
+            inputUrl = inputUrl.trim().replace(/^(https?:\/\/)?(www\.)?/, '');
+            if (inputUrl.endsWith('/')) {
+              inputUrl = inputUrl.slice(0, -1);
             }
             // open the loading page
             if (inputUrl) {

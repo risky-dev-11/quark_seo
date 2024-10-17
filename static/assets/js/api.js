@@ -6,27 +6,47 @@ pageTitle.innerHTML += url;
 });
 
 // the awaits can currently not be removed, because the used db crashes when too many requests are made at the same time - this is a workaround!
-window.onload=async function(){
-    await fetchOverallResults();
-    await fetchGeneralResults();
-    await fetchMetadataResults();
-    await fetchPageQualityResults();
-    await fetchPageStructureResults();
-    await fetchLinksResults();
-    await fetchServerResults();
-    await fetchExternalFactorsResults();
+window.onload = async function(){
+    await fetchAndApplyResults();
+}
+async function fetchAndApplyResults() {
+  try {
+      const response = await fetch(`/get_results/${url}`);
+      if (!response.ok) {
+        displayAPIError();
+      }else{
+        const data = await response.json();
+
+        applyOverallResults(data.overall_results[0]);
+        applyGeneralResults(data.general_results[0]);
+        applyMetadataResults(data.metadata_results[0]);
+        applyPageQualityResults(data.pagequality_results[0]);
+        applyPageStructureResults(data.pagestructure_results[0]);
+        applyLinksResults(data.links_results[0]);
+        applyServerResults(data.server_results[0]);
+        applyExternalFactorsResults(data.externalfactors_results[0]);
+      }
+    } catch (error) {
+      displayAPIError();
+    }
 }
 
-async function fetchOverallResults() {
-    try {
-        const response = await fetch(`/overall_results/${url}`);
-        if (!response.ok) {
-        throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        
-        const result = data[0];
+function displayAPIError() {
+  document.getElementById('seo-analyse-container').innerHTML = 
+  `<section id="features" class="features section">
+    <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <span>Fehler</span>
+        <h2>Fehler</h2>
+        <p><p>Es ist ein Fehler bei der Verarbeitung Ihrer Anfrage aufgetreten. Bitte versuchen Sie es erneut.</p></p>
+      </div>
+      <!-- End Section Title -->   
+  </section>
+  <!-- /Features Section -->`;
+}
 
+async function applyOverallResults(result) {
+    try {
         // Update overall rating SVG and text
         document.querySelector("#overallRatingValue").textContent = result.overall_rating_value;
         document.querySelector("#overallRatingCircle").setAttribute("stroke-dashoffset", `${(100 - result.overall_rating_value) * 5.65}`); // Adjust stroke based on value
@@ -76,23 +96,14 @@ async function fetchOverallResults() {
             document.querySelector("#improvementCountValue").style.fill = improvementColor;
 
     } catch (error) {
-        console.error('Error fetching the overall results:', error);
+        console.error('Error in overall results', error);
     }
 }
 
 
 
-async function fetchGeneralResults() {
+async function applyGeneralResults(result) {
     try {
-      const response = await fetch(`/general_results/${url}`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      
-      // Assuming the data returned is in the form [{ website_response_time, file_size, word_count, media_count, link_count }]
-      const result = data[0];
-
       // Populate HTML elements with the data
       document.getElementById('generalResultsResponseTimeTitle').innerHTML += ` <span style="color: #0d42ff;">${result.website_response_time}</span>`;
       document.getElementById('generalResultsResponseTimeText').innerText = result.website_response_time_text;
@@ -111,20 +122,12 @@ async function fetchGeneralResults() {
 
       
     } catch (error) {
-      console.error('Error fetching the general results:', error);
+      console.error('Error in general results:', error);
     }
   }
 
-async function fetchMetadataResults() {
+async function applyMetadataResults(result) {
     try {
-        const response = await fetch(`/metadata_results/${url}`);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        
-        const result = data[0];
-        
         // Update the card contents dynamically
         document.querySelector("#metadataResultsTitleMissing").innerHTML = `
         <i class="bi ${result.title[0].missing_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
@@ -209,20 +212,12 @@ async function fetchMetadataResults() {
         progressBar.setAttribute('aria-valuenow', result.points);
 
         } catch (error) {
-            console.error('Error fetching the metadata results:', error);
+            console.error('Error in metadata results:', error);
         }
     }
 
-async function fetchPageQualityResults() {
+async function applyPageQualityResults(result) {
     try {
-      const response = await fetch(`/pagequality_results/${url}`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      
-      const result = data[0];
-
       // Update the content section
       document.querySelector("#pagequalityResultsComparisonTitleText").innerHTML = `
         <i class="bi ${result.content[0].comparison_title_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
@@ -249,20 +244,12 @@ async function fetchPageQualityResults() {
       progressBar.setAttribute('aria-valuenow', result.points);
       
     } catch (error) {
-      console.error('Error fetching the page quality results:', error);
+      console.error('Error in page quality results:', error);
     }
   }
 
-async function fetchPageStructureResults() {
+async function applyPageStructureResults(result) {
     try {
-        const response = await fetch(`/pagestructure_results/${url}`);
-        if (!response.ok) {
-        throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        
-        const result = data[0];
-
         // Update headings section
         document.querySelector("#pagestructureResultsH1Heading").innerHTML = `
         <i class="bi ${result.headings[0].h1_heading_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
@@ -279,20 +266,12 @@ async function fetchPageStructureResults() {
         progressBar.setAttribute('aria-valuenow', result.points);
         
     } catch (error) {
-        console.error('Error fetching the page structure results:', error);
+        console.error('Error in page structure results:', error);
     }
 }
 
-async function fetchLinksResults() {
+async function applyLinksResults(result) {
     try {
-      const response = await fetch(`/links_results/${url}`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      
-      const result = data[0];
-
       // Update internal links section
       document.querySelector("#linksResultsInternalCount").innerHTML = `
         <i class="bi bi-check-circle" style="color: green;"></i> Anzahl der internen Links: ${result.links_internal[0].count}
@@ -333,20 +312,12 @@ async function fetchLinksResults() {
       progressBar.setAttribute('aria-valuenow', result.points);
       
     } catch (error) {
-      console.error('Error fetching the links results:', error);
+      console.error('Error in links results:', error);
     }
   }
 
-async function fetchServerResults() {
+async function applyServerResults(result) {
     try {
-        const response = await fetch(`/server_results/${url}`);
-        if (!response.ok) {
-        throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        
-        const result = data[0];
-
         // Update HTTP redirect section
         document.querySelector("#serverResultsRedirects").innerHTML = `
         <i class="bi ${result.http_redirect[0].site_redirects_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
@@ -377,20 +348,12 @@ async function fetchServerResults() {
         progressBar.setAttribute('aria-valuenow', result.points);
         
     } catch (error) {
-        console.error('Error fetching the server results:', error);
+        console.error('Error in server results:', error);
     }
 }
 
-async function fetchExternalFactorsResults() {
+async function applyExternalFactorsResults(result) {
     try {
-      const response = await fetch(`/externalfactors_results/${url}`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      
-      const result = data[0];
-
       // Update blacklists section
       document.querySelector("#externalFactorsResultsBlacklist").innerHTML = `
         <i class="bi ${result.blacklists[0].is_blacklist_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
@@ -408,6 +371,6 @@ async function fetchExternalFactorsResults() {
       progressBar.setAttribute('aria-valuenow', result.points);
       
     } catch (error) {
-      console.error('Error fetching the external factors results:', error);
+      console.error('Error in external factors results:', error);
     }
   }

@@ -29,16 +29,14 @@ def create_app():
     from routes import register_routes
     register_routes(app, db, bycrypt)
 
-    # import the api & template endpoints
-    from api import api
+    # import the template endpoints
     from template_routes import template_routes
 
-    # add the api & template endpoints to the app
-    app.register_blueprint(api)
+    # add the template endpoints to the app
     app.register_blueprint(template_routes)
 
     # enable CORS
-    #CORS(app)
+    CORS(app)
 
     return app
 
