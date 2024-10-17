@@ -95,9 +95,11 @@
   window.addEventListener('load', aosInit);
 
   /**
-   * Initiate Pure Counter
+   * Initiate Pure Counter - this is now done in the html file, 
+   * because otherwise the purecounter would get called on every page
+   * (the base uses this file too)
    */
-  new PureCounter();
+
 
   /**
    * Initiate glightbox

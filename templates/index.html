@@ -45,11 +45,23 @@
 
           <div class="col-lg-3 col-6">
             <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="15451" data-purecounter-duration="1" class="purecounter">15451</span>
+              <span id="analyzed-websites-count" data-purecounter-start="0" data-purecounter-end="0" data-purecounter-duration="1" class="purecounter">0</span>
               <p>analysierte Webseiten</p>
             </div>
           </div><!-- End Stats Item -->
-
+          <script>
+            document.addEventListener('DOMContentLoaded', async () => {
+              await fetch('/api/count_of_analyzed_websites')
+                .then(response => response.json())
+                .then(data => {
+                  const countElement = document.getElementById('analyzed-websites-count');
+                  countElement.setAttribute('data-purecounter-end', data.count);
+                  countElement.textContent = data.count;
+                  new PureCounter();
+                })
+                .catch(error => console.error('Error fetching analyzed websites count:', error));
+            });
+          </script>
           <div class="col-lg-3 col-6">
             <div class="stats-item text-center w-100 h-100">
               <span data-purecounter-start="0" data-purecounter-end="1233" data-purecounter-duration="1" class="purecounter">1233</span>

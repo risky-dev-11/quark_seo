@@ -7,6 +7,10 @@ query = Query()
 
 api = Blueprint('api_blueprint', __name__)
 
+@api.route('/api/count_of_analyzed_websites', methods=['GET'])
+def count_of_analyzed_websites():
+    return jsonify({"count": len(db.tables())}), 200
+
 @api.route('/api/analyze/<path:url>', methods=['GET'])
 def analyze_url(url):
     table = db.table(url)
