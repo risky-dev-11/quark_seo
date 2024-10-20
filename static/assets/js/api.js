@@ -146,9 +146,7 @@ async function applyMetadataResults(result) {
         }
         else
         {
-          document.querySelector("#metadataResultsMetaTitle").innerHTML = `
-          <i class="bi bi-check-circle" style="color: green;"></i> ${result.title[0].text}
-          `;
+          document.querySelector("#metadataResultsMetaTitle").innerHTML = result.title[0].text;
           document.querySelector("#metadataResultsDomainInTitle").innerHTML = `
           <i class="bi ${result.title[0].domain_in_title_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
           style="color: ${result.title[0].domain_in_title_bool ? 'green' : 'red'};"></i> ${result.title[0].domain_in_title_text}
@@ -188,15 +186,9 @@ async function applyMetadataResults(result) {
         }
 
         // Update language
-        document.querySelector("#metadataResultsMetatagLanguage").innerHTML = `
-        <i class="bi bi-check-circle" style="color: green;"></i> Metatag Language: ${result.language[0].metatag_language}
-        `;
-        document.querySelector("#metadataResultsTextLanguage").innerHTML = `
-        <i class="bi bi-check-circle" style="color: green;"></i> Text Language: ${result.language[0].text_language}
-        `;
-        document.querySelector("#metadataResultsServerLocation").innerHTML = `
-        <i class="bi bi-check-circle" style="color: green;"></i> Server Location: ${result.language[0].server_location}
-        `;
+        document.querySelector("#metadataResultsMetatagLanguage").innerHTML = `Sprache laut Metatag: ${result.language[0].metatag_language}`;
+        document.querySelector("#metadataResultsTextLanguage").innerHTML = `Im Text erkannte Sprache: ${result.language[0].text_language}`;
+        document.querySelector("#metadataResultsServerLocation").innerHTML = `Serverstandort: ${result.language[0].server_location}`;
         document.querySelector("#metadataResultsLanguageMatch").innerHTML = `
         <i class="bi bi-check-circle" style="color: green;"></i> ${result.language[0].language_comment}
         `;
