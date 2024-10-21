@@ -51,10 +51,13 @@ def register_routes(app, db, bcrypt):
     def count_of_analyzed_websites():
         count = db.session.query(AnalyzedWebsite).count()
         return jsonify({"count": count}), 200
-
+    
     @app.route('/api/analyze/<path:url>', methods=['GET'])
     def analyze_url(url):
-        analyze_website(url, db)
+        try: 
+            analyze_website(url, db)
+        except Exception as e:
+            return jsonify({"error": str(e)}), 400
         return jsonify({"message": "Website successfully analyzed"}), 200
 
     # Endpoint for retrieving the results

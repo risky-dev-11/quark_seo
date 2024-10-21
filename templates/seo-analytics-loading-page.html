@@ -34,16 +34,26 @@
         fetch(`/api/analyze/${url}`, { 
             method: 'GET',
             headers: {
-            'Accept': 'application/json'
+                'Accept': 'application/json'
             }
         })
-            .then(response => response.json())
-            .then(data => {
-                window.location.href = `/results/${url}`;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        .then(response => {
+            if (response.status === 200) {
+                return response.json().then(data => {
+                    window.location.href = `/results/${url}`; 
+                });
+            } else {
+                return response.json().then(data => {
+                    alert(data.error || 'An error occurred');
+                    window.close();
+                });
+            }
+        })
+        .catch(error => {
+            console.log('Error:', error);
+            alert('An error occurred while analyzing the website.');
+            window.close();
+        });
     </script>
 </body>
 </html>

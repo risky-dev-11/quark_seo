@@ -7,7 +7,11 @@ import socket
 
 def analyze_website(url, db):
 
-    response = requests.get(url if url.startswith(('http://', 'https://')) else 'http://' + url)
+    try:
+        response = requests.get(url if url.startswith(('http://', 'https://')) else 'http://' + url)
+    except Exception:
+        raise requests.exceptions.RequestException('Unser Server konnte die Webseite nicht erreichen. Bitte überprüfen Sie die URL und versuchen Sie es erneut.')
+    
     soup = BeautifulSoup(response.text, 'html.parser')
 
     # General results
@@ -39,9 +43,14 @@ def analyze_website(url, db):
     text_language = langdetect.detect(soup.get_text())
 
     # Get the IP address of the URL
-    ip_address = socket.gethostbyname(url)'
+    
+    domain = url.split('/')[2] if '//' in url else url.split('/')[0]
+    ip_address = socket.gethostbyname(domain)
     # Get the server location using the IP address
-    server_location = requests.get(f'http://ip-api.com/json/{ip_address}').json().get('country', 'Unknown')
+    try:
+        server_location = requests.get(f'http://ip-api.com/json/{ip_address}').json().get('country', 'Unknown')
+    except Exception:
+        server_location = 'Unbekannt'
     
     language_matching_bool = metatag_language and text_language and text_language in metatag_language
 
@@ -83,21 +92,19 @@ def analyze_website(url, db):
     linktext_repetitions_external_bool = len(link_texts_external) != len(set(link_texts_external))
 
     # server results - http redirect
-    site_redirects_bool = response.history == []
-    redirecting_www_bool = response.history == []
+    site_redirects_bool = len(response.history) > 0
+    
+    www_url = (url if url.startswith(('http://', 'https://')) else 'http://' + url).replace('http://', 'http://www.').replace('https://', 'https://www.')
+    try:
+        response_with_www = requests.get(www_url)
+        redirecting_www_bool = response.status_code == 200 and response_with_www.status_code == 200
+    except Exception:
+        redirecting_www_bool = False
+    
 
     # server results - http header
     compression = response.headers.get('Content-Encoding')
-
-    # server results - performance
-    performance_website_response_time = website_response_time # use the same value as in general results
-
-    # externalfactors results - blacklists
-    is_blacklist_bool = False
-    backlinks_bool = False
-
-    
-
+    compression_bool = compression is not None
 
     analysis_results = AnalyzedWebsite(url=url, results=
         {
@@ -179,7 +186,7 @@ def analyze_website(url, db):
         'links_results': [{
             'links_internal': [{
                 'count': link_results_internal_link_count,                
-                'length_linktext_bool': not length_linktext_internal_bool, 
+                'length_linktext_bool': length_linktext_internal_bool, 
                 'length_linktext_text': get_internal_length_linktext_text(length_linktext_internal_bool), 
                 'no_linktext_bool': no_linktext_count_internal_bool, 
                 'no_linktext_text': get_internal_no_linktext_text(no_linktext_count_internal_bool), 
@@ -188,7 +195,7 @@ def analyze_website(url, db):
             }],
             'links_external': [{
                 'count': link_results_external_link_count,
-                'length_linktext_bool': not length_linktext_external_bool, 
+                'length_linktext_bool': length_linktext_external_bool, 
                 'length_linktext_text': get_external_length_linktext_text(length_linktext_external_bool), 
                 'no_linktext_bool': no_linktext_count_external_bool, 
                 'no_linktext_text': get_external_no_linktext_text(no_linktext_count_external_bool), 
@@ -199,28 +206,18 @@ def analyze_website(url, db):
         }],
         'server_results': [{
             'http_redirect': [{
-                'site_redirects_bool': True, 
-                'site_redirects_text': "Die Seite leitet nicht auf eine andere Seite um.",
-                'redirecting_www_bool': "True",  
-                'redirecting_www_text': "Die Weiterleitung von Adressen mit und ohne www. ist korrekt konfiguriert.",
+                'site_redirects_bool': not site_redirects_bool, 
+                'site_redirects_text': get_site_redirects_text(site_redirects_bool),
+                'redirecting_www_bool': redirecting_www_bool,  
+                'redirecting_www_text': get_redirecting_www_text(redirecting_www_bool),
             }],
             'http_header': [{
-                'compression_bool': True, 
-                'compression_text': "Der Webserver nutzt GZip zur komprimierten Übertragung der Webseite.", 
+                'compression_bool': compression_bool, 
+                'compression_text': get_compression_text(compression, compression_bool),
             }],
             'performance': [{
-                'website_response_time_text': "Die Antwortzeit der Website ist mit 0,7s ausgezeichnet.",
-                'file_size_text': "Die Dateigröße der Website ist mit 65kb sehr gut.",
-            }],                        
-            "points": 100,
-        }],
-        'externalfactors_results': [{
-            'blacklists': [{
-                'is_blacklist_bool': True, 
-                'is_blacklist_text': 'Die Seite wird nicht als "nur für Erwachsene" eingestuft.', 
-            }],
-            'backlinks': [{
-                'text': "Es wurden keine Backlinks gefunden.",
+                'website_response_time_text': get_website_response_time_text(website_response_time),
+                'file_size_text': get_file_size_text(file_size),
             }],                        
             "points": 100,
         }],

@@ -135,16 +135,18 @@ def init_db():
                 }],                        
                 "points": 100,
             }],
-            'externalfactors_results': [{
-                'blacklists': [{
-                    'is_blacklist_text': 'Die Seite wird nicht als "nur für Erwachsene" eingestuft.', 
-                    'is_blacklist_bool': True, 
-                }],
-                'backlinks': [{
-                    'text': "Es wurden keine Backlinks gefunden.",
-                }],                        
-                "points": 100,
-            }]
+            'serp_preview': [{
+            'serp_mobile': [{
+                'url': 'http://lichess.org',
+                'title': "lichess.org • Kostenloses Online-Schach", 
+                'description': "Kostenloser Online-Schach-Server. Spiele jetzt auf einer übersichtlichen Benutzeroberfläche Schach! Keine Registrierung und keine Plugins erforderlich, komplett ohne Werbung. Spiele gegen den Computer, Freunde oder zufällige Gegner!", 
+            }],
+            'serp_desktop': [{
+                'url': 'http://lichess.org',
+                'title': "lichess.org • Kostenloses Online-Schach", 
+                'description': "Kostenloser Online-Schach-Server. Spiele jetzt auf einer übersichtlichen Benutzeroberfläche Schach! Keine Registrierung und keine Plugins erforderlich, komplett ohne Werbung. Spiele gegen den Computer, Freunde oder zufällige Gegner!", 
+            }],                        
+        }]
         })
         db.session.add(example_website)
         

@@ -57,11 +57,11 @@ def get_description_missing_text(description_missing_bool):
 
 def get_description_length_text(length_pixels):
     if length_pixels < 300:
-        return f"Die Beschreibung ist mit {length_pixels} Pixeln zu kurz! Eine gute Beschreibung sollte mindestens 300 Pixel (etwa 50 Zeichen) lang sein."
+        return f"Die Beschreibung ist mit {length_pixels} Pixeln zu kurz."
     elif 300 <= length_pixels <= 960:
-        return f"Die Länge der Beschreibung ist mit {length_pixels} Pixeln in Ordnung."
+        return f"Die Länge der Beschreibung ist mit {length_pixels} Pixeln optimal."
     else:
-        return f"Die Beschreibung ist mit {length_pixels} Pixeln zu lang! Maximale Länge sind 960 Pixel (etwa 160 Zeichen)."
+        return f"Die Beschreibung ist mit {length_pixels} Pixeln zu lang."
 
 def get_language_comment(metatag_language, text_language):
     if metatag_language and text_language:
@@ -130,3 +130,11 @@ def get_external_no_linktext_text(no_linktext_count_external):
 def get_external_linktext_repetitions_text(linktext_repetitions_external_bool):
     return "Einige der externen Linktexte wiederholen sich." if linktext_repetitions_external_bool else "Es gibt keine Wiederholungen bei den externen Linktexten."
 
+def get_site_redirects_text(site_redirects_bool):
+    return "Die Seite leitet auf eine andere Seite um." if site_redirects_bool else "Die Seite leitet nicht auf eine andere Seite um."
+
+def get_redirecting_www_text(redirecting_www_bool):
+    return "Die Weiterleitung von Adressen mit und ohne www. ist korrekt konfiguriert." if redirecting_www_bool else "Die Weiterleitung von Adressen mit und ohne www. ist nicht korrekt konfiguriert."
+
+def get_compression_text(compression, compression_bool):
+    return f"Der Webserver nutzt {compression} zur komprimierten Übertragung der Webseite." if compression_bool else "Der Webserver nutzt keine Komprimierung zur Übertragung der Webseite."

@@ -23,7 +23,6 @@ async function fetchAndApplyResults() {
         applyPageStructureResults(data.pagestructure_results[0]);
         applyLinksResults(data.links_results[0]);
         applyServerResults(data.server_results[0]);
-        applyExternalFactorsResults(data.externalfactors_results[0]);
         applySerpPreview(data.serp_preview[0]);	
       }
     } catch (error) {
@@ -353,31 +352,6 @@ function applyServerResults(result) {
       
   } catch (error) {
       console.error('Error in server results:', error);
-  }
-}
-
-function applyExternalFactorsResults(result) {
-  try {
-      // Update blacklists section
-      document.querySelector("#externalFactorsResultsBlacklist").insertAdjacentHTML('beforebegin', `
-      <i class="bi ${result.blacklists[0].is_blacklist_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-      style="color: ${result.blacklists[0].is_blacklist_bool ? 'green' : 'red'};"></i>
-      `);
-      document.querySelector("#externalFactorsResultsBlacklist").innerHTML = `${result.blacklists[0].is_blacklist_text}`;
-
-      // Update backlinks section
-      document.querySelector("#externalFactorsResultsBacklinks").insertAdjacentHTML('beforebegin', `
-      <i class="bi bi-check-circle" style="color: green;"></i>
-      `);
-      document.querySelector("#externalFactorsResultsBacklinks").innerHTML = `${result.backlinks[0].text}`;
-
-      // Update progress bar
-      let progressBar = document.getElementById('externalFactorsResultsProgressBar');
-      progressBar.style.width = `${result.points}%`;
-      progressBar.setAttribute('aria-valuenow', result.points);
-      
-  } catch (error) {
-      console.error('Error in external factors results:', error);
   }
 }
 
