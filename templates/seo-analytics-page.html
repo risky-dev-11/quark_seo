@@ -109,148 +109,174 @@
 </div>
 
 </section><!-- /About Section -->
-
-<!-- Services Section -->
 <section id="services" class="services section" style="padding-top: 30px;">
 
   <div class="container">
 
-    <div class="row gy-4">
+    <div class="row gy-4" style="justify-content: center;">
 
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-lg-8 col-md-6" data-aos="fade-up" data-aos-delay="100">
+
         <div class="card">
           <div class="progress" style="border-radius: 0;">
             <div class="progress-bar" id="metadataResultsProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
-          <h3><a href="#" class="stretched-link">Metaangaben</a></h3>
-      
-          <!-- Title Section -->
-          <div class="card-body">
-            <h3 class="card-title">Titel</h3>
-            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsTitleMissing"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text mb-2" id="metadataResultsMetaTitleNotFromAPI">Titel der Webseite:</p></div>
-            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsMetaTitle" style="font-style: italic; font-size: 0.8em;"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsDomainInTitle"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsTitleLength"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text mb-0" id="metadataResultsTitleRepetition"></p></div>
-          </div>
-      
-          <!-- Description Section -->
-          <div class="card-body">
-            <h3 class="card-title">Beschreibung</h3>
-            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsDescriptionMissing"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text mb-2" id="metadataResultsDescriptionHeaderNotFromAPI">Beschreibung der Webseite:</p></div>
-            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsDescriptionText" style="font-style: italic; font-size: 0.8em;"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text mb-0" id="metadataResultsDescriptionLength"></p></div>
-          </div>
-      
-          <!-- Language Section -->
-          <div class="card-body">
-            <h3 class="card-title">Sprache</h3>
-            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsMetatagLanguage"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsTextLanguage"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsServerLocation"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text mb-0" id="metadataResultsLanguageMatch"></p></div>
-          </div>
-      
-          <!-- Favicon Section -->
-          <div class="card-body">
-            <h3 class="card-title">Favicon</h3>
-            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsFaviconStatus"></p></div>
-          </div>
-        </div>
-      </div><!-- End Card Item -->
 
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-        <div class="card">
-          <div class="progress" style="border-radius: 0;">
-            <div class="progress-bar" id="pagequalityResultsProgressBar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-          <h3><a href="#" class="stretched-link">Seitenqualität</a></h3>
+          <h3><a href="#" >Metaangaben</a></h3> <!-- re-add class="stretched-link" -->
           
           <div class="card-body">
-            <h3 class="card-title">Inhalt</h3>
-            <div class="container-card-text-server-results"><p class="card-text" id="pagequalityResultsComparisonTitleText"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text" id="pagequalityResultsWordCount"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text mb-0" id="pagequalityResultsDuplicateText"></p></div>
+
+            <table>
+
+               <!-- Title Section -->
+              <tr><td class="td-title">Titel</td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="metadataResultsTitleMissing"></p></td><td class="container_optimization"><p class="card-text" id="metadataResultsTitleMissingOptimation"> bl bla blsabij </p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text mb-2" id="metadataResultsMetaTitleNotFromAPI">Titel der Webseite:</p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="metadataResultsMetaTitle" style="font-style: italic; font-size: 0.8em;"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="metadataResultsDomainInTitle"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="metadataResultsTitleLength"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="metadataResultsTitleRepetition"></p></td></tr>
+
+              <!-- Description Section -->
+              <tr><td class="td-title">Beschreibung</td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="metadataResultsDescriptionMissing"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text mb-2" id="metadataResultsDescriptionHeaderNotFromAPI">Beschreibung der Webseite:</p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="metadataResultsDescriptionText" style="font-style: italic; font-size: 0.8em;"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="metadataResultsDescriptionLength"></p></td></tr>
+
+              <!-- Language Section -->
+              <tr><td class="td-title">Sprache</td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="metadataResultsMetatagLanguage"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="metadataResultsTextLanguage"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="metadataResultsServerLocation"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="metadataResultsLanguageMatch"></p></td></tr>
+  
+              <!-- Favicon Section -->
+              <tr><td class="td-title">Favicon</td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="metadataResultsFaviconStatus"></p></td></tr>
+
+            </table>
+
           </div>
 
-          <div class="card-body">
-            <h3 class="card-title">Medien</h3>
-            <div class="container-card-text-server-results"><p class="card-text" id="pagequalityResultsMissingAlts"></p></div>
-          </div>
         </div>
+          
+
+        <div class="card">
+          <div class="progress" style="border-radius: 0;">
+            <div class="progress-bar" id="pagequalityResultsProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+
+          <h3><a href="#">Seitenqualität</a></h3> <!-- re-add class="stretched-link -->
+          
+          <div class="card-body">
+
+            <table>
+
+              <!-- Content Section -->
+              <tr><td class="td-title">Inhalt</td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="pagequalityResultsComparisonTitleText"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="pagequalityResultsWordCount"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text mb-0" id="pagequalityResultsDuplicateText"></p></td></tr>
+
+              <!-- Media Section -->
+              <tr><td class="td-title">Medien</td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="pagequalityResultsMissingAlts"></p></td></tr>
+
+            </table>
+
+          </div>
+          
+        </div>
+
+
 
         <div class="card mt-3">
           <div class="progress" style="border-radius: 0;">
-            <div class="progress-bar" id="linksResultsProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" ></div>
+            <div class="progress-bar" id="linksResultsProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
           <h3><a href="#" class="stretched-link">Verlinkung</a></h3>
-
+          
           <div class="card-body">
-            <h3 class="card-title">Interne Links</h3>
-            <div class="container-card-text-server-results"><p class="card-text" id="linksResultsInternalCount"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text" id="linksResultsInternalLength"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text" id="linksResultsInternalNoText"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text mb-0" id="linksResultsInternalRepetitions"></p></div>
-          </div>
-      
-          <div class="card-body">
-            <h3 class="card-title">Externe Links</h3>
-            <div class="container-card-text-server-results"><p class="card-text" id="linksResultsExternalCount"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text" id="linksResultsExternalLength"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text" id="linksResultsExternalNoText"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text" id="linksResultsExternalRepetitions"></p></div>
-          </div>
+            <table>
+              <!-- Internal Links Section -->
+              <tr><td class="td-title">Interne Links</td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="linksResultsInternalCount"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="linksResultsInternalLength"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="linksResultsInternalNoText"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text mb-0" id="linksResultsInternalRepetitions"></p></td></tr>
 
+              <!-- External Links Section -->
+              <tr><td class="td-title">Externe Links</td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="linksResultsExternalCount"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="linksResultsExternalLength"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="linksResultsExternalNoText"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="linksResultsExternalRepetitions"></p></td></tr>
+            </table>
+          </div>
         </div>
-      </div><!-- End Card Item -->
 
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+
+
         <div class="card">
           <div class="progress" style="border-radius: 0;">
-            <div class="progress-bar"  id="pagestructureResultsProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" ></div>
+            <div class="progress-bar" id="pagestructureResultsProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
+
           <h3><a href="#" class="stretched-link">Seitenstruktur</a></h3>
+          
           <div class="card-body">
-            <h3 class="card-title">Überschriften</h3>
-            <div class="container-card-text-server-results"><p class="card-text" id="pagestructureResultsH1Heading"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text" id="pagestructureResultsStructure"></p></div>
+
+            <table>
+
+              <!-- Headings Section -->
+              <tr><td class="td-title">Überschriften</td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="pagestructureResultsH1Heading"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="pagestructureResultsStructure"></p></td></tr>
+
+            </table>
+
           </div>
+          
         </div>
 
         <div class="card mt-3">
           <div class="progress" style="border-radius: 0;">
-            <div class="progress-bar" role="progressbar" id="serverResultsProgressBar" aria-valuemin="0" aria-valuemax="100" ></div>
+            <div class="progress-bar" id="serverResultsProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
-          <h3>Server</h3>
+
+          <h3><a href="#" class="stretched-link">Server</a></h3>
           
           <div class="card-body">
-            <h3 class="card-title">HTTP Redirect</h3>
-            <div class="container-card-text-server-results"><p class="card-text" id="serverResultsRedirects"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text mb-0" id="serverResultsRedirectingWWW"></p></div>
+
+            <table>
+
+              <!-- HTTP Redirect Section -->
+              <tr><td class="td-title">HTTP Redirect</td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="serverResultsRedirects"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text mb-0" id="serverResultsRedirectingWWW"></p></td></tr>
+
+              <!-- HTTP Header Section -->
+              <tr><td class="td-title">HTTP Header</td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text mb-0" id="serverResultsCompression"></p></td></tr>
+
+              <!-- Performance Section -->
+              <tr><td class="td-title">Performance</td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="serverResultsResponseTime"></p></td></tr>
+              <tr><td class="container_icon_and_text"><p class="card-text" id="serverResultsFileSize"></p></td></tr>
+
+            </table>
+
           </div>
-      
-          <div class="card-body">
-            <h3 class="card-title">HTTP Header</h3>
-            <div class="container-card-text-server-results"><p class="card-text mb-0" id="serverResultsCompression"></p></div>
-          </div>
-      
-          <div class="card-body">
-            <h3 class="card-title">Performance</h3>
-            <div class="container-card-text-server-results"><p class="card-text" id="serverResultsResponseTime"></p></div>
-            <div class="container-card-text-server-results"><p class="card-text" id="serverResultsFileSize"></p></div>
-          </div>
+          
         </div>
 
-      </div><!-- End Card Item -->
-
+      </div>
     </div>
 
   </div>
 
 </section><!-- /Services Section -->
-
 <!-- Featured Services Section -->
 <section id="featured-services" class="featured-services section">
 

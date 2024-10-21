@@ -1104,8 +1104,7 @@ section,
 
 .services .card h3 {
   font-weight: 700;
-  font-size: 18px;
-  margin-bottom: 5px;
+  font-size: 25px;
   padding: 10px 30px;
   text-transform: uppercase;
 }
@@ -2012,14 +2011,32 @@ section,
   /* Add your styles here */
 }
 
-.container-card-text-server-results{
+.container_icon_and_text{
   display: flex;
   flex-direction: row;
   gap: 0.5em;
-  padding: 0 30px;
 }
 
 /* overwrite padding of the card-text bootstrap styles*/
-.container-card-text-server-results .card-text{
+.container_icon_and_text .card-text{
   padding: 0 !important; 
+}
+
+.td-title {
+  word-wrap: break-word;
+  box-sizing: border-box;
+  margin-top: 0;
+  line-height: 1.2;
+  font-family: var(--heading-font);
+  color: var(--bs-card-title-color);
+  font-weight: 700;
+  font-size: 18px;
+  padding: 16px 30px 20px 30px;
+  text-transform: uppercase;
+}
+
+td {
+  padding: 10px 30px;
+  margin: 0;
+  vertical-align: top;
 }

@@ -46,11 +46,7 @@ def register_routes(app, db, bcrypt):
     @app.login_manager.unauthorized_handler
     def unauthorized_callback():
         return render_template('unauthorized.html')
-    
-    @app.route('/api/count_of_analyzed_websites', methods=['GET'])
-    def count_of_analyzed_websites():
-        count = db.session.query(AnalyzedWebsite).count()
-        return jsonify({"count": count}), 200
+
     
     @app.route('/api/analyze/<path:url>', methods=['GET'])
     def analyze_url(url):
