@@ -60,6 +60,7 @@ def init_db():
                     'metatag_language': "de-de", 
                     'text_language': "de", 
                     'server_location': "Deutschland",
+                    'language_comment_bool': True,
                     'language_comment': "Die Sprache des Texts entspricht der Sprache des Metatags.",
                 }],
                 'favicon': [{

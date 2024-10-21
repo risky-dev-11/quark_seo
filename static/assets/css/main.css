@@ -2011,3 +2011,15 @@ section,
 .starter-section {
   /* Add your styles here */
 }
+
+.container-card-text-server-results{
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+  padding: 0 30px;
+}
+
+/* overwrite padding of the card-text bootstrap styles*/
+.container-card-text-server-results .card-text{
+  padding: 0 !important; 
+}

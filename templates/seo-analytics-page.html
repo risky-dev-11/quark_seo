@@ -3,6 +3,9 @@
 {% block title %}Anmelden{% endblock %}
 {% block content %}
 
+<!-- Serp Preview CSS File -->
+<link href="../static/assets/css/serp-preview.css" rel="stylesheet">
+
 <!-- Page Title -->
 <div class="page-title dark-background" data-aos="fade" style="background-image: url(../static/assets/img/page-title-bg.jpg);">
   <div class="container position-relative">
@@ -124,38 +127,36 @@
           <!-- Title Section -->
           <div class="card-body">
             <h3 class="card-title">Titel</h3>
-            <p class="card-text" id="metadataResultsTitleMissing"></p>
-            <p class="card-text mb-2" id="metadataResultsMetaTitleNotFromAPI">Titel der Webseite:</p>
-            <p class="card-text" id="metadataResultsMetaTitle" style="font-style: italic; font-size: 0.8em;"></p>
-            <p class="card-text" id="metadataResultsDomainInTitle"></p>
-            <p class="card-text" id="metadataResultsTitleLength"></p>
-            <p class="card-text mb-0" id="metadataResultsTitleRepetition"></p>
-            
+            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsTitleMissing"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text mb-2" id="metadataResultsMetaTitleNotFromAPI">Titel der Webseite:</p></div>
+            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsMetaTitle" style="font-style: italic; font-size: 0.8em;"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsDomainInTitle"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsTitleLength"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text mb-0" id="metadataResultsTitleRepetition"></p></div>
           </div>
       
           <!-- Description Section -->
           <div class="card-body">
             <h3 class="card-title">Beschreibung</h3>
-            <p class="card-text" id="metadataResultsDescriptionMissing"></p>
-            <p class="card-text mb-2" id="metadataResultsDescriptionHeaderNotFromAPI">Beschreibung der Webseite:</p>
-            <p class="card-text" id="metadataResultsDescriptionText" style="font-style: italic; font-size: 0.8em;"></p>
-            <p class="card-text mb-0" id="metadataResultsDescriptionLength"></p>
-            
+            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsDescriptionMissing"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text mb-2" id="metadataResultsDescriptionHeaderNotFromAPI">Beschreibung der Webseite:</p></div>
+            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsDescriptionText" style="font-style: italic; font-size: 0.8em;"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text mb-0" id="metadataResultsDescriptionLength"></p></div>
           </div>
       
           <!-- Language Section -->
           <div class="card-body">
             <h3 class="card-title">Sprache</h3>
-            <p class="card-text" id="metadataResultsMetatagLanguage"></p>
-            <p class="card-text" id="metadataResultsTextLanguage"></p>
-            <p class="card-text" id="metadataResultsServerLocation"></p>
-            <p class="card-text mb-0" id="metadataResultsLanguageMatch"></p>
+            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsMetatagLanguage"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsTextLanguage"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsServerLocation"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text mb-0" id="metadataResultsLanguageMatch"></p></div>
           </div>
       
           <!-- Favicon Section -->
           <div class="card-body">
             <h3 class="card-title">Favicon</h3>
-            <p class="card-text" id="metadataResultsFaviconStatus"></p>
+            <div class="container-card-text-server-results"><p class="card-text" id="metadataResultsFaviconStatus"></p></div>
           </div>
         </div>
       </div><!-- End Card Item -->
@@ -169,14 +170,14 @@
           
           <div class="card-body">
             <h3 class="card-title">Inhalt</h3>
-            <p class="card-text" id="pagequalityResultsComparisonTitleText"></p>
-            <p class="card-text" id="pagequalityResultsWordCount"></p>
-            <p class="card-text mb-0" id="pagequalityResultsDuplicateText"></p>
+            <div class="container-card-text-server-results"><p class="card-text" id="pagequalityResultsComparisonTitleText"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text" id="pagequalityResultsWordCount"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text mb-0" id="pagequalityResultsDuplicateText"></p></div>
           </div>
 
           <div class="card-body">
             <h3 class="card-title">Medien</h3>
-            <p class="card-text" id="pagequalityResultsMissingAlts"></p>
+            <div class="container-card-text-server-results"><p class="card-text" id="pagequalityResultsMissingAlts"></p></div>
           </div>
         </div>
 
@@ -188,18 +189,18 @@
 
           <div class="card-body">
             <h3 class="card-title">Interne Links</h3>
-            <p class="card-text" id="linksResultsInternalCount"></p>
-            <p class="card-text" id="linksResultsInternalLength"></p>
-            <p class="card-text" id="linksResultsInternalNoText"></p>
-            <p class="card-text mb-0" id="linksResultsInternalRepetitions"></p>
+            <div class="container-card-text-server-results"><p class="card-text" id="linksResultsInternalCount"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text" id="linksResultsInternalLength"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text" id="linksResultsInternalNoText"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text mb-0" id="linksResultsInternalRepetitions"></p></div>
           </div>
       
           <div class="card-body">
             <h3 class="card-title">Externe Links</h3>
-            <p class="card-text" id="linksResultsExternalCount"></p>
-            <p class="card-text" id="linksResultsExternalLength"></p>
-            <p class="card-text" id="linksResultsExternalNoText"></p>
-            <p class="card-text" id="linksResultsExternalRepetitions"></p>
+            <div class="container-card-text-server-results"><p class="card-text" id="linksResultsExternalCount"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text" id="linksResultsExternalLength"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text" id="linksResultsExternalNoText"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text" id="linksResultsExternalRepetitions"></p></div>
           </div>
 
         </div>
@@ -213,8 +214,8 @@
           <h3><a href="#" class="stretched-link">Seitenstruktur</a></h3>
           <div class="card-body">
             <h3 class="card-title">Überschriften</h3>
-            <p class="card-text" id="pagestructureResultsH1Heading"></p>
-            <p class="card-text" id="pagestructureResultsStructure"></p>
+            <div class="container-card-text-server-results"><p class="card-text" id="pagestructureResultsH1Heading"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text" id="pagestructureResultsStructure"></p></div>
           </div>
         </div>
 
@@ -226,19 +227,19 @@
           
           <div class="card-body">
             <h3 class="card-title">HTTP Redirect</h3>
-            <p class="card-text" id="serverResultsRedirects"></p>
-            <p class="card-text mb-0" id="serverResultsRedirectingWWW"></p>
+            <div class="container-card-text-server-results"><p class="card-text" id="serverResultsRedirects"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text mb-0" id="serverResultsRedirectingWWW"></p></div>
           </div>
       
           <div class="card-body">
             <h3 class="card-title">HTTP Header</h3>
-            <p class="card-text mb-0" id="serverResultsCompression"></p>
+            <div class="container-card-text-server-results"><p class="card-text mb-0" id="serverResultsCompression"></p></div>
           </div>
       
           <div class="card-body">
             <h3 class="card-title">Performance</h3>
-            <p class="card-text" id="serverResultsResponseTime"></p>
-            <p class="card-text" id="serverResultsFileSize"></p>
+            <div class="container-card-text-server-results"><p class="card-text" id="serverResultsResponseTime"></p></div>
+            <div class="container-card-text-server-results"><p class="card-text" id="serverResultsFileSize"></p></div>
           </div>
 
         </div>
@@ -251,12 +252,12 @@
           
           <div class="card-body">
             <h3 class="card-title">Blacklists</h3>
-            <p class="card-text mb-0" id="externalFactorsResultsBlacklist"></p>
+            <div class="container-card-text-server-results"><p class="card-text mb-0" id="externalFactorsResultsBlacklist"></p></div>
           </div>
       
           <div class="card-body">
             <h3 class="card-title">Backlinks</h3>
-            <p class="card-text" id="externalFactorsResultsBacklinks"></p>
+            <div class="container-card-text-server-results"><p class="card-text" id="externalFactorsResultsBacklinks"></p></div>
           </div>
 
         </div>
@@ -291,27 +292,15 @@
     <div class="col-lg-4 col-md-6 service-item d-flex flex-column" data-aos="fade-up" data-aos-delay="100" style="width: fit-content; align-self: center; margin: 0;">
       <h4 class="title">Desktop Ansicht</h4>
       <div class="serp-preview-container-desktop mb-5">
-        <div class="serp-preview-url">
-          https://mangools.com/free-seo-tools/serp-simulator
-        </div>
-        <div class="serp-preview-title">
-          Title gizfeifew gifwe bhiojke
-        </div>
-        <div class="serp-preview-description">
-          title will be cut after 600px description will be cut after 960px (desktop) or 680px (mobile) -> roughly 158 characters
-        </div>
+        <div class="serp-preview-url" id="serpPreviewDesktopURL"></div>
+        <div class="serp-preview-title" id="serpPreviewDesktopTitle"></div>
+        <div class="serp-preview-description" id="serpPreviewDesktopDescription"></div>
       </div>
       <h4 class="title">Mobile Ansicht</h4>
       <div class="serp-preview-container-mobile">
-        <div class="serp-preview-url">
-          https://mangools.com/free-seo-tools/serp-simulator
-        </div>
-        <div class="serp-preview-title">
-          Title gizfeifew gifwe bhiojke
-        </div>
-        <div class="serp-preview-description">
-          title will be cut after 600px description will be cut after 960px (desktop) or 680px (mobile) -> roughly 158 characters
-        </div>
+        <div class="serp-preview-url" id="serpPreviewMobileURL"></div>
+        <div class="serp-preview-title" id="serpPreviewMobileTitle"></div>
+        <div class="serp-preview-description" id="serpPreviewMobileDescription"></div>
       </div>
     </div>
       <!-- End Service Item -->

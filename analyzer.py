@@ -39,10 +39,12 @@ def analyze_website(url, db):
     text_language = langdetect.detect(soup.get_text())
 
     # Get the IP address of the URL
-    ip_address = socket.gethostbyname(url)
+    ip_address = socket.gethostbyname(url)'
     # Get the server location using the IP address
     server_location = requests.get(f'http://ip-api.com/json/{ip_address}').json().get('country', 'Unknown')
-        
+    
+    language_matching_bool = metatag_language and text_language and text_language in metatag_language
+
     # Metadata results - favicon
     favicon_included_bool = soup.find('link', attrs={'rel': 'icon'}) is not None
 
@@ -141,17 +143,18 @@ def analyze_website(url, db):
                 'metatag_language': metatag_language, 
                 'text_language': text_language, 
                 'server_location': server_location,
+                'language_comment_bool': language_matching_bool,
                 'language_comment': get_language_comment(metatag_language, text_language),
             }],
             'favicon': [{
-                'included_bool': not favicon_included_bool, 
+                'included_bool': favicon_included_bool, 
                 'included_text': get_favicon_included_text(favicon_included_bool),
             }],
             "points": 70,
         }],
         'pagequality_results': [{
             'content': [{
-                'comparison_title_bool': comparison_title_with_content_bool, 
+                'comparison_title_bool': not comparison_title_with_content_bool, 
                 'comparison_title_text': get_comparison_title_text(comparison_title_with_content_bool),                 
                 'length_comment_bool': word_count < 800,
                 'length_comment': get_content_length_comment(word_count),                
@@ -176,20 +179,20 @@ def analyze_website(url, db):
         'links_results': [{
             'links_internal': [{
                 'count': link_results_internal_link_count,                
-                'length_linktext_bool': length_linktext_internal_bool, 
+                'length_linktext_bool': not length_linktext_internal_bool, 
                 'length_linktext_text': get_internal_length_linktext_text(length_linktext_internal_bool), 
-                'no_linktext_bool': not no_linktext_count_internal_bool, 
+                'no_linktext_bool': no_linktext_count_internal_bool, 
                 'no_linktext_text': get_internal_no_linktext_text(no_linktext_count_internal_bool), 
-                'linktext_repetitions_bool': linktext_repetitions_internal_bool,  
+                'linktext_repetitions_bool': not linktext_repetitions_internal_bool,  
                 'linktext_repetitions_text': get_internal_linktext_repetitions_text(linktext_repetitions_internal_bool),                       
             }],
             'links_external': [{
                 'count': link_results_external_link_count,
-                'length_linktext_bool': length_linktext_external_bool, 
+                'length_linktext_bool': not length_linktext_external_bool, 
                 'length_linktext_text': get_external_length_linktext_text(length_linktext_external_bool), 
-                'no_linktext_bool': not no_linktext_count_external_bool, 
+                'no_linktext_bool': no_linktext_count_external_bool, 
                 'no_linktext_text': get_external_no_linktext_text(no_linktext_count_external_bool), 
-                'linktext_repetitions_bool': linktext_repetitions_external_bool,  
+                'linktext_repetitions_bool': not linktext_repetitions_external_bool,  
                 'linktext_repetitions_text': get_external_linktext_repetitions_text(linktext_repetitions_external_bool),              
             }],
             "points": 79,
@@ -220,6 +223,18 @@ def analyze_website(url, db):
                 'text': "Es wurden keine Backlinks gefunden.",
             }],                        
             "points": 100,
+        }],
+        'serp_preview': [{
+            'serp_mobile': [{
+                'url': url if url.startswith(('http://', 'https://')) else 'http://' + url,
+                'title': title_text, 
+                'description': description_of_the_website, 
+            }],
+            'serp_desktop': [{
+                'url': url if url.startswith(('http://', 'https://')) else 'http://' + url,
+                'title': title_text, 
+                'description': description_of_the_website, 
+            }],                        
         }]
     })
     db.session.add(analysis_results)

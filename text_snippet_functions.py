@@ -82,7 +82,7 @@ def get_comparison_title_text(comparison_title_with_content_bool):
 
 def get_content_length_comment(word_count):
     if word_count < 800:
-        return f"Der Inhalt ist mit {word_count} Wörtern etwas kurz. Eine gute Seite zu einem Thema sollte Text mit etwa 800 Wörtern enthalten."
+        return f"Der Inhalt ist mit {word_count} Wörtern etwas kurz."
     else:
         return f"Der Inhalt ist mit {word_count} Wörtern ausreichend."
 
@@ -93,8 +93,8 @@ def get_alt_attributes_missing_text(alt_attributes_missing_count):
     if alt_attributes_missing_count == 0:
         return "Alle Bilder haben ein Alt-Attribut."
     elif alt_attributes_missing_count == 1:
-        return "Bei einem Bild fehlt das Alt-Attribut. Der Inhalt von Alt-Attributen wird von Suchmaschinen auch als Text gewertet und ist wichtig für die Bildersuche."
-    return f"Bei {alt_attributes_missing_count} Bildern fehlt das Alt-Attribut. Der Inhalt von Alt-Attributen wird von Suchmaschinen auch als Text gewertet und ist wichtig für die Bildersuche."
+        return "Bei einem Bild fehlt das Alt-Attribut."
+    return f"Bei {alt_attributes_missing_count} Bildern fehlt das Alt-Attribut."
 
 def get_h1_heading_text(h1_heading_bool):
     return "H1-Überschrift ist vorhanden." if h1_heading_bool else "H1-Überschrift fehlt."

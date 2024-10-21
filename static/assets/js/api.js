@@ -5,10 +5,9 @@ const pageTitle = document.querySelector('.page-title h1');
 pageTitle.innerHTML += url;
 });
 
-// the awaits can currently not be removed, because the used db crashes when too many requests are made at the same time - this is a workaround!
-window.onload = async function(){
+document.addEventListener('DOMContentLoaded', async function() {
     await fetchAndApplyResults();
-}
+});
 async function fetchAndApplyResults() {
   try {
       const response = await fetch(`/get_results/${url}`);
@@ -25,6 +24,7 @@ async function fetchAndApplyResults() {
         applyLinksResults(data.links_results[0]);
         applyServerResults(data.server_results[0]);
         applyExternalFactorsResults(data.externalfactors_results[0]);
+        applySerpPreview(data.serp_preview[0]);	
       }
     } catch (error) {
       displayAPIError();
@@ -45,7 +45,7 @@ function displayAPIError() {
   <!-- /Features Section -->`;
 }
 
-async function applyOverallResults(result) {
+function applyOverallResults(result) {
     try {
         // Update overall rating SVG and text
         document.querySelector("#overallRatingValue").textContent = result.overall_rating_value;
@@ -102,7 +102,7 @@ async function applyOverallResults(result) {
 
 
 
-async function applyGeneralResults(result) {
+function applyGeneralResults(result) {
     try {
       // Populate HTML elements with the data
       document.getElementById('generalResultsResponseTimeTitle').innerHTML += ` <span style="color: #0d42ff;">${result.website_response_time}</span>`;
@@ -126,243 +126,273 @@ async function applyGeneralResults(result) {
     }
   }
 
-async function applyMetadataResults(result) {
+  function applyMetadataResults(result) {
     try {
         // Update the card contents dynamically
-        document.querySelector("#metadataResultsTitleMissing").innerHTML = `
-        <i class="bi ${result.title[0].missing_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
-        style="color: ${result.title[0].missing_bool ? 'red' : 'green'};"></i> ${result.title[0].missing_text}
-        `;
-        if (result.title[0].missing_bool) 
-        {
-            // Remove the other elements if the title is missing - no need to display them, because the title is missing
+        document.querySelector("#metadataResultsTitleMissing").insertAdjacentHTML('beforebegin',         
+        `<i class="bi ${result.title[0].missing_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
+          style="color: ${result.title[0].missing_bool ? 'red' : 'green'};"></i>`);
+        document.querySelector("#metadataResultsTitleMissing").innerHTML = `${result.title[0].missing_text}`;
+
+        if (result.title[0].missing_bool) {
             document.querySelector("#metadataResultsMetaTitle").remove();
             document.querySelector("#metadataResultsDomainInTitle").remove();
-            document.querySelector("#metadataResultsTitleLength").remove(); 
+            document.querySelector("#metadataResultsTitleLength").remove();
             document.querySelector("#metadataResultsTitleRepetition").remove();
-
-            // Because the other elements are removed this is now the last element and should not have a margin-bottom
             document.querySelector("#metadataResultsTitleMissing").classList.add("mb-0");
-        }
-        else
-        {
-          document.querySelector("#metadataResultsMetaTitle").innerHTML = result.title[0].text;
-          document.querySelector("#metadataResultsDomainInTitle").innerHTML = `
-          <i class="bi ${result.title[0].domain_in_title_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-          style="color: ${result.title[0].domain_in_title_bool ? 'green' : 'red'};"></i> ${result.title[0].domain_in_title_text}
-          `;
-          document.querySelector("#metadataResultsTitleLength").innerHTML = `
-          <i class="bi ${result.title[0].length_comment_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-          style="color: ${result.title[0].length_comment_bool ? 'green' : 'red'};"></i> ${result.title[0].length_comment}
-          `;
-          document.querySelector("#metadataResultsTitleRepetition").innerHTML = `
-          <i class="bi ${result.title[0].word_repetitons_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-          style="color: ${result.title[0].word_repetitons_bool ? 'green' : 'red'};"></i> ${result.title[0].word_repetitons_text}
-          `;
+        } else {
+            document.querySelector("#metadataResultsMetaTitle").innerHTML = result.title[0].text;
+            
+            document.querySelector("#metadataResultsDomainInTitle").insertAdjacentHTML('beforebegin',         
+            `<i class="bi ${result.title[0].domain_in_title_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
+              style="color: ${result.title[0].domain_in_title_bool ? 'green' : 'red'};"></i>`);
+            document.querySelector("#metadataResultsDomainInTitle").innerHTML = `${result.title[0].domain_in_title_text}`;
+            
+            document.querySelector("#metadataResultsTitleLength").insertAdjacentHTML('beforebegin',         
+            `<i class="bi ${result.title[0].length_comment_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
+              style="color: ${result.title[0].length_comment_bool ? 'green' : 'red'};"></i>`);
+            document.querySelector("#metadataResultsTitleLength").innerHTML = `${result.title[0].length_comment}`;
+            
+            document.querySelector("#metadataResultsTitleRepetition").insertAdjacentHTML('beforebegin',         
+            `<i class="bi ${result.title[0].word_repetitons_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
+              style="color: ${result.title[0].word_repetitons_bool ? 'green' : 'red'};"></i>`);
+            document.querySelector("#metadataResultsTitleRepetition").innerHTML = `${result.title[0].word_repetitons_text}`;
         }
 
-        // Update description
-        document.querySelector("#metadataResultsDescriptionMissing").innerHTML = `
-        <i class="bi ${result.description[0].missing_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
-        style="color: ${result.description[0].missing_bool ? 'red' : 'green'};"></i> ${result.description[0].missing_text}
-        `;
-        if (result.description[0].missing_bool)
-        {
-            // Remove the other elements if the description is missing - no need to display them, because the description is missing
+        document.querySelector("#metadataResultsDescriptionMissing").insertAdjacentHTML('beforebegin',         
+        `<i class="bi ${result.description[0].missing_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
+          style="color: ${result.description[0].missing_bool ? 'red' : 'green'};"></i>`);
+        document.querySelector("#metadataResultsDescriptionMissing").innerHTML = `${result.description[0].missing_text}`;
+        
+        if (result.description[0].missing_bool) {
             document.querySelector("#metadataResultsDescriptionText").remove();
             document.querySelector("#metadataResultsDescriptionLength").remove();
             document.querySelector("#metadataResultsDescriptionHeaderNotFromAPI").remove();
-            
-            // Because the other elements are removed this is now the last element and should not have a margin-bottom
             document.querySelector("#metadataResultsDescriptionMissing").classList.add("mb-0");
-        }
-        else
-        {
-          document.querySelector("#metadataResultsDescriptionText").innerHTML = result.description[0].text;
-          document.querySelector("#metadataResultsDescriptionLength").innerHTML = `
-          <i class="bi ${result.description[0].length_comment_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
-          style="color: ${result.description[0].length_comment_bool ? 'red' : 'green'};"></i> ${result.description[0].length_comment}
-          `;
+        } else {
+            document.querySelector("#metadataResultsDescriptionText").innerHTML = result.description[0].text;
+            
+            document.querySelector("#metadataResultsDescriptionLength").insertAdjacentHTML('beforebegin',         
+            `<i class="bi ${result.description[0].length_comment_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
+              style="color: ${result.description[0].length_comment_bool ? 'red' : 'green'};"></i>`);
+            document.querySelector("#metadataResultsDescriptionLength").innerHTML = `${result.description[0].length_comment}`;
         }
 
         // Update language
         document.querySelector("#metadataResultsMetatagLanguage").innerHTML = `Sprache laut Metatag: ${result.language[0].metatag_language}`;
         document.querySelector("#metadataResultsTextLanguage").innerHTML = `Im Text erkannte Sprache: ${result.language[0].text_language}`;
         document.querySelector("#metadataResultsServerLocation").innerHTML = `Serverstandort: ${result.language[0].server_location}`;
-        document.querySelector("#metadataResultsLanguageMatch").innerHTML = `
-        <i class="bi bi-check-circle" style="color: green;"></i> ${result.language[0].language_comment}
-        `;
+        
+        document.querySelector("#metadataResultsLanguageMatch").insertAdjacentHTML('beforebegin',         
+          `<i class="bi ${result.language[0].language_matching_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
+            style="color: ${result.language[0].language_matching_bool ? 'red' : 'green'};"></i>`);
+        document.querySelector("#metadataResultsLanguageMatch").innerHTML = `${result.language[0].language_comment}`;
 
-        // Update favicon
-        document.querySelector("#metadataResultsFaviconStatus").innerHTML = 
+        document.querySelector("#metadataResultsFaviconStatus").insertAdjacentHTML('beforebegin',         
         `<i class="bi ${result.favicon[0].included_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-        style="color: ${result.favicon[0].included_bool ? 'green' : 'red'};"></i> ${result.favicon[0].included_text}`;
+          style="color: ${result.favicon[0].included_bool ? 'green' : 'red'};"></i>`);
+        document.querySelector("#metadataResultsFaviconStatus").innerHTML = `${result.favicon[0].included_text}`;
 
         // Update progress bar width and aria-valuenow
         let progressBar = document.getElementById('metadataResultsProgressBar');
         progressBar.style.width = `${result.points}%`;
         progressBar.setAttribute('aria-valuenow', result.points);
 
-        } catch (error) {
-            console.error('Error in metadata results:', error);
-        }
-    }
-
-async function applyPageQualityResults(result) {
-    try {
-      // Update the content section
-      document.querySelector("#pagequalityResultsComparisonTitleText").innerHTML = `
-        <i class="bi ${result.content[0].comparison_title_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-        style="color: ${result.content[0].comparison_title_bool ? 'green' : 'red'};"></i> ${result.content[0].comparison_title_text}
-      `;
-      document.querySelector("#pagequalityResultsWordCount").innerHTML = `
-        <i class="bi ${result.content[0].length_comment_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
-        style="color: ${result.content[0].length_comment_bool ? 'red' : 'green'};"></i> ${result.content[0].length} Wörter: ${result.content[0].length_comment}
-      `;
-      document.querySelector("#pagequalityResultsDuplicateText").innerHTML = `
-        <i class="bi ${result.content[0].duplicate_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-        style="color: ${result.content[0].duplicate_bool ? 'green' : 'red'};"></i> ${result.content[0].duplicate_text}
-      `;
-
-      // Update the media section
-      document.querySelector("#pagequalityResultsMissingAlts").innerHTML = `
-        <i class="bi ${result.pictures[0].alt_attributes_missing_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
-        style="color: ${result.pictures[0].alt_attributes_missing_bool ? 'red' : 'green'};"></i> ${result.pictures[0].alt_attributes_missing_text}
-      `;
-
-      // Update the progress bar
-      let progressBar = document.getElementById('pagequalityResultsProgressBar');
-      progressBar.style.width = `${result.points}%`;
-      progressBar.setAttribute('aria-valuenow', result.points);
-      
     } catch (error) {
-      console.error('Error in page quality results:', error);
-    }
-  }
-
-async function applyPageStructureResults(result) {
-    try {
-        // Update headings section
-        document.querySelector("#pagestructureResultsH1Heading").innerHTML = `
-        <i class="bi ${result.headings[0].h1_heading_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-        style="color: ${result.headings[0].h1_heading_bool ? 'green' : 'red'};"></i> ${result.headings[0].h1_heading_text}
-        `;
-        document.querySelector("#pagestructureResultsStructure").innerHTML = `
-        <i class="bi ${result.headings[0].structure_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-        style="color: ${result.headings[0].structure_bool ? 'green' : 'red'};"></i> ${result.headings[0].structure_text}
-        `;
-
-        // Update progress bar
-        let progressBar = document.getElementById('pagestructureResultsProgressBar');
-        progressBar.style.width = `${result.points}%`;
-        progressBar.setAttribute('aria-valuenow', result.points);
-        
-    } catch (error) {
-        console.error('Error in page structure results:', error);
+        console.error('Error in metadata results:', error);
     }
 }
 
-async function applyLinksResults(result) {
+function applyPageQualityResults(result) {
     try {
+        document.querySelector("#pagequalityResultsComparisonTitleText").insertAdjacentHTML('beforebegin',         
+        `<i class="bi ${result.content[0].comparison_title_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
+          style="color: ${result.content[0].comparison_title_bool ? 'green' : 'red'};"></i>`);
+        document.querySelector("#pagequalityResultsComparisonTitleText").innerHTML = `${result.content[0].comparison_title_text}`;
+        
+        document.querySelector("#pagequalityResultsWordCount").insertAdjacentHTML('beforebegin',         
+        `<i class="bi ${result.content[0].length_comment_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
+          style="color: ${result.content[0].length_comment_bool ? 'red' : 'green'};"></i>`);
+        document.querySelector("#pagequalityResultsWordCount").innerHTML = `${result.content[0].length_comment}`;
+        
+        document.querySelector("#pagequalityResultsDuplicateText").insertAdjacentHTML('beforebegin',         
+        `<i class="bi ${result.content[0].duplicate_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
+          style="color: ${result.content[0].duplicate_bool ? 'green' : 'red'};"></i>`);
+        document.querySelector("#pagequalityResultsDuplicateText").innerHTML = `${result.content[0].duplicate_text}`;
+
+        document.querySelector("#pagequalityResultsMissingAlts").insertAdjacentHTML('beforebegin',         
+        `<i class="bi ${result.pictures[0].alt_attributes_missing_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
+          style="color: ${result.pictures[0].alt_attributes_missing_bool ? 'red' : 'green'};"></i>`);
+        document.querySelector("#pagequalityResultsMissingAlts").innerHTML = `${result.pictures[0].alt_attributes_missing_text}`;
+
+        let progressBar = document.getElementById('pagequalityResultsProgressBar');
+        progressBar.style.width = `${result.points}%`;
+        progressBar.setAttribute('aria-valuenow', result.points);
+
+    } catch (error) {
+        console.error('Error in page quality results:', error);
+    }
+}
+
+function applyPageStructureResults(result) {
+  try {
+      // Update headings section
+      document.querySelector("#pagestructureResultsH1Heading").insertAdjacentHTML('beforebegin', `
+      <i class="bi ${result.headings[0].h1_heading_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
+      style="color: ${result.headings[0].h1_heading_bool ? 'green' : 'red'};"></i>
+      `);
+      document.querySelector("#pagestructureResultsH1Heading").innerHTML = `${result.headings[0].h1_heading_text}`;
+
+      document.querySelector("#pagestructureResultsStructure").insertAdjacentHTML('beforebegin', `
+      <i class="bi ${result.headings[0].structure_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
+      style="color: ${result.headings[0].structure_bool ? 'green' : 'red'};"></i>
+      `);
+      document.querySelector("#pagestructureResultsStructure").innerHTML = `${result.headings[0].structure_text}`;
+
+      // Update progress bar
+      let progressBar = document.getElementById('pagestructureResultsProgressBar');
+      progressBar.style.width = `${result.points}%`;
+      progressBar.setAttribute('aria-valuenow', result.points);
+      
+  } catch (error) {
+      console.error('Error in page structure results:', error);
+  }
+}
+
+function applyLinksResults(result) {
+  try {
       // Update internal links section
-      document.querySelector("#linksResultsInternalCount").innerHTML = `
-        <i class="bi bi-check-circle" style="color: green;"></i> Anzahl der internen Links: ${result.links_internal[0].count}
-      `;
-      document.querySelector("#linksResultsInternalLength").innerHTML = `
-        <i class="bi ${result.links_internal[0].length_linktext_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-        style="color: ${result.links_internal[0].length_linktext_bool ? 'green' : 'red'};"></i> ${result.links_internal[0].length_linktext_text}
-      `;
-      document.querySelector("#linksResultsInternalNoText").innerHTML = `
-        <i class="bi ${result.links_internal[0].no_linktext_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
-        style="color: ${result.links_internal[0].no_linktext_bool ? 'red' : 'green'};"></i> ${result.links_internal[0].no_linktext_text}
-      `;
-      document.querySelector("#linksResultsInternalRepetitions").innerHTML = `
-        <i class="bi ${result.links_internal[0].linktext_repetitions_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-        style="color: ${result.links_internal[0].linktext_repetitions_bool ? 'green' : 'red'};"></i> ${result.links_internal[0].linktext_repetitions_text}
-      `;
+      document.querySelector("#linksResultsInternalCount").innerHTML = `Anzahl der internen Links: ${result.links_internal[0].count}`;
+      
+      document.querySelector("#linksResultsInternalLength").insertAdjacentHTML('beforebegin', `
+      <i class="bi ${result.links_internal[0].length_linktext_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
+      style="color: ${result.links_internal[0].length_linktext_bool ? 'green' : 'red'};"></i>
+      `);
+      document.querySelector("#linksResultsInternalLength").innerHTML = `${result.links_internal[0].length_linktext_text}`;
+
+      document.querySelector("#linksResultsInternalNoText").insertAdjacentHTML('beforebegin', `
+      <i class="bi ${result.links_internal[0].no_linktext_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
+      style="color: ${result.links_internal[0].no_linktext_bool ? 'red' : 'green'};"></i>
+      `);
+      document.querySelector("#linksResultsInternalNoText").innerHTML = `${result.links_internal[0].no_linktext_text}`;
+
+      document.querySelector("#linksResultsInternalRepetitions").insertAdjacentHTML('beforebegin', `
+      <i class="bi ${result.links_internal[0].linktext_repetitions_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
+      style="color: ${result.links_internal[0].linktext_repetitions_bool ? 'green' : 'red'};"></i>
+      `);
+      document.querySelector("#linksResultsInternalRepetitions").innerHTML = `${result.links_internal[0].linktext_repetitions_text}`;
 
       // Update external links section
-      document.querySelector("#linksResultsExternalCount").innerHTML = `
-        <i class="bi bi-check-circle" style="color: green;"></i> Anzahl der externen Links: ${result.links_external[0].count}
-      `;
-      document.querySelector("#linksResultsExternalLength").innerHTML = `
-        <i class="bi ${result.links_external[0].length_linktext_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-        style="color: ${result.links_external[0].length_linktext_bool ? 'green' : 'red'};"></i> ${result.links_external[0].length_linktext_text}
-      `;
-      document.querySelector("#linksResultsExternalNoText").innerHTML = `
-        <i class="bi ${result.links_external[0].no_linktext_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
-        style="color: ${result.links_external[0].no_linktext_bool ? 'red' : 'green'};"></i> ${result.links_external[0].no_linktext_text}
-      `;
-      document.querySelector("#linksResultsExternalRepetitions").innerHTML = `
-        <i class="bi ${result.links_external[0].linktext_repetitions_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-        style="color: ${result.links_external[0].linktext_repetitions_bool ? 'green' : 'red'};"></i> ${result.links_external[0].linktext_repetitions_text}
-      `;
+      document.querySelector("#linksResultsExternalCount").innerHTML = `Anzahl der externen Links: ${result.links_external[0].count}`;
+
+      document.querySelector("#linksResultsExternalLength").insertAdjacentHTML('beforebegin', `
+      <i class="bi ${result.links_external[0].length_linktext_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
+      style="color: ${result.links_external[0].length_linktext_bool ? 'green' : 'red'};"></i>
+      `);
+      document.querySelector("#linksResultsExternalLength").innerHTML = `${result.links_external[0].length_linktext_text}`;
+
+      document.querySelector("#linksResultsExternalNoText").insertAdjacentHTML('beforebegin', `
+      <i class="bi ${result.links_external[0].no_linktext_bool ? 'bi-x-circle' : 'bi-check-circle'}" 
+      style="color: ${result.links_external[0].no_linktext_bool ? 'red' : 'green'};"></i>
+      `);
+      document.querySelector("#linksResultsExternalNoText").innerHTML = `${result.links_external[0].no_linktext_text}`;
+
+      document.querySelector("#linksResultsExternalRepetitions").insertAdjacentHTML('beforebegin', `
+      <i class="bi ${result.links_external[0].linktext_repetitions_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
+      style="color: ${result.links_external[0].linktext_repetitions_bool ? 'green' : 'red'};"></i>
+      `);
+      document.querySelector("#linksResultsExternalRepetitions").innerHTML = `${result.links_external[0].linktext_repetitions_text}`;
 
       // Update progress bar
       let progressBar = document.getElementById('linksResultsProgressBar');
       progressBar.style.width = `${result.points}%`;
       progressBar.setAttribute('aria-valuenow', result.points);
       
-    } catch (error) {
+  } catch (error) {
       console.error('Error in links results:', error);
-    }
   }
-
-async function applyServerResults(result) {
-    try {
-        // Update HTTP redirect section
-        document.querySelector("#serverResultsRedirects").innerHTML = `
-        <i class="bi ${result.http_redirect[0].site_redirects_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-        style="color: ${result.http_redirect[0].site_redirects_bool ? 'green' : 'red'};"></i> ${result.http_redirect[0].site_redirects_text}
-        `;
-        document.querySelector("#serverResultsRedirectingWWW").innerHTML = `
-        <i class="bi ${result.http_redirect[0].redirecting_www_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-        style="color: ${result.http_redirect[0].redirecting_www_bool ? 'green' : 'red'};"></i> ${result.http_redirect[0].redirecting_www_text}
-        `;
-
-        // Update HTTP header section
-        document.querySelector("#serverResultsCompression").innerHTML = `
-        <i class="bi ${result.http_header[0].compression_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-        style="color: ${result.http_header[0].compression_bool ? 'green' : 'red'};"></i> ${result.http_header[0].compression_text}
-        `;
-
-        // Update performance section
-        document.querySelector("#serverResultsResponseTime").innerHTML = `
-        <i class="bi bi-check-circle" style="color: green;"></i> ${result.performance[0].website_response_time_text}
-        `;
-        document.querySelector("#serverResultsFileSize").innerHTML = `
-        <i class="bi bi-check-circle" style="color: green;"></i> ${result.performance[0].file_size_text}
-        `;
-
-        // Update progress bar
-        let progressBar = document.getElementById('serverResultsProgressBar');
-        progressBar.style.width = `${result.points}%`;
-        progressBar.setAttribute('aria-valuenow', result.points);
-        
-    } catch (error) {
-        console.error('Error in server results:', error);
-    }
 }
 
-async function applyExternalFactorsResults(result) {
-    try {
+function applyServerResults(result) {
+  try {
+      // Update HTTP redirect section
+      document.querySelector("#serverResultsRedirects").insertAdjacentHTML('beforebegin', `
+      <i class="bi ${result.http_redirect[0].site_redirects_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
+      style="color: ${result.http_redirect[0].site_redirects_bool ? 'green' : 'red'};"></i>
+      `);
+      document.querySelector("#serverResultsRedirects").innerHTML = `${result.http_redirect[0].site_redirects_text}`;
+
+      document.querySelector("#serverResultsRedirectingWWW").insertAdjacentHTML('beforebegin', `
+      <i class="bi ${result.http_redirect[0].redirecting_www_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
+      style="color: ${result.http_redirect[0].redirecting_www_bool ? 'green' : 'red'};"></i>
+      `);
+      document.querySelector("#serverResultsRedirectingWWW").innerHTML = `${result.http_redirect[0].redirecting_www_text}`;
+
+      // Update HTTP header section
+      document.querySelector("#serverResultsCompression").insertAdjacentHTML('beforebegin', `
+      <i class="bi ${result.http_header[0].compression_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
+      style="color: ${result.http_header[0].compression_bool ? 'green' : 'red'};"></i>
+      `);
+      document.querySelector("#serverResultsCompression").innerHTML = `${result.http_header[0].compression_text}`;
+
+      // Update performance section
+      document.querySelector("#serverResultsResponseTime").insertAdjacentHTML('beforebegin', `
+      <i class="bi bi-check-circle" style="color: green;"></i>
+      `);
+      document.querySelector("#serverResultsResponseTime").innerHTML = `${result.performance[0].website_response_time_text}`;
+
+      document.querySelector("#serverResultsFileSize").insertAdjacentHTML('beforebegin', `
+      <i class="bi bi-check-circle" style="color: green;"></i>
+      `);
+      document.querySelector("#serverResultsFileSize").innerHTML = `${result.performance[0].file_size_text}`;
+
+      // Update progress bar
+      let progressBar = document.getElementById('serverResultsProgressBar');
+      progressBar.style.width = `${result.points}%`;
+      progressBar.setAttribute('aria-valuenow', result.points);
+      
+  } catch (error) {
+      console.error('Error in server results:', error);
+  }
+}
+
+function applyExternalFactorsResults(result) {
+  try {
       // Update blacklists section
-      document.querySelector("#externalFactorsResultsBlacklist").innerHTML = `
-        <i class="bi ${result.blacklists[0].is_blacklist_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
-        style="color: ${result.blacklists[0].is_blacklist_bool ? 'green' : 'red'};"></i> ${result.blacklists[0].is_blacklist_text}
-      `;
+      document.querySelector("#externalFactorsResultsBlacklist").insertAdjacentHTML('beforebegin', `
+      <i class="bi ${result.blacklists[0].is_blacklist_bool ? 'bi-check-circle' : 'bi-x-circle'}" 
+      style="color: ${result.blacklists[0].is_blacklist_bool ? 'green' : 'red'};"></i>
+      `);
+      document.querySelector("#externalFactorsResultsBlacklist").innerHTML = `${result.blacklists[0].is_blacklist_text}`;
 
       // Update backlinks section
-      document.querySelector("#externalFactorsResultsBacklinks").innerHTML = `
-        <i class="bi bi-check-circle" style="color: green;"></i> ${result.backlinks[0].text}
-      `;
+      document.querySelector("#externalFactorsResultsBacklinks").insertAdjacentHTML('beforebegin', `
+      <i class="bi bi-check-circle" style="color: green;"></i>
+      `);
+      document.querySelector("#externalFactorsResultsBacklinks").innerHTML = `${result.backlinks[0].text}`;
 
       // Update progress bar
       let progressBar = document.getElementById('externalFactorsResultsProgressBar');
       progressBar.style.width = `${result.points}%`;
       progressBar.setAttribute('aria-valuenow', result.points);
       
-    } catch (error) {
+  } catch (error) {
       console.error('Error in external factors results:', error);
-    }
   }
+}
+
+function applySerpPreview(result){
+  try {
+    // Update SERP preview for desktop
+    document.querySelector("#serpPreviewDesktopURL").innerHTML = result.serp_desktop[0].url;
+    document.querySelector("#serpPreviewDesktopTitle").innerHTML = result.serp_desktop[0].title;
+    document.querySelector("#serpPreviewDesktopDescription").innerHTML = result.serp_desktop[0].description;
+    // Update SERP preview for mobile
+    document.querySelector("#serpPreviewMobileURL").innerHTML = result.serp_mobile[0].url;
+    document.querySelector("#serpPreviewMobileTitle").innerHTML = result.serp_mobile[0].title;
+    document.querySelector("#serpPreviewMobileDescription").innerHTML = result.serp_mobile[0].description;  
+  } catch (error) {
+    console.error('Error in SERP preview results:', error);
+  }
+}
+
