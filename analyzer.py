@@ -1,4 +1,5 @@
 from text_snippet_functions import *
+from points_calculator import calculate_metadata_points, calculate_pagequality_points, calculate_pagestructure_points, calculate_links_points, calculate_server_points
 from models import AnalyzedWebsite
 import requests
 from bs4 import BeautifulSoup
@@ -92,8 +93,7 @@ def analyze_website(url, db):
     linktext_repetitions_external_bool = len(link_texts_external) != len(set(link_texts_external))
 
     # server results - http redirect
-    site_redirects_bool = len(response.history) > 0
-    
+    site_redirects_bool = response.url != 'http://' + url and response.url != 'https://' + url   
     www_url = (url if url.startswith(('http://', 'https://')) else 'http://' + url).replace('http://', 'http://www.').replace('https://', 'https://www.')
     try:
         response_with_www = requests.get(www_url)
@@ -106,10 +106,20 @@ def analyze_website(url, db):
     compression = response.headers.get('Content-Encoding')
     compression_bool = compression is not None
 
+    metadata_points = calculate_metadata_points(title_missing_bool, domain_in_title_bool, title_length, title_word_repetitions_bool, description_missing_bool, length_pixels, metatag_language, text_language, favicon_included_bool)
+    pagequality_points = calculate_pagequality_points(comparison_title_with_content_bool, word_count, duplicate_bool, alt_attributes_missing_count)
+    pagestructure_points = calculate_pagestructure_points(h1_heading_bool, structure_bool)
+    links_points = calculate_links_points(length_linktext_internal_bool, no_linktext_count_internal, linktext_repetitions_internal_bool, length_linktext_external_bool, no_linktext_count_external, linktext_repetitions_external_bool)
+    server_points = calculate_server_points(site_redirects_bool, redirecting_www_bool, compression_bool)
+
+    max_points_of_all_categories = 69
+    overall_points = metadata_points + pagequality_points + pagestructure_points + links_points + server_points
+    overall_rating_value = round((overall_points / max_points_of_all_categories) * 100)
+
     analysis_results = AnalyzedWebsite(url=url, results=
         {
         'overall_results': [{
-            'overall_rating_value': "81",
+            'overall_rating_value': overall_rating_value,
             'overall_rating_text': "Die analysierte Webseite hat eine Gesamtbewertung von 81 von 100 Punkten. Das ist eine gute Bewertung, es bestehen jedoch noch einige Verbesserungsmöglichkeiten.",
             'improvement_count': "16",
             'improvement_count_text': "Es wurden 16 Verbesserungsmöglichkeiten für die Webseite gefunden.",
@@ -157,7 +167,7 @@ def analyze_website(url, db):
                 'included_bool': favicon_included_bool, 
                 'included_text': get_favicon_included_text(favicon_included_bool),
             }],
-            "points": 70,
+            "points": metadata_points,
         }],
         'pagequality_results': [{
             'content': [{
@@ -172,7 +182,7 @@ def analyze_website(url, db):
                 'alt_attributes_missing_bool': alt_attributes_missing_bool,
                 'alt_attributes_missing_text': get_alt_attributes_missing_text(alt_attributes_missing_count),    
             }],
-            "points": 44,
+            "points": pagequality_points,
         }],
         'pagestructure_results': [{
             'headings': [{
@@ -181,7 +191,7 @@ def analyze_website(url, db):
                 'structure_bool': structure_bool, 
                 'structure_text': get_structure_text(structure_bool),           
             }],
-            "points": 79,
+            "points": pagestructure_points,
         }],
         'links_results': [{
             'links_internal': [{
@@ -202,7 +212,7 @@ def analyze_website(url, db):
                 'linktext_repetitions_bool': not linktext_repetitions_external_bool,  
                 'linktext_repetitions_text': get_external_linktext_repetitions_text(linktext_repetitions_external_bool),              
             }],
-            "points": 79,
+            "points": links_points,
         }],
         'server_results': [{
             'http_redirect': [{
@@ -219,7 +229,7 @@ def analyze_website(url, db):
                 'website_response_time_text': get_website_response_time_text(website_response_time),
                 'file_size_text': get_file_size_text(file_size),
             }],                        
-            "points": 100,
+            "points": server_points,
         }],
         'serp_preview': [{
             'serp_mobile': [{
@@ -231,7 +241,8 @@ def analyze_website(url, db):
                 'url': url if url.startswith(('http://', 'https://')) else 'http://' + url,
                 'title': title_text, 
                 'description': description_of_the_website, 
-            }],                        
+            }],
+            "points": 50,                        
         }]
     })
     db.session.add(analysis_results)
