@@ -76,7 +76,7 @@ def analyze_website(url, db):
 
     # links results - internal
     internal_link_list = [link for link in soup.find_all('a', href=True) if url in link['href']]
-    link_results_internal_link_count = internal_link_count # use the same value as in general results
+    link_results_internal_link_count = internal_link_count # use the same bool as in general results
     length_linktext_internal_bool = all(len(link.text) < 30 for link in internal_link_list)
     link_texts_internal = [link.text for link in internal_link_list]
     no_linktext_count_internal = sum(1 for text in link_texts_internal if not text.strip())
@@ -85,7 +85,7 @@ def analyze_website(url, db):
     
     # links results - external
     external_link_list = [link for link in soup.find_all('a', href=True) if url not in link['href']]
-    link_results_external_link_count = external_link_count # use the same value as in general results
+    link_results_external_link_count = external_link_count # use the same bool as in general results
     length_linktext_external_bool = all(len(link.text) < 30 for link in external_link_list)
     link_texts_external = [link.text for link in external_link_list]
     no_linktext_count_external = sum(1 for text in link_texts_external if not text.strip())
@@ -114,135 +114,275 @@ def analyze_website(url, db):
 
     max_points_of_all_categories = 69
     overall_points = metadata_points + pagequality_points + pagestructure_points + links_points + server_points
-    overall_rating_value = round((overall_points / max_points_of_all_categories) * 100)
+    overall_rating_bool = round((overall_points / max_points_of_all_categories) * 100)
 
     analysis_results = AnalyzedWebsite(url=url, results=
         {
         'overall_results': [{
-            'overall_rating_value': overall_rating_value,
+            'isCard': False,
+            'overall_rating_bool': overall_rating_bool,
             'overall_rating_text': "Die analysierte Webseite hat eine Gesamtbewertung von 81 von 100 Punkten. Das ist eine gute Bewertung, es bestehen jedoch noch einige Verbesserungsmöglichkeiten.",
             'improvement_count': "16",
             'improvement_count_text': "Es wurden 16 Verbesserungsmöglichkeiten für die Webseite gefunden.",
         }],
         'general_results': [{
-            'website_response_time': website_response_time,
-            'website_response_time_text': get_website_response_time_text(website_response_time),
-            'file_size': f"{file_size / 1000} kB",
-            'file_size_text': get_file_size_text(file_size),
-            'word_count': word_count, 
-            'word_count_text': "Hier gibt es kein richtig oder falsch.",
-            'media_count': media_count,
-            'media_count_text': get_media_count_text(media_count),
-            'link_count': f"{internal_link_count} Intern / {external_link_count} Extern",
-            'link_count_text': get_link_count_text(internal_link_count, external_link_count),
+            'isCard': False,
+            '1': {
+                'value': website_response_time,
+                'text': get_website_response_time_text(website_response_time)
+            },
+            '2': {
+                'value': f"{file_size / 1000} kB",
+                'text': get_file_size_text(file_size)
+            },
+            '3': {
+                'value': word_count,
+                'text': "Hier gibt es kein richtig oder falsch."
+            },
+            '4': {
+                'value': media_count,
+                'text': get_media_count_text(media_count)
+            },
+            '5': {
+                'value': f"{internal_link_count} Intern / {external_link_count} Extern",
+                'text': get_link_count_text(internal_link_count, external_link_count)
+            },
         }],
         'metadata_results': [{
-            'title': [{                
-                'missing_bool': title_missing_bool, 
-                'missing_text': get_title_missing_text(title_missing_bool),
-                'text': title_text,
-                'domain_in_title_bool': not domain_in_title_bool, 
-                'domain_in_title_text': get_domain_in_title_text(domain_in_title_bool),
-                'length_comment_bool': not title_length_bool,  
-                'length_comment': get_title_length_text(title_length), 
-                'word_repetitons_bool': not title_word_repetitions_bool,
-                'word_repetitons_text': get_title_word_repetitions_text(title_word_repetitions_bool),
-       
+            'isCard': True,
+            'card_name': 'Metadaten',
+            'title': [{
+                'category_name': 'Titel',
+                'content': [{
+                    '0': {
+                        'bool': title_missing_bool,
+                        'text': get_title_missing_text(title_missing_bool)
+                    },
+                    '1': {
+                        'bool': '',
+                        'text': title_text,
+                    },
+                    '2': {
+                        'bool': not domain_in_title_bool,
+                        'text': get_domain_in_title_text(domain_in_title_bool)
+                    },
+                    '3': {
+                        'bool': not title_length_bool,
+                        'text': get_title_length_text(title_length)
+                    },
+                    '4': {
+                        'bool': not title_word_repetitions_bool,
+                        'text': get_title_word_repetitions_text(title_word_repetitions_bool)
+                    },
+                }],
             }],
+            
             'description': [{
-                'missing_bool': description_missing_bool,
-                'missing_text': get_description_missing_text(description_missing_bool), 
-                'text': description_of_the_website,
-                'length_comment_bool': description_length_bool,
-                'length_comment': get_description_length_text(length_pixels), 
+                'category_name': 'Beschreibung',
+                'content': [{
+                    '0': {
+                        'bool': description_missing_bool,
+                        'text': get_description_missing_text(description_missing_bool)
+                    },
+                    '1': {
+                        'bool': description_length_bool,
+                        'text': description_of_the_website,
+                    },
+                    '2': {
+                        'bool': description_length_bool,
+                        'text': get_description_length_text(length_pixels)
+                    },
+                }],
             }],
+
             'language': [{
-                'metatag_language': metatag_language, 
-                'text_language': text_language, 
-                'server_location': server_location,
-                'language_comment_bool': language_matching_bool,
-                'language_comment': get_language_comment(metatag_language, text_language),
+                'category_name': 'Sprache',
+                'content': [{
+                    '0': {
+                        'bool': language_matching_bool,
+                        'text': get_language_comment(metatag_language, text_language)
+                    },
+                    '1': {
+                        'bool': '',
+                        'text': f'Meta-Tag Sprache: {metatag_language}'
+                    },
+                    '2': {
+                        'bool': '',
+                        'text': f'Textsprache: {text_language}'
+                    },
+                    '3': {
+                        'bool': '',
+                        'text': f'Server: {server_location}'
+                    },
+                }],
             }],
+
             'favicon': [{
-                'included_bool': favicon_included_bool, 
-                'included_text': get_favicon_included_text(favicon_included_bool),
+                'category_name': 'Favicon',
+                'content': [{
+                    '0': {
+                        'bool': favicon_included_bool,
+                        'text': get_favicon_included_text(favicon_included_bool)
+                    }
+                }],
             }],
+
             "points": metadata_points,
         }],
+
         'pagequality_results': [{
+            'isCard': True,
+            'card_name': 'Seitenqualität',
             'content': [{
-                'comparison_title_bool': not comparison_title_with_content_bool, 
-                'comparison_title_text': get_comparison_title_text(comparison_title_with_content_bool),                 
-                'length_comment_bool': word_count < 800,
-                'length_comment': get_content_length_comment(word_count),                
-                'duplicate_bool': duplicate_bool,
-                'duplicate_text': get_duplicate_text(duplicate_bool),
+                'category_name': 'Inhalt',
+                'content': [{
+                    '0': {
+                        'bool': not comparison_title_with_content_bool,
+                        'text': get_comparison_title_text(comparison_title_with_content_bool)
+                    },
+                    '1': {
+                        'bool': word_count < 800,
+                        'text': get_content_length_comment(word_count)
+                    },
+                    '2': {
+                        'bool': duplicate_bool,
+                        'text': get_duplicate_text(duplicate_bool)
+                    },
+                }],
             }],
-            'pictures': [{ 
-                'alt_attributes_missing_bool': alt_attributes_missing_bool,
-                'alt_attributes_missing_text': get_alt_attributes_missing_text(alt_attributes_missing_count),    
+            
+            'pictures': [{
+                'category_name': 'Bilder',
+                'content': [{
+                    '0': {
+                        'bool': alt_attributes_missing_bool,
+                        'text': get_alt_attributes_missing_text(alt_attributes_missing_count)
+                    }
+                }],
             }],
+            
             "points": pagequality_points,
         }],
+
         'pagestructure_results': [{
+            'isCard': True,
+            'card_name': 'Seitenstruktur',
             'headings': [{
-                'h1_heading_bool': h1_heading_bool, 
-                'h1_heading_text': get_h1_heading_text(h1_heading_bool),
-                'structure_bool': structure_bool, 
-                'structure_text': get_structure_text(structure_bool),           
+                'category_name': 'Überschriften',
+                'content': [{
+                    '0': {
+                        'bool': h1_heading_bool,
+                        'text': get_h1_heading_text(h1_heading_bool)
+                    },
+                    '1': {
+                        'bool': structure_bool,
+                        'text': get_structure_text(structure_bool)
+                    },
+                }],
             }],
+            
             "points": pagestructure_points,
         }],
+
         'links_results': [{
+            'isCard': True,
+            'card_name': 'Links',
             'links_internal': [{
-                'count': link_results_internal_link_count,                
-                'length_linktext_bool': length_linktext_internal_bool, 
-                'length_linktext_text': get_internal_length_linktext_text(length_linktext_internal_bool), 
-                'no_linktext_bool': no_linktext_count_internal_bool, 
-                'no_linktext_text': get_internal_no_linktext_text(no_linktext_count_internal_bool), 
-                'linktext_repetitions_bool': not linktext_repetitions_internal_bool,  
-                'linktext_repetitions_text': get_internal_linktext_repetitions_text(linktext_repetitions_internal_bool),                       
+                'category_name': 'Interne Links',
+                'content': [{
+                    '0': {
+                        'bool': length_linktext_internal_bool,
+                        'text': get_internal_length_linktext_text(length_linktext_internal_bool)
+                    },
+                    '1': {
+                        'bool': no_linktext_count_internal_bool,
+                        'text': get_internal_no_linktext_text(no_linktext_count_internal_bool)
+                    },
+                    '2': {
+                        'bool': not linktext_repetitions_internal_bool,
+                        'text': get_internal_linktext_repetitions_text(linktext_repetitions_internal_bool)
+                    },
+                }],
             }],
+
             'links_external': [{
-                'count': link_results_external_link_count,
-                'length_linktext_bool': length_linktext_external_bool, 
-                'length_linktext_text': get_external_length_linktext_text(length_linktext_external_bool), 
-                'no_linktext_bool': no_linktext_count_external_bool, 
-                'no_linktext_text': get_external_no_linktext_text(no_linktext_count_external_bool), 
-                'linktext_repetitions_bool': not linktext_repetitions_external_bool,  
-                'linktext_repetitions_text': get_external_linktext_repetitions_text(linktext_repetitions_external_bool),              
+                'category_name': 'Externe Links',
+                'content': [{
+                    '0': {
+                        'bool': length_linktext_external_bool,
+                        'text': get_external_length_linktext_text(length_linktext_external_bool)
+                    },
+                    '1': {
+                        'bool': no_linktext_count_external_bool,
+                        'text': get_external_no_linktext_text(no_linktext_count_external_bool)
+                    },
+                    '2': {
+                        'bool': not linktext_repetitions_external_bool,
+                        'text': get_external_linktext_repetitions_text(linktext_repetitions_external_bool)
+                    },
+                }],
             }],
+            
             "points": links_points,
         }],
+
         'server_results': [{
+            'isCard': True,
+            'card_name': 'Server',
             'http_redirect': [{
-                'site_redirects_bool': not site_redirects_bool, 
-                'site_redirects_text': get_site_redirects_text(site_redirects_bool),
-                'redirecting_www_bool': redirecting_www_bool,  
-                'redirecting_www_text': get_redirecting_www_text(redirecting_www_bool),
+                'category_name': 'HTTP Redirect',
+                'content': [{
+                    '0': {
+                        'bool': not site_redirects_bool,
+                        'text': get_site_redirects_text(site_redirects_bool)
+                    },
+                    '1': {
+                        'bool': redirecting_www_bool,
+                        'text': get_redirecting_www_text(redirecting_www_bool)
+                    }
+                }],
             }],
+            
             'http_header': [{
-                'compression_bool': compression_bool, 
-                'compression_text': get_compression_text(compression, compression_bool),
+                'category_name': 'HTTP Header',
+                'content': [{
+                    '0': {
+                        'bool': compression_bool,
+                        'text': get_compression_text(compression, compression_bool)
+                    },
+                }],
             }],
+            
             'performance': [{
-                'website_response_time_text': get_website_response_time_text(website_response_time),
-                'file_size_text': get_file_size_text(file_size),
-            }],                        
+                'category_name': 'Performance',
+                'content': [{
+                    '0': {
+                        'bool': website_response_time,
+                        'text': get_website_response_time_text(website_response_time)
+                    },
+                    '1': {
+                        'bool': f"{file_size / 1000} kB",
+                        'text': get_file_size_text(file_size)
+                    }
+                }],
+            }],
+            
             "points": server_points,
         }],
+
         'serp_preview': [{
+            'isCard': False,
             'serp_mobile': [{
                 'url': url if url.startswith(('http://', 'https://')) else 'http://' + url,
-                'title': title_text, 
-                'description': description_of_the_website, 
+                'title': title_text,
+                'description': description_of_the_website,
             }],
             'serp_desktop': [{
                 'url': url if url.startswith(('http://', 'https://')) else 'http://' + url,
-                'title': title_text, 
-                'description': description_of_the_website, 
+                'title': title_text,
+                'description': description_of_the_website,
             }],
-            "points": 50,                        
+            "points": 50,
         }]
     })
     db.session.add(analysis_results)
