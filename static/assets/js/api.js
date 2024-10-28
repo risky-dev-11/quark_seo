@@ -1,8 +1,8 @@
 const url = decodeURIComponent(document.location.href.split('/results/')[1] || document.location.href);
 
 document.addEventListener('DOMContentLoaded', function() {
-const pageTitle = document.querySelector('.page-title h1');
-pageTitle.innerHTML += url;
+  const pageTitle = document.querySelector('.page-title h1');
+  pageTitle.innerHTML += url;
 });
 
 document.addEventListener('DOMContentLoaded', async function() {
@@ -15,7 +15,7 @@ async function fetchAndApplyResults() {
         displayAPIError();
       }else{
         const data = await response.json();
-        displayAPIData(data);
+        generateCards(data);
       }
     } catch (error) {
       displayAPIError();
@@ -36,94 +36,144 @@ function displayAPIError() {
   <!-- /Features Section -->`;
 }
 
-function displayAPIData(data) {
-  data.forEach(card => {
-    if (card.isCard) {
-      // Create card container
-      const cardDiv = document.createElement('div');
-      cardDiv.className = 'card';
+function createCard(cardName, points, subcategories) {
 
-      // Create progress bar
-      const progressDiv = document.createElement('div');
-      progressDiv.className = 'progress';
-      progressDiv.style.borderRadius = '0';
+  // create the card & assign the attributes
+  const card = document.createElement('div');
+    card.className = 'card';
+  
+  // create the progress bar container & assign the attributes
+  const progress = document.createElement('div');
+    progress.className = 'progress';
+    progress.style.borderRadius = '0';
+  
+  // create the progress bar & assign the attributes
+  const progressBar = document.createElement('div');
+    progressBar.className = 'progress-bar';
+    progressBar.setAttribute('role', 'progressbar');
+    progressBar.setAttribute('aria-valuemin', '0');
+    progressBar.setAttribute('aria-valuemax', '100');
+    progressBar.setAttribute('aria-valuenow', points);
+    progressBar.style.width = `${points}%`;
+  
+  // insert the progress bar into the progress container
+  progress.appendChild(progressBar);
 
-      const progressBarDiv = document.createElement('div');
-      progressBarDiv.className = 'progress-bar';
-      progressBarDiv.role = 'progressbar';
-      progressBarDiv.ariaValueMin = '0';
-      progressBarDiv.ariaValueMax = '100';
-      progressBarDiv.style.width = `${card.points}%`;
+  // add the progress container to the card
+  card.appendChild(progress);
 
-      progressDiv.appendChild(progressBarDiv);
-      cardDiv.appendChild(progressDiv);
+  // create the strechted link for the title
+  const titleLink = document.createElement('a');
+    titleLink.className = 'stretched-link';
+    titleLink.href = '#'; // tbd...
+    titleLink.textContent = cardName;
 
-      // Create card title
-      const cardTitle = document.createElement('h3');
-      const cardLink = document.createElement('a');
-      cardLink.href = '#';
-      cardLink.className = 'stretched-link';
-      cardLink.textContent = card.card_name;
-      cardTitle.appendChild(cardLink);
-      cardDiv.appendChild(cardTitle);
+  // create the title of the card
+  const title = document.createElement('h3');
 
-      // Create card body
-      const cardBody = document.createElement('div');
-      cardBody.className = 'card-body';
+  // add the link to the title
+  title.appendChild(titleLink);
 
-      // Create table
-      const table = document.createElement('table');
+  // add the title to the card
+  card.appendChild(title);
 
-      for (const key in card) {
-        if (key !== 'isCard' && key !== 'card_name' && key !== 'points') {
-          const category = card[key];
+  // create the card body & table for the subcategories
+  const cardBody = document.createElement('div');
+    cardBody.className = 'card-body';
+  const table = document.createElement('table');
 
-          category.forEach(cat => {
-            // Create category row
-            const categoryRow = document.createElement('tr');
-            const categoryTitleCell = document.createElement('td');
-            categoryTitleCell.className = 'td-title';
-            categoryTitleCell.textContent = cat.category_name;
-            categoryRow.appendChild(categoryTitleCell);
-            table.appendChild(categoryRow);
+  subcategories.forEach(subcategory => {
+    Object.keys(subcategory).forEach(key => {
+      if (Array.isArray(subcategory[key])) {
 
-            // Create content rows
-            cat.content.forEach(category_content => {
-              for (const key in category_content) {
-                const element = category_content[key];
+        // Create the title row
+        const trTitle = document.createElement('tr');
+        const tdTitle = document.createElement('td');
+          tdTitle.className = 'td-title';
 
-                const contentRow = document.createElement('tr');
-                const contentCell = document.createElement('td');
-                contentCell.className = 'container_icon_and_text';
+        // Get the category name & set it as the title
+        tdTitle.textContent = subcategory[key][0].category_name;
+          delete subcategory[key][0].category_name; // Remove the property
 
-                // Add icon based on bool value
-                if (element.bool !== '') {
-                  const icon = document.createElement('i');
-                  icon.className = element.bool ? 'positive-icon' : 'negative-icon';
-                  contentCell.appendChild(icon);
-                }
+        // add the title to the row & the row to the table
+        trTitle.appendChild(tdTitle);
+        table.appendChild(trTitle);
 
-                // Add text
-                const textParagraph = document.createElement('p');
-                textParagraph.className = 'card-text';
-                textParagraph.textContent = element.text;
-                contentCell.appendChild(textParagraph);
+        // Iterate over the content
+        subcategory[key][0].content.forEach(item => {
 
-                contentRow.appendChild(contentCell);
-                table.appendChild(contentRow);
-              }
-            });
+          // now get the bool & text for each item in the content
+          Object.keys(item).forEach(index => {
+
+            // bool can be true, false or empty
+            const bool = item[index].bool;
+            // string value
+            const text = item[index].text;
+
+            // create the row & cell
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+              td.className = 'container_icon_and_text mb-2';
+
+            // create the paragraph element
+            const p = document.createElement('p');
+              p.className = 'card-text mb-0';
+
+            // check if bool value was passed from the server or if it's empty
+            if (bool === true || bool === false) {
+              // if a bool value was passed, create a row with the text & a icon matching the bool value
+              const icon = document.createElement('i');
+                // set the icon class & color based on the bool value
+                icon.className = bool ? 'bi bi-check-circle' : 'bi bi-x-circle';
+                icon.style.color = bool ? 'green' : 'red';
+
+              // add the icon to the cell & set the text
+              td.appendChild(icon);
+              p.textContent = text;
+            } else {
+              // if no bool value was passed, create a row with the text only
+              p.textContent = text;
+
+              // differentiate when no bool value was passed
+              p.style = "font-style: italic; font-size: 0.8em;";
+            } 
+
+            td.appendChild(p);
+            tr.appendChild(td);
+            table.appendChild(tr);
+
           });
-        }
+        });
+        
       }
-
-      cardBody.appendChild(table);
-      cardDiv.appendChild(cardBody);
-
-      // Append card to body
-      document.body.appendChild(cardDiv);
-    }
+    });
   });
 
-  // here do the special cases (not loopable)
+  cardBody.appendChild(table);
+  card.appendChild(cardBody);
+
+  return card;
+}
+
+// Iterate over the data and generate the cards
+function generateCards(data) {
+  Object.keys(data).forEach(resultCategory => {
+    const subcategories = data[resultCategory];
+    if (!subcategories[0].isCard) {
+      return; // Skip the category if it's not a card
+    }
+    delete subcategories[0].isCard; // Remove the property 
+
+    // Get the points
+    const points = subcategories[0].points;
+    delete subcategories[0].points; // Remove the property
+
+    // get the card name
+    const cardName = subcategories[0].card_name;
+    delete subcategories[0].card_name; // Remove the property
+    
+    // Create the card & append it to the container
+    const cardHtml = createCard(cardName, points, subcategories);
+    document.querySelector("#cardsContainer").appendChild(cardHtml);
+  });
 }
