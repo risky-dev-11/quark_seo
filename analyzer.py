@@ -1,12 +1,15 @@
-from text_snippet_functions import *
+from text_snippet_functions import get_website_response_time_text, get_file_size_text, get_media_count_text, get_link_count_text, get_title_missing_text, get_domain_in_title_text, get_title_length_text, get_title_word_repetitions_text, get_description_missing_text, get_description_length_text, get_language_comment, get_favicon_included_text, get_comparison_title_text, get_content_length_comment, get_duplicate_text, get_alt_attributes_missing_text, get_h1_heading_text, get_structure_text, get_internal_length_linktext_text, get_internal_no_linktext_text, get_internal_linktext_repetitions_text, get_external_length_linktext_text, get_external_no_linktext_text, get_external_linktext_repetitions_text, get_site_redirects_text, get_redirecting_www_text, get_compression_text
 from points_calculator import calculate_metadata_points, calculate_pagequality_points, calculate_pagestructure_points, calculate_links_points, calculate_server_points
 from models import AnalyzedWebsite
+from results_model import Content, Category, Card
 import requests
 from bs4 import BeautifulSoup
 import langdetect
 import socket
 
 def analyze_website(url, db):
+
+    results = {}
 
     try:
         response = requests.get(url if url.startswith(('http://', 'https://')) else 'http://' + url)
@@ -23,28 +26,54 @@ def analyze_website(url, db):
     internal_link_count = len([link for link in soup.find_all('a', href=True) if url in link['href']])
     external_link_count = len([link for link in soup.find_all('a', href=True) if url not in link['href']])
 
-    # Metadata results - title
+    ########################################
+
+    # Create the metadata card
+    metadata_card = Card('Metadaten', 0)
+
+    ##########
+
+    # Create the title category
+    title_category = Category('Titel')
+
+    # Add the content of the title category
     title_missing_bool = soup.title is None or not soup.title.string.strip()
+    title_category.add_content(title_missing_bool, get_title_missing_text(title_missing_bool))
     if (not title_missing_bool):
-        title_text = soup.title.string
-        domain_in_title_bool = url in soup.title.string
-        title_length = len(soup.title.string)
-        title_length_bool = title_length < 30 or title_length > 60 
-        title_word_repetitions_bool = len(set(soup.title.string.split())) != len(soup.title.string.split())
+        title_category.add_content('', soup.title.string)
+        title_category.add_content(url in soup.title.string, get_domain_in_title_text(url in soup.title.string))
+        title_category.add_content(len(soup.title.string) < 30 or len(soup.title.string) > 60, get_title_length_text(len(soup.title.string) < 30 or len(soup.title.string) > 60) )
+        title_category.add_content(len(set(soup.title.string.split())) != len(soup.title.string.split()), get_title_word_repetitions_text(len(set(soup.title.string.split())) != len(soup.title.string.split())))
+    
+    # Add the title category to the card
+    metadata_card.add_category(title_category)
 
-    # Metadata results - description
+    ####################
+
+    # Create the description category
+    description_category = Category('Beschreibung')
+
+     # Add the content of the description category
     description_missing_bool = soup.find('meta', attrs={'name': 'description'}) is None
+    description_category.add_content(description_missing_bool, get_description_missing_text(description_missing_bool))
     if (not description_missing_bool):
-        description_of_the_website = soup.find('meta', attrs={'name': 'description'})['content']
-        length_pixels = round(len(description_of_the_website) * 6.11) # 1 character is about 6 pixels
-        description_length_bool = length_pixels > 960
+        description_category.add_content('', soup.find('meta', attrs={'name': 'description'})['content'])
+        description_length_in_pixels = round(len(soup.find('meta', attrs={'name': 'description'})['content']) * 6.11) # 1 character is about 6 pixels
+        description_category.add_content(description_length_in_pixels >= 300 and description_length_in_pixels <= 960, get_description_length_text(description_length_in_pixels < 300 or description_length_in_pixels > 960))
 
-    # Metadata results - language
-    metatag_language = soup.find('meta', attrs={'name': 'language'}) or soup.html.get('lang')
-    text_language = langdetect.detect(soup.get_text())
+    # Add the description category to the card
+    metadata_card.add_category(description_category)
+
+    ####################
+
+     # Create the language category
+    language_category = Category('Sprache')
+
+    # Add the content of the language category
+    language_category.add_content('', 'Meta/HTML-Sprache: ' + soup.find('meta', attrs={'name': 'language'}) or soup.html.get('lang') or 'Unbekannt')
+    language_category.add_content('', 'Im Text erkannte Sprache: ' + langdetect.detect(soup.get_text()))
 
     # Get the IP address of the URL
-    
     domain = url.split('/')[2] if '//' in url else url.split('/')[0]
     ip_address = socket.gethostbyname(domain)
     # Get the server location using the IP address
@@ -58,6 +87,10 @@ def analyze_website(url, db):
     # Metadata results - favicon
     favicon_included_bool = soup.find('link', attrs={'rel': 'icon'}) is not None
 
+    ########################################
+
+    ##########
+
     # pagequality results - content
     comparison_title_with_content_bool = set(soup.title.string.split()).issubset(set(soup.get_text().split()))
     # Split text into sentences considering different tags
@@ -67,13 +100,18 @@ def analyze_website(url, db):
     alt_attributes_missing_count = sum(1 for img in soup.find_all('img') if not img.get('alt') or not img.get('alt').strip())
     alt_attributes_missing_bool = alt_attributes_missing_count > 0
 
-    ######
+    ########################################
+
+    ##########
     
     # pagestructure results - headings
     h1_heading_bool = soup.find('h1') is not None
     headings = [tag.name for tag in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])]
     structure_bool = all(int(headings[i][1]) >= int(headings[i + 1][1]) - 1 for i in range(len(headings) - 1))
 
+    ########################################
+
+    ##########
     # links results - internal
     internal_link_list = [link for link in soup.find_all('a', href=True) if url in link['href']]
     link_results_internal_link_count = internal_link_count # use the same bool as in general results
@@ -92,6 +130,9 @@ def analyze_website(url, db):
     no_linktext_count_external_bool = no_linktext_count_external > 0
     linktext_repetitions_external_bool = len(link_texts_external) != len(set(link_texts_external))
 
+    ########################################
+
+    ##########
     # server results - http redirect
     site_redirects_bool = response.url != 'http://' + url and response.url != 'https://' + url   
     www_url = (url if url.startswith(('http://', 'https://')) else 'http://' + url).replace('http://', 'http://www.').replace('https://', 'https://www.')
