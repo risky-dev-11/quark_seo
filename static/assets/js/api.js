@@ -15,9 +15,10 @@ async function fetchAndApplyResults() {
         displayAPIError();
       }else{
         const data = await response.json();
-        generateCards(data);
+        display(data);
       }
     } catch (error) {
+      console.error('Error:', error); 
       displayAPIError();
     }
 }
@@ -81,10 +82,8 @@ function createCard(cardName, points, subcategories) {
   const cardBody = document.createElement('div');
     cardBody.className = 'card-body';
   const table = document.createElement('table');
-
-  subcategories.forEach(subcategory => {
-    Object.keys(subcategory).forEach(key => {
-      if (Array.isArray(subcategory[key])) {
+  console.log(subcategories);
+    Object.keys(subcategories).forEach(key => {
 
         // Create the title row
         const trTitle = document.createElement('tr');
@@ -92,23 +91,21 @@ function createCard(cardName, points, subcategories) {
           tdTitle.className = 'td-title';
 
         // Get the category name & set it as the title
-        tdTitle.textContent = subcategory[key][0].category_name;
-          delete subcategory[key][0].category_name; // Remove the property
+        tdTitle.textContent = subcategories[key].category_name;
+          delete subcategories[key].category_name; // Remove the property
 
         // add the title to the row & the row to the table
         trTitle.appendChild(tdTitle);
         table.appendChild(trTitle);
 
         // Iterate over the content
-        subcategory[key][0].content.forEach(item => {
-
-          // now get the bool & text for each item in the content
-          Object.keys(item).forEach(index => {
-
+        subcategories[key].content.forEach(item => {
+            
+            console.log(item);
             // bool can be true, false or empty
-            const bool = item[index].bool;
+            const bool = item.bool;
             // string value
-            const text = item[index].text;
+            const text = item.text;
 
             // create the row & cell
             const tr = document.createElement('tr');
@@ -141,13 +138,8 @@ function createCard(cardName, points, subcategories) {
             td.appendChild(p);
             tr.appendChild(td);
             table.appendChild(tr);
-
-          });
         });
-        
-      }
     });
-  });
 
   cardBody.appendChild(table);
   card.appendChild(cardBody);
@@ -156,22 +148,21 @@ function createCard(cardName, points, subcategories) {
 }
 
 // Iterate over the data and generate the cards
-function generateCards(data) {
+function display(data) {
   Object.keys(data).forEach(resultCategory => {
     const subcategories = data[resultCategory];
-    if (!subcategories[0].isCard) {
+    if (!subcategories.isCard) {
       return; // Skip the category if it's not a card
     }
-    delete subcategories[0].isCard; // Remove the property 
+    delete subcategories.isCard; // Remove the property 
 
     // Get the points
-    const points = subcategories[0].points;
-    delete subcategories[0].points; // Remove the property
+    const points = subcategories.points;
+    delete subcategories.points; // Remove the property
 
     // get the card name
-    const cardName = subcategories[0].card_name;
-    delete subcategories[0].card_name; // Remove the property
-    
+    const cardName = subcategories.card_name;
+    delete subcategories.card_name; // Remove the property
     // Create the card & append it to the container
     const cardHtml = createCard(cardName, points, subcategories);
     document.querySelector("#cardsContainer").appendChild(cardHtml);
