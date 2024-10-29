@@ -385,5 +385,6 @@ def analyze_website(url, db):
             "points": 50,
         }]
     })
+            
     db.session.add(analysis_results)
     db.session.commit()
