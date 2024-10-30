@@ -61,11 +61,11 @@ function applyOverallResults(result) {
             }
 
         // Update improvement count and text
-        document.querySelector("#improvementCountValue").textContent = result.improvement_count;
+        document.querySelector("#improvementCount").textContent = result.improvement_count;
         document.querySelector("#improvementCountText").textContent = result.improvement_count_text;
         
             // Adjust the x position based on the improvement count value
-            const improvementCountTextElement = document.querySelector("#improvementCountValue");
+            const improvementCountTextElement = document.querySelector("#improvementCount");
 
             if (result.improvement_count < 10) {
                 improvementCountTextElement.setAttribute("x", parseInt(improvementCountTextElement.getAttribute("x")) + 14);
@@ -92,7 +92,7 @@ function applyOverallResults(result) {
                 improvementColor = '#dc3545'; // Red
             }
             document.querySelector("#improvementCircle").style.stroke = improvementColor;
-            document.querySelector("#improvementCountValue").style.fill = improvementColor;
+            document.querySelector("#improvementCount").style.fill = improvementColor;
 
     } catch (error) {
         console.error('Error in overall results', error);

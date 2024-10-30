@@ -27,6 +27,21 @@ def analyze_website(url, db):
     internal_link_count = len([link for link in soup.find_all('a', href=True) if url in link['href']])
     external_link_count = len([link for link in soup.find_all('a', href=True) if url not in link['href']])
     
+    general_results = {
+            'isCard': False,
+            'website_response_time': website_response_time,
+            'website_response_time_text': get_website_response_time_text(website_response_time),
+            'file_size': f"{file_size / 1000} kB",
+            'file_size_text': get_file_size_text(file_size), 
+            'word_count': word_count,
+            'word_count_text': "Hier gibt grundsätzlich es kein richtig oder falsch.",
+            'media_count': media_count,
+            'media_count_text': get_media_count_text(media_count),
+            'link_count': f"{internal_link_count} Intern / {external_link_count} Extern",
+            'link_count_text': get_link_count_text(internal_link_count, external_link_count),
+        }   
+    results['general_results'] = general_results
+
     ########################################
 
     # Create the metadata card
@@ -252,9 +267,36 @@ def analyze_website(url, db):
 
     #max_points_of_all_categories = 69
     #overall_points = metadata_points + pagequality_points + pagestructure_points + links_points + server_points
-    #overall_rating_bool = round((overall_points / max_points_of_all_categories) * 100)
-    
+    #overall_rating = round((overall_points / max_points_of_all_categories) * 100)
 
+    title_text = soup.title.string if soup.title and soup.title.string.strip() else ""
+    description_tag = soup.find('meta', attrs={'name': 'description'})
+    description_of_the_website = description_tag['content'] if description_tag else ""
+
+    serp_preview = {
+            'isCard': False,
+            'serp_mobile': {
+                'url': url if url.startswith(('http://', 'https://')) else 'http://' + url,
+                'title': title_text,
+                'description': description_of_the_website,
+            },
+            'serp_desktop': {
+                'url': url if url.startswith(('http://', 'https://')) else 'http://' + url,
+                'title': title_text,
+                'description': description_of_the_website,
+            },
+            "points": 50,
+        }
+    results['serp_preview'] = serp_preview
+
+    overall_results = {
+        'isCard': False,
+        'overall_rating': 81,
+        'overall_rating_text': "Die analysierte Webseite hat eine Gesamtbewertung von 81 von 100 Punkten. Das ist eine gute Bewertung, es bestehen jedoch noch einige Verbesserungsmöglichkeiten.",
+        'improvement_count': 16,
+        'improvement_count_text': "Es wurden 16 Verbesserungsmöglichkeiten für die Webseite gefunden.",
+    }
+    results['overall_results'] = overall_results
 
     analysis_results = AnalyzedWebsite(url=url, results=results)
             

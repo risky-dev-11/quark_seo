@@ -15,6 +15,10 @@ async function fetchAndApplyResults() {
         displayAPIError();
       }else{
         const data = await response.json();
+        console.log(data.overall_results);
+        applyGeneralResults(data.general_results);
+        applyOverallResults(data.overall_results);
+        applySerpPreview(data.serp_preview)
         display(data);
       }
     } catch (error) {
@@ -167,4 +171,98 @@ function display(data) {
     const cardHtml = createCard(cardName, points, subcategories);
     document.querySelector("#cardsContainer").appendChild(cardHtml);
   });
+}
+
+function applyOverallResults(result) {
+  try {
+      // Update overall rating SVG and text
+      document.querySelector("#overallRatingValue").textContent = result.overall_rating;
+      document.querySelector("#overallRatingCircle").setAttribute("stroke-dashoffset", `${(100 - result.overall_rating) * 5.65}`); // Adjust stroke based on value
+      document.querySelector("#overallRatingText").textContent = result.overall_rating_text;
+
+          // Adjust the x position based on the overall rating value
+          const overallRatingTextElement = document.querySelector("#overallRatingValue");
+
+          if (result.overall_rating_value < 10) {
+              overallRatingTextElement.setAttribute("x", parseInt(overallRatingTextElement.getAttribute("x")) + 14);
+          } else if (result.overall_rating_value >= 100) {
+              overallRatingTextElement.setAttribute("x", parseInt(overallRatingTextElement.getAttribute("x")) - 14);
+          }
+
+      // Update improvement count and text
+      document.querySelector("#improvementCount").textContent = result.improvement_count;
+      document.querySelector("#improvementCountText").textContent = result.improvement_count_text;
+      
+          // Adjust the x position based on the improvement count value
+          const improvementCountTextElement = document.querySelector("#improvementCount");
+
+          if (result.improvement_count < 10) {
+              improvementCountTextElement.setAttribute("x", parseInt(improvementCountTextElement.getAttribute("x")) + 14);
+          } else if (result.improvement_count >= 100) {
+              improvementCountTextElement.setAttribute("x", parseInt(improvementCountTextElement.getAttribute("x")) - 14);
+          }
+
+          // Update the improvement circle based on the improvement count
+
+          // Cap the improvement count at 30 for the circle display
+          const improvementCount = Math.min(result.improvement_count, 30);
+          const improvementPercentage = (improvementCount / 30) * 100;
+
+          // Set the stroke-dashoffset based on the capped improvement count
+          document.querySelector("#improvementCircle").setAttribute("stroke-dashoffset", `${(100 - improvementPercentage) * 5.65}`);
+
+          // Set the color based on the percentage
+          let improvementColor;
+          if (improvementPercentage <= 30) {
+              improvementColor = '#28a745'; // Green
+          } else if (improvementPercentage <= 70) {
+              improvementColor = '#ffc107'; // Yellow
+          } else {
+              improvementColor = '#dc3545'; // Red
+          }
+          document.querySelector("#improvementCircle").style.stroke = improvementColor;
+          document.querySelector("#improvementCount").style.fill = improvementColor;
+
+  } catch (error) {
+      console.error('Error in overall results', error);
+  }
+}
+
+function applyGeneralResults(result) {
+  try {
+    // Populate HTML elements with the data
+    document.getElementById('generalResultsResponseTimeTitle').innerHTML += ` <span style="color: #0d42ff;">${result.website_response_time}</span>`;
+    document.getElementById('generalResultsResponseTimeText').innerText = result.website_response_time_text;
+    
+    document.getElementById('generalResultsFileSizeTitle').innerHTML += ` <span style="color: #0d42ff;">${result.file_size}</span>`;
+    document.getElementById('generalResultsFileSizeText').innerText = result.file_size_text;
+    
+    document.getElementById('generalResultsWordCountTitle').innerHTML += ` <span style="color: #0d42ff;">${result.word_count}</span>`;
+    document.getElementById('generalResultsWordCountText').innerText = result.word_count_text;
+    
+    document.getElementById('generalResultsMediaCountTitle').innerHTML += ` <span style="color: #0d42ff;">${result.media_count}</span>`;
+    document.getElementById('generalResultsMediaCountText').innerText = result.media_count_text;
+    
+    document.getElementById('generalResultsLinkCountTitle').innerHTML += ` <span style="color: #0d42ff;">${result.link_count}</span>`;
+    document.getElementById('generalResultsLinkCountText').innerText = result.link_count_text;
+
+    
+  } catch (error) {
+    console.error('Error in general results:', error);
+  }
+}
+
+function applySerpPreview(result){
+  try {
+    // Update SERP preview for desktop
+    document.querySelector("#serpPreviewDesktopURL").innerHTML = result.serp_desktop.url;
+    document.querySelector("#serpPreviewDesktopTitle").innerHTML = result.serp_desktop.title;
+    document.querySelector("#serpPreviewDesktopDescription").innerHTML = result.serp_desktop.description;
+    // Update SERP preview for mobile
+    document.querySelector("#serpPreviewMobileURL").innerHTML = result.serp_mobile.url;
+    document.querySelector("#serpPreviewMobileTitle").innerHTML = result.serp_mobile.title;
+    document.querySelector("#serpPreviewMobileDescription").innerHTML = result.serp_mobile.description;  
+  } catch (error) {
+    console.error('Error in SERP preview results:', error);
+  }
 }
