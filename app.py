@@ -18,7 +18,6 @@ def create_app():
 
     login_manager = LoginManager()
     login_manager.init_app(app)
-    migrate = Migrate(app, db)
 
     from models import User
     @login_manager.user_loader
@@ -29,12 +28,6 @@ def create_app():
 
     from routes import register_routes
     register_routes(app, db, bycrypt)
-
-    # import the template endpoints
-    from template_routes import template_routes
-
-    # add the template endpoints to the app
-    app.register_blueprint(template_routes)
 
     # enable CORS
     CORS(app)

@@ -1,6 +1,5 @@
 from text_snippet_functions import get_improvement_count_text, get_overall_rating_text, get_website_response_time_text, get_file_size_text, get_media_count_text, get_link_count_text, get_title_missing_text, get_domain_in_title_text, get_title_length_text, get_title_word_repetitions_text, get_description_missing_text, get_description_length_text, get_language_comment, get_favicon_included_text, get_comparison_title_text, get_content_length_comment, get_duplicate_text, get_alt_attributes_missing_text, get_h1_heading_text, get_structure_text, get_internal_length_linktext_text, get_internal_no_linktext_text, get_internal_linktext_repetitions_text, get_external_length_linktext_text, get_external_no_linktext_text, get_external_linktext_repetitions_text, get_site_redirects_text, get_redirecting_www_text, get_compression_text
-from models import AnalyzedWebsite
-from results_model import Category, Card, calculate_improvement_count, calculate_overall_points
+from models import AnalyzedWebsite, Category, Card, calculate_improvement_count, calculate_overall_points
 import requests
 from bs4 import BeautifulSoup
 import langdetect
@@ -10,8 +9,11 @@ def analyze_website(url, db):
 
     results = {}
 
+    http_const = 'http://'
+    https_const = 'https://'
+
     try:
-        response = requests.get(url if url.startswith(('http://', 'https://')) else 'http://' + url)
+        response = requests.get(url if url.startswith((http_const, https_const)) else http_const + url)
     except Exception:
         raise requests.exceptions.RequestException('Unser Server konnte die Webseite nicht erreichen. Bitte überprüfen Sie die URL und versuchen Sie es erneut.')
     
@@ -227,8 +229,8 @@ def analyze_website(url, db):
     redirects_category = Category('Weiterleitungen')
 
     # Add the content of the redirects category
-    site_redirects_bool = response.url != 'http://' + url and response.url != 'https://' + url
-    www_url = (url if url.startswith(('http://', 'https://')) else 'http://' + url).replace('http://', 'http://www.').replace('https://', 'https://www.')
+    site_redirects_bool = response.url != http_const + url and response.url != https_const + url
+    www_url = (url if url.startswith((http_const, https_const)) else http_const + url).replace(http_const, 'http://www.').replace(https_const, 'https://www.')
     try:
         response_with_www = requests.get(www_url)
         redirecting_www_bool = response.status_code == 200 and response_with_www.status_code == 200
@@ -265,12 +267,12 @@ def analyze_website(url, db):
     serp_preview = {
             'isCard': False,
             'serp_mobile': {
-                'url': url if url.startswith(('http://', 'https://')) else 'http://' + url,
+                'url': url if url.startswith((http_const, https_const)) else http_const + url,
                 'title': title_text,
                 'description': description_of_the_website,
             },
             'serp_desktop': {
-                'url': url if url.startswith(('http://', 'https://')) else 'http://' + url,
+                'url': url if url.startswith((http_const, https_const)) else http_const + url,
                 'title': title_text,
                 'description': description_of_the_website,
             },

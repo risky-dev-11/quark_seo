@@ -1,6 +1,6 @@
 from flask import jsonify, render_template, request, redirect, url_for
 from models import AnalyzedWebsite, User
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_user, login_required, logout_user
 from analyzer import analyze_website
 
 def register_routes(app, db, bcrypt):
@@ -64,5 +64,35 @@ def register_routes(app, db, bcrypt):
             return jsonify(result.results), 200
         else:
             return jsonify({"error": "Not Found"}), 404
+        
+    # Routes for the templates
+    @app.route('/results/<path:url>', methods=['GET'])
+    def show_results(url):
+        return render_template("seo-analytics-page.html")
+    @app.route('/seo/analyze/<path:url>', methods=['GET'])
+    def show_loading_page(url):
+        return render_template("seo-analytics-loading-page.html")
+    @app.route('/profile')
+    @login_required
+    def profile():
+        return render_template('profile.html')
+    @app.route('/about')
+    def about():
+        return render_template('about.html')
+    @app.route('/contact')
+    def contact():
+        return render_template('contact.html')
+    @app.route('/get-a-quote')
+    def get_a_quote():
+        return render_template('get-a-quote.html')
+    @app.route('/pricing')
+    def pricing():
+        return render_template('pricing.html')
+    @app.route('/service-details')
+    def service_details():
+        return render_template('service-details.html')
+    @app.route('/starter-page')
+    def starter_page():
+        return render_template('starter-page.html')
 
  
