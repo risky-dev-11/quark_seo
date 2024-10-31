@@ -15,7 +15,6 @@ async function fetchAndApplyResults() {
         displayAPIError();
       }else{
         const data = await response.json();
-        console.log(data.overall_results);
         applyGeneralResults(data.general_results);
         applyOverallResults(data.overall_results);
         applySerpPreview(data.serp_preview)
@@ -61,6 +60,7 @@ function createCard(cardName, points, subcategories) {
     progressBar.setAttribute('aria-valuenow', points);
     progressBar.style.width = `${points}%`;
   
+    console.log(points);
   // insert the progress bar into the progress container
   progress.appendChild(progressBar);
 
@@ -86,7 +86,6 @@ function createCard(cardName, points, subcategories) {
   const cardBody = document.createElement('div');
     cardBody.className = 'card-body';
   const table = document.createElement('table');
-  console.log(subcategories);
     Object.keys(subcategories).forEach(key => {
 
         // Create the title row
@@ -105,7 +104,6 @@ function createCard(cardName, points, subcategories) {
         // Iterate over the content
         subcategories[key].content.forEach(item => {
             
-            console.log(item);
             // bool can be true, false or empty
             const bool = item.bool;
             // string value
@@ -175,6 +173,7 @@ function display(data) {
 
 function applyOverallResults(result) {
   try {
+    console.log(result);
       // Update overall rating SVG and text
       document.querySelector("#overallRatingValue").textContent = result.overall_rating;
       document.querySelector("#overallRatingCircle").setAttribute("stroke-dashoffset", `${(100 - result.overall_rating) * 5.65}`); // Adjust stroke based on value
@@ -204,9 +203,12 @@ function applyOverallResults(result) {
 
           // Update the improvement circle based on the improvement count
 
+          // Maximum expected improvements, used to calculate the percentage that the circle displays
+          maximum_expected_improvements = 15; 
+
           // Cap the improvement count at 30 for the circle display
-          const improvementCount = Math.min(result.improvement_count, 30);
-          const improvementPercentage = (improvementCount / 30) * 100;
+          const improvementCount = Math.min(result.improvement_count, maximum_expected_improvements);
+          const improvementPercentage = (improvementCount / maximum_expected_improvements) * 100;
 
           // Set the stroke-dashoffset based on the capped improvement count
           document.querySelector("#improvementCircle").setAttribute("stroke-dashoffset", `${(100 - improvementPercentage) * 5.65}`);

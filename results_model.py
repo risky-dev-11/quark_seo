@@ -1,3 +1,23 @@
+def calculate_overall_points(results):
+    overall_points = 0
+    achieved_points = 0
+    for card in results.values():
+        if 'points' in card:
+            overall_points += 100
+            achieved_points += card.get('points', 0)
+    return round((achieved_points / overall_points) * 100) if overall_points != 0 else 0
+
+def calculate_improvement_count(results):
+    false_count = 0
+    for _, card in results.items():
+        if card.get('isCard', False):
+            for category in card.values():
+                if isinstance(category, dict) and 'content' in category:
+                    for content in category['content']:
+                        if content['bool'] is False:
+                            false_count += 1
+    return false_count
+
 class Content:
     def __init__(self, bool, text):
         self.bool = bool
@@ -24,9 +44,9 @@ class Category:
         }
 
 class Card:
-    def __init__(self, card_name, points):
+    def __init__(self, card_name):
         self.card_name = card_name
-        self.points = points
+        self.points = 0
         self.is_card = True
         self.categories = {}
 
@@ -42,7 +62,25 @@ class Card:
         }
 
     def add_to_results(self, results):
+        self.calculate_points()
         results[self.card_name.lower()] = self.to_dict()
+    
+    def update_points(self, points):
+        self.points = points
+        
+    def calculate_points(self):
+        true_count = 0
+        false_count = 0
+        for category in self.categories.values():
+            for content in category['content']:
+                if content['bool'] is True:
+                    true_count += 1
+                elif content['bool'] is False:
+                    false_count += 1
+        total_points = true_count + false_count
+
+        points_percentage = (true_count / total_points) * 100 if total_points != 0 else 0
+        self.update_points(points_percentage)
 
 # EXAMPLE USAGE
 #

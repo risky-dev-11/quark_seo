@@ -1,7 +1,6 @@
-from text_snippet_functions import get_website_response_time_text, get_file_size_text, get_media_count_text, get_link_count_text, get_title_missing_text, get_domain_in_title_text, get_title_length_text, get_title_word_repetitions_text, get_description_missing_text, get_description_length_text, get_language_comment, get_favicon_included_text, get_comparison_title_text, get_content_length_comment, get_duplicate_text, get_alt_attributes_missing_text, get_h1_heading_text, get_structure_text, get_internal_length_linktext_text, get_internal_no_linktext_text, get_internal_linktext_repetitions_text, get_external_length_linktext_text, get_external_no_linktext_text, get_external_linktext_repetitions_text, get_site_redirects_text, get_redirecting_www_text, get_compression_text
-from points_calculator import calculate_metadata_points, calculate_pagequality_points, calculate_pagestructure_points, calculate_links_points, calculate_server_points
+from text_snippet_functions import get_improvement_count_text, get_overall_rating_text, get_website_response_time_text, get_file_size_text, get_media_count_text, get_link_count_text, get_title_missing_text, get_domain_in_title_text, get_title_length_text, get_title_word_repetitions_text, get_description_missing_text, get_description_length_text, get_language_comment, get_favicon_included_text, get_comparison_title_text, get_content_length_comment, get_duplicate_text, get_alt_attributes_missing_text, get_h1_heading_text, get_structure_text, get_internal_length_linktext_text, get_internal_no_linktext_text, get_internal_linktext_repetitions_text, get_external_length_linktext_text, get_external_no_linktext_text, get_external_linktext_repetitions_text, get_site_redirects_text, get_redirecting_www_text, get_compression_text
 from models import AnalyzedWebsite
-from results_model import Content, Category, Card
+from results_model import Category, Card, calculate_improvement_count, calculate_overall_points
 import requests
 from bs4 import BeautifulSoup
 import langdetect
@@ -45,7 +44,7 @@ def analyze_website(url, db):
     ########################################
 
     # Create the metadata card
-    metadata_card = Card('Metadaten', 0)
+    metadata_card = Card('Metadaten')
 
     ##########
 
@@ -122,7 +121,7 @@ def analyze_website(url, db):
     ########################################
     
     # Create the pagequality card
-    pagequality_card = Card('Seitenqualität', 0)
+    pagequality_card = Card('Seitenqualität')
     
     ##########
 
@@ -156,7 +155,7 @@ def analyze_website(url, db):
     ########################################
 
     # Create the pagestructure card
-    pagestructure_card = Card('Seitenstruktur', 0)
+    pagestructure_card = Card('Seitenstruktur')
 
     ##########
     
@@ -179,7 +178,7 @@ def analyze_website(url, db):
     ########################################
 
     # Create the links card
-    links_card = Card('Links', 0)
+    links_card = Card('Links')
 
     ##########
 
@@ -220,7 +219,7 @@ def analyze_website(url, db):
     ########################################
 
     # Create the server card
-    server_card = Card('Server', 0)
+    server_card = Card('Server')
 
     ##########
 
@@ -259,16 +258,6 @@ def analyze_website(url, db):
 
     ########################################
 
-    #metadata_points = calculate_metadata_points(title_missing_bool, domain_in_title_bool, title_length, title_word_repetitions_bool, description_missing_bool, length_pixels, metatag_language, text_language, favicon_included_bool)
-    #pagequality_points = calculate_pagequality_points(comparison_title_with_content_bool, word_count, duplicate_bool, alt_attributes_missing_count)
-    #pagestructure_points = calculate_pagestructure_points(h1_heading_bool, structure_bool)
-    #links_points = calculate_links_points(length_linktext_internal_bool, no_linktext_count_internal, linktext_repetitions_internal_bool, length_linktext_external_bool, no_linktext_count_external, linktext_repetitions_external_bool)
-    #server_points = calculate_server_points(site_redirects_bool, redirecting_www_bool, compression_bool)
-
-    #max_points_of_all_categories = 69
-    #overall_points = metadata_points + pagequality_points + pagestructure_points + links_points + server_points
-    #overall_rating = round((overall_points / max_points_of_all_categories) * 100)
-
     title_text = soup.title.string if soup.title and soup.title.string.strip() else ""
     description_tag = soup.find('meta', attrs={'name': 'description'})
     description_of_the_website = description_tag['content'] if description_tag else ""
@@ -289,12 +278,17 @@ def analyze_website(url, db):
         }
     results['serp_preview'] = serp_preview
 
+    # calculate the overall rating
+
+    overall_rating = calculate_overall_points(results)
+    improvement_count = calculate_improvement_count(results)
+
     overall_results = {
         'isCard': False,
-        'overall_rating': 81,
-        'overall_rating_text': "Die analysierte Webseite hat eine Gesamtbewertung von 81 von 100 Punkten. Das ist eine gute Bewertung, es bestehen jedoch noch einige Verbesserungsmöglichkeiten.",
-        'improvement_count': 16,
-        'improvement_count_text': "Es wurden 16 Verbesserungsmöglichkeiten für die Webseite gefunden.",
+        'overall_rating': overall_rating,
+        'overall_rating_text': get_overall_rating_text(overall_rating),
+        'improvement_count': improvement_count,
+        'improvement_count_text': get_improvement_count_text(improvement_count),
     }
     results['overall_results'] = overall_results
 

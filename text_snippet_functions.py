@@ -138,3 +138,27 @@ def get_redirecting_www_text(redirecting_www_bool):
 
 def get_compression_text(compression, compression_bool):
     return f"Der Webserver nutzt {compression} zur komprimierten Übertragung der Webseite." if compression_bool else "Der Webserver nutzt keine Komprimierung zur Übertragung der Webseite."
+
+def get_overall_rating_text(overall_rating):
+    text = f"Die analysierte Webseite hat eine Gesamtbewertung von {overall_rating} von 100 Punkten. "
+    if overall_rating < 40:
+        text += "Die Webseite ist nicht optimiert. Es bestehen viele Verbesserungsmöglichkeiten."
+    elif 40 <= overall_rating < 55:
+        text += "Die Webseite ist nicht optimiert. Es bestehen einige Verbesserungsmöglichkeiten."
+    elif 55 <= overall_rating < 70:
+        text += "Die Webseite ist teilweise optimiert. Es bestehen noch einige Verbesserungsmöglichkeiten."
+    elif 70 <= overall_rating < 90:
+        text +=  "Die Webseite ist optimiert. Es bestehen kaum Verbesserungsmöglichkeiten."
+    elif 90 <= overall_rating <= 100:
+        text +=  "Die Website ist hervorragend optimiert. Es bestehen kaum Verbesserungsmöglichkeiten."
+    else:
+        text = "Es ist ein Fehler bei der Bewertung aufgetreten. Bitte versuchen Sie es erneut."
+    return text
+
+def get_improvement_count_text(improvement_count):
+    if improvement_count == 0:
+        return "Es wurden keine Verbesserungsmöglichkeiten gefunden."
+    elif improvement_count == 1:
+        return "Es wurde eine Verbesserungsmöglichkeit gefunden."
+    else:
+        return f"Es wurden {improvement_count} Verbesserungsmöglichkeiten gefunden."
