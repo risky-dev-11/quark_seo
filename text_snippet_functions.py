@@ -100,8 +100,9 @@ def get_h1_heading_text(h1_heading_bool):
     return "H1-Überschrift ist vorhanden." if h1_heading_bool else "H1-Überschrift fehlt."
 
 def get_structure_text(structure_bool):
-    return "Die Hierachie der Überschriften wurde eingehalten." if structure_bool else "Die Seitenstruktur ist nicht optimal. Die Hierachie der Überschriften (H1-H6) sollte eingehalten werden."
-
+    return "Die Struktur der Überschriften ist korrekt." if structure_bool else "Die Struktur der Überschriften ist nicht korrekt."
+def get_hierachy_text(hierachy_bool):
+    return "Die Hierarchie der Überschriften ist korrekt." if hierachy_bool else "Die Hierarchie der Überschriften ist nicht korrekt."
 def get_internal_length_linktext_text(length_linktext_internal_bool):
     return "Keiner der internen Linktexte ist zu lang." if length_linktext_internal_bool else "Einige der internen Linktexte sind zu lang."
 
