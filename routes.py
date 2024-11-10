@@ -82,9 +82,6 @@ def register_routes(app, db, bcrypt):
     @app.route('/contact')
     def contact():
         return render_template('contact.html')
-    @app.route('/get-a-quote')
-    def get_a_quote():
-        return render_template('get-a-quote.html')
     @app.route('/pricing')
     def pricing():
         return render_template('pricing.html')
