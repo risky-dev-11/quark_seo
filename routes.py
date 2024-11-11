@@ -2,6 +2,7 @@ from flask import jsonify, render_template, request, redirect, url_for
 from models import AnalyzedWebsite, User
 from flask_login import login_user, login_required, logout_user
 from analyzer import analyze_website
+from flask_login import current_user
 
 def register_routes(app, db, bcrypt):
 
@@ -50,8 +51,12 @@ def register_routes(app, db, bcrypt):
     
     @app.route('/api/analyze/<path:url>', methods=['GET'])
     def analyze_url(url):
+        if not current_user.is_authenticated:
+            user_uuid = None
+        else:
+            user_uuid = current_user.uuid
         try: 
-            uuid = analyze_website(url, db)
+            uuid = analyze_website(user_uuid, url, db)
         except Exception as e:
             return jsonify({"message": "There was an error while analyzing the website", "error": str(e)}), 400
         return jsonify({"message": "Website successfully analyzed", "uuid": uuid}), 200

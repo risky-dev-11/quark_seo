@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import langdetect
 import socket
 
-def analyze_website(url, db):
+def analyze_website(user_uuid, url, db):
 
     results = {}
 
@@ -302,7 +302,7 @@ def analyze_website(url, db):
     }
     results['overall_results'] = overall_results
 
-    analysis_results = AnalyzedWebsite(url=url, results=results)
+    analysis_results = AnalyzedWebsite(user_uuid=user_uuid, url=url, results=results)
             
     db.session.add(analysis_results)
     db.session.commit()

@@ -23,6 +23,7 @@ class User(db.Model, UserMixin):
 
 class AnalyzedWebsite(db.Model, UserMixin):
     __tablename__ = 'analyzed_websites'
+    user_uuid = db.Column(db.Integer, db.ForeignKey('users.uuid'))
     uuid = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
     url = db.Column(db.String)
     results = db.Column(db.JSON)

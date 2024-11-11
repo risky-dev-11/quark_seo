@@ -17,7 +17,7 @@ def init_db():
         db.session.add(example_user)
         
         # Create an example analyzed website
-        example_website = AnalyzedWebsite(url='example.com', results={
+        example_website = AnalyzedWebsite(user_uuid=1, url='example.com', results={
             "general_results": {
             "isCard": False,
             "website_response_time": 0.749074,
