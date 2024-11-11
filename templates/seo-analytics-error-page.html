@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Deine SEO Analyseergebnisse{% endblock %}
+{% block content %}
+
+<!-- Page Title -->
+<div class="page-title dark-background" data-aos="fade">
+  <style>
+    .page-title {
+      background-image: url("{{ url_for('static', filename='assets/img/page-title-bg.jpg') }}");
+    }
+  </style>
+  <div class="container position-relative">
+    <h1>SEO Analyse von {{ url }}</h1>
+    <p>Wir haben die Webseite unter die Lupe genommen und sind zu folgenden Ergebnissen gekommen</p>
+  </div>
+</div><!-- End Page Title -->
+
+<section id="features" class="features section">
+    <div class="container section-title" data-aos="fade-up">
+        <span>Fehler</span>
+        <h2>Fehler</h2>
+        <p>Es ist ein Fehler bei der Verarbeitung Ihrer Anfrage aufgetreten. Bitte versuchen Sie es erneut.</p>
+    </div>
+</section>
+
+<script>
+  const url = "{{ url }}";
+</script>
+
+{% endblock %}

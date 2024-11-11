@@ -51,24 +51,27 @@ def register_routes(app, db, bcrypt):
     @app.route('/api/analyze/<path:url>', methods=['GET'])
     def analyze_url(url):
         try: 
-            analyze_website(url, db)
+            uuid = analyze_website(url, db)
         except Exception as e:
-            return jsonify({"error": str(e)}), 400
-        return jsonify({"message": "Website successfully analyzed"}), 200
+            return jsonify({"message": "There was an error while analyzing the website", "error": str(e)}), 400
+        return jsonify({"message": "Website successfully analyzed", "uuid": uuid}), 200
 
     # Endpoint for retrieving the results
-    @app.route('/get_results/<path:url>', methods=['GET'])
-    def get_results(url):
-        result = db.session.query(AnalyzedWebsite).filter(AnalyzedWebsite.url == url).order_by(AnalyzedWebsite.uuid.desc()).first()
+    @app.route('/api/get_results/<uuid:uuid>', methods=['GET'])
+    def get_results(uuid):
+        result = db.session.query(AnalyzedWebsite).filter_by(uuid=str(uuid)).first()
         if result:
             return jsonify(result.results), 200
         else:
             return jsonify({"error": "Not Found"}), 404
         
     # Routes for the templates
-    @app.route('/results/<path:url>', methods=['GET'])
-    def show_results(url):
-        return render_template("seo-analytics-page.html")
+    @app.route('/results/<path:url>/<uuid:uuid>', methods=['GET'])
+    def show_results(url, uuid):
+        return render_template("seo-analytics-page.html", url=url, uuid=uuid)
+    @app.route('/results/<path:url>/error', methods=['GET'])
+    def show_results_error(url):
+        return render_template("seo-analytics-error-page.html", url=url)
     @app.route('/seo/analyze/<path:url>', methods=['GET'])
     def show_loading_page(url):
         return render_template("seo-analytics-loading-page.html")
@@ -92,4 +95,3 @@ def register_routes(app, db, bcrypt):
     def starter_page():
         return render_template('starter-page.html')
 
- 

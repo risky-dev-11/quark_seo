@@ -4,285 +4,164 @@ from models import User, AnalyzedWebsite
 from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt(flask_app)
+
 def init_db():
     with flask_app.app_context():
-        db.create_all()
+        db.drop_all()  # Drop all tables
+        db.create_all()  # Create all tables
         print("Database tables created.")
         
         # Create an example user
-        hashed_password = bcrypt.generate_password_hash('Timer640').decode('utf-8')
+        hashed_password = bcrypt.generate_password_hash('1234').decode('utf-8')
         example_user = User(first_name='Niklas', last_name='Werthmann', email='n11werthmann@gmail.com', password=hashed_password, role='user')
         db.session.add(example_user)
         
         # Create an example analyzed website
-        example_website = AnalyzedWebsite(url='example.com', results=
-            {
-            'overall_results': [{
-                'isCard': False,
-                'overall_rating_bool': True,
-                'overall_rating_text': "Die analysierte Webseite hat eine Gesamtbewertung von 81 von 100 Punkten. Das ist eine gute Bewertung, es bestehen jedoch noch einige Verbesserungsmöglichkeiten.",
-                'improvement_count': "16",
-                'improvement_count_text': "Es wurden 16 Verbesserungsmöglichkeiten für die Webseite gefunden.",
-            }],
-            'general_results': [{
-                'isCard': False,
-                '1': {
-                    'value': "0.07s",
-                    'text': "Die Antwortzeit der Website ist ausgezeichnet."
-                },
-                '2': {
-                    'value': "67 kB",
-                    'text': "Die Dateigröße der Website ist sehr gut."
-                },
-                '3': {
-                    'value': "364",
-                    'text': "Hier gibt es kein richtig oder falsch."
-                },
-                '4': {
-                    'value': "23",
-                    'text': "Die Anzahl der Medien auf der Seite ist angemessen."
-                },
-                '5': {
-                    'value': "99 Intern / 12 Extern",
-                    'text': "Die Anzahl der internen und externen Links ist gut."
-                },
-            }],
-            'metadata_results': [{
-            'isCard': True,
-            'card_name': 'Metadaten',
-            'title': [{
-                'category_name': 'Titel',
-                'content': [{
-                    '0': {
-                        'bool': False,
-                        'text': "Titel ist vorhanden"
-                    },
-                    '1': {
-                        'bool': '',
-                        'text': "lichess.org • Kostenloses Online-Schach",
-                    },
-                    '2': {
-                        'bool': False,
-                        'text': "Die Domain steht im Seitentitel."
-                    },
-                    '3': {
-                        'bool': False,
-                        'text': "Die Länge deines Titels ist genau richtig"
-                    },
-                    '4': {
-                        'bool': False,
-                        'text': "Es gibt keine Wortwiederholungen im Titel."
-                    },
-                }],
-            }],
-            
-            'description': [{
-                'category_name': 'Beschreibung',
-                'content': [{
-                '0': {
-                    'bool': False,
-                    'text': "Beschreibung ist vorhanden"
-                },
-                '1': {
-                    'bool': True,
-                    'text': "Kostenloser Online-Schach-Server. Spiele jetzt auf einer übersichtlichen Benutzeroberfläche Schach! Keine Registrierung und keine Plugins erforderlich, komplett ohne Werbung. Spiele gegen den Computer, Freunde oder zufällige Gegner!",
-                },
-                '2': {
-                    'bool': True,
-                    'text': "Deine Beschreibung ist zu lang! Maximale Länge sind 1000 Pixel (etwa 160 Zeichen)."
-                },
-                }],
-            }],
-
-            'language': [{
-                'category_name': 'Sprache',
-                'content': [{
-                '0': {
-                    'bool': True,
-                    'text': "Die Sprache des Texts entspricht der Sprache des Metatags."
-                },
-                '1': {
-                    'bool': '',
-                    'text': 'Meta-Tag Sprache: de-de'
-                },
-                '2': {
-                    'bool': '',
-                    'text': 'Textsprache: de'
-                },
-                '3': {
-                    'bool': '',
-                    'text': 'Server: Deutschland'
-                },
-                }],
-            }],
-
-            'favicon': [{
-                'category_name': 'Favicon',
-                'content': [{
-                '0': {
-                    'bool': True,
-                    'text': "Favicon ist vorhanden und korrekt eingebunden."
-                }
-                }],
-            }],
-
-            "points": 70,
-            }],
-
-            'pagequality_results': [{
-            'isCard': True,
-            'card_name': 'Seitenqualität',
-            'content': [{
-                'category_name': 'Inhalt',
-                'content': [{
-                '0': {
-                    'bool': False,
-                    'text': "Einige Wörter aus dem Seitentitel werden nicht im Text bzw. Inhalt der Seite verwendet"
-                },
-                '1': {
-                    'bool': True,
-                    'text': "Der Inhalt ist mit 386 Wörtern etwas kurz. Eine gute Seite zu einem Thema sollte Text mit etwa 800 Wörtern enthalten."
-                },
-                '2': {
-                    'bool': True,
-                    'text': "Es gibt keine doppelten Inhalte auf der Seite."
-                },
-                }],
-            }],
-            
-            'pictures': [{
-                'category_name': 'Bilder',
-                'content': [{
-                '0': {
-                    'bool': False,
-                    'text': "Bei 16 Bildern fehlt das Alt-Attribut. Der Inhalt von Alt-Attributen wird von Suchmaschinen auch als Text gewertet und ist wichtig für die Bildersuche."
-                }
-                }],
-            }],
-            
-            "points": 44,
-            }],
-
-            'pagestructure_results': [{
-            'isCard': True,
-            'card_name': 'Seitenstruktur',
-            'headings': [{
-                'category_name': 'Überschriften',
-                'content': [{
-                '0': {
-                    'bool': True,
-                    'text': "H1-Überschrift ist vorhanden"
-                },
-                '1': {
-                    'bool': False,
-                    'text': "Die Seitenstruktur ist nicht optimal. Die Hierachie der Überschriften (H1-H6) sollte eingehalten werden."
-                },
-                }],
-            }],
-            
-            "points": 79,
-            }],
-
-            'links_results': [{
-            'isCard': True,
-            'card_name': 'Links',
-            'links_internal': [{
-                'category_name': 'Interne Links',
-                'content': [{
-                '0': {
-                    'bool': True,
-                    'text': "Keiner der Linktexte ist zu lang."
-                },
-                '1': {
-                    'bool': False,
-                    'text': "8 Links haben keinen Linktext oder nur Inhalt in Alt- und Titelattributen."
-                },
-                '2': {
-                    'bool': False,
-                    'text': "Einige der Linktexte wiederholen sich."
-                },
-                }],
-            }],
-
-            'links_external': [{
-                'category_name': 'Externe Links',
-                'content': [{
-                '0': {
-                    'bool': True,
-                    'text': "Keiner der Linktexte ist zu lang."
-                },
-                '1': {
-                    'bool': False,
-                    'text': "2 Links haben keinen Linktext oder nur Inhalt in Alt- und Titelattributen."
-                },
-                '2': {
-                    'bool': True,
-                    'text': "Keine der Linktexte wiederholen sich."
-                },
-                }],
-            }],
-            
-            "points": 79,
-            }],
-
-            'server_results': [{
-            'isCard': True,
-            'card_name': 'Server',
-            'http_redirect': [{
-                'category_name': 'HTTP Redirect',
-                'content': [{
-                '0': {
-                    'bool': True,
-                    'text': "Die Seite leitet nicht auf eine andere Seite um."
-                },
-                '1': {
-                    'bool': True,
-                    'text': "Die Weiterleitung von Adressen mit und ohne www. ist korrekt konfiguriert."
-                }
-                }],
-            }],
-            
-            'http_header': [{
-                'category_name': 'HTTP Header',
-                'content': [{
-                '0': {
-                    'bool': True,
-                    'text': "Der Webserver nutzt GZip zur komprimierten Übertragung der Webseite."
-                },
-                }],
-            }],
-            
-            'performance': [{
-                'category_name': 'Performance',
-                'content': [{
-                '0': {
-                    'bool': True,
-                    'text': "Die Antwortzeit der Website ist mit 0,7s ausgezeichnet."
-                },
-                '1': {
-                    'bool': True,
-                    'text': "Die Dateigröße der Website ist mit 65kb sehr gut."
-                }
-                }],
-            }],
-            
-            "points": 100,
-            }],
-
-            'serp_preview': [{
-            'isCard': False,
-            'serp_mobile': [{
-                'url': 'http://lichess.org',
-                'title': "lichess.org • Kostenloses Online-Schach",
-                'description': "Kostenloser Online-Schach-Server. Spiele jetzt auf einer übersichtlichen Benutzeroberfläche Schach! Keine Registrierung und keine Plugins erforderlich, komplett ohne Werbung. Spiele gegen den Computer, Freunde oder zufällige Gegner!",
-            }],
-            'serp_desktop': [{
-                'url': 'http://lichess.org',
-                'title': "lichess.org • Kostenloses Online-Schach",
-                'description': "Kostenloser Online-Schach-Server. Spiele jetzt auf einer übersichtlichen Benutzeroberfläche Schach! Keine Registrierung und keine Plugins erforderlich, komplett ohne Werbung. Spiele gegen den Computer, Freunde oder zufällige Gegner!",
-            }],
-            "points": 50,
-            }]
+        example_website = AnalyzedWebsite(url='example.com', results={
+            "general_results": {
+            "isCard": False,
+            "website_response_time": 0.749074,
+            "website_response_time_text": "Die Antwortzeit der Website könnte verbessert werden.",
+            "file_size": "39.872 kB",
+            "file_size_text": "Die Dateigröße der Website ist sehr gut.",
+            "word_count": 508,
+            "word_count_text": "Hier gibt grundsätzlich es kein richtig oder falsch.",
+            "media_count": 17,
+            "media_count_text": "Die Anzahl der Medien auf der Seite ist hoch.",
+            "link_count": "23 Intern / 101 Extern",
+            "link_count_text": "Die Anzahl der internen und externen Links ist hoch."
+            },
+            "metadaten": {
+            "isCard": True,
+            "card_name": "Metadaten",
+            "points": 62.5,
+            "titel": {
+                "category_name": "Titel",
+                "content": [
+                {"bool": True, "text": "Der Titel ist vorhanden."},
+                {"bool": "", "text": "lichess.org • Free Online Chess"},
+                {"bool": False, "text": "Die Domain steht im Seitentitel."},
+                {"bool": False, "text": "Die Länge des Titels ist mit 31 Zeichen zu kurz."},
+                {"bool": True, "text": "Es gibt keine Wortwiederholungen im Titel."}
+                ]
+            },
+            "beschreibung": {
+                "category_name": "Beschreibung",
+                "content": [
+                {"bool": True, "text": "Die Beschreibung ist vorhanden."},
+                {"bool": "", "text": "Free online chess server. Play chess in a clean interface. No registration, no ads, no plugin required. Play chess with the computer, friends or random opponents."},
+                {"bool": False, "text": "Die Beschreibung ist mit 990 Pixeln zu lang."}
+                ]
+            },
+            "sprache": {
+                "category_name": "Sprache",
+                "content": [
+                {"bool": "", "text": "Meta/HTML-Sprache: en-GB"},
+                {"bool": "", "text": "Im Text erkannte Sprache: en"},
+                {"bool": "", "text": "Serverstandort: France"},
+                {"bool": True, "text": "Die Sprache des Texts entspricht der Sprache des Metatags."}
+                ]
+            },
+            "favicon": {
+                "category_name": "Favicon",
+                "content": [
+                {"bool": True, "text": "Favicon ist vorhanden und korrekt eingebunden."}
+                ]
+            }
+            },
+            "seitenqualität": {
+            "isCard": True,
+            "card_name": "Seitenqualität",
+            "points": 50.0,
+            "inhalt": {
+                "category_name": "Inhalt",
+                "content": [
+                {"bool": True, "text": "Einige Wörter aus dem Seitentitel werden nicht im Text bzw. Inhalt der Seite verwendet."},
+                {"bool": True, "text": "Der Inhalt ist mit 508 Wörtern etwas kurz."},
+                {"bool": False, "text": "Es gibt keine doppelten Inhalte auf der Seite."}
+                ]
+            },
+            "bilder": {
+                "category_name": "Bilder",
+                "content": [
+                {"bool": False, "text": "Bei 15 Bildern fehlt das Alt-Attribut."}
+                ]
+            }
+            },
+            "seitenstruktur": {
+            "isCard": True,
+            "card_name": "Seitenstruktur",
+            "points": 50.0,
+            "überschriften": {
+                "category_name": "Überschriften",
+                "content": [
+                {"bool": False, "text": "H1-Überschrift fehlt."},
+                {"bool": True, "text": "Die Hierachie der Überschriften wurde eingehalten."}
+                ]
+            }
+            },
+            "links": {
+            "isCard": True,
+            "card_name": "Links",
+            "points": 50.0,
+            "interne links": {
+                "category_name": "Interne Links",
+                "content": [
+                {"bool": True, "text": "Keiner der internen Linktexte ist zu lang."},
+                {"bool": False, "text": "Einige der internen Linktexte sind zu lang."},
+                {"bool": False, "text": "Alle internen Links haben einen Linktext."},
+                {"bool": False, "text": "Es gibt keine Wiederholungen bei den internen Linktexten."}
+                ]
+            },
+            "externe links": {
+                "category_name": "Externe Links",
+                "content": [
+                {"bool": True, "text": "Keiner der externen Linktexte ist zu lang."},
+                {"bool": False, "text": "Einige der externen Linktexte sind zu lang."},
+                {"bool": True, "text": "Ein externer Link hat keinen Linktext oder nur Inhalt in Alt- und Titelattributen."},
+                {"bool": True, "text": "Einige der externen Linktexte wiederholen sich."}
+                ]
+            }
+            },
+            "server": {
+            "isCard": True,
+            "card_name": "Server",
+            "points": 100.0,
+            "weiterleitungen": {
+                "category_name": "Weiterleitungen",
+                "content": [
+                {"bool": True, "text": "Die Seite leitet auf eine andere Seite um."},
+                {"bool": True, "text": "Die Weiterleitung von Adressen mit und ohne www. ist korrekt konfiguriert."}
+                ]
+            },
+            "komprimierung": {
+                "category_name": "Komprimierung",
+                "content": [
+                {"bool": True, "text": "Der Webserver nutzt br zur komprimierten Übertragung der Webseite."}
+                ]
+            }
+            },
+            "serp_preview": {
+            "isCard": False,
+            "serp_mobile": {
+                "url": "http://lichess.org",
+                "title": "lichess.org • Free Online Chess",
+                "description": "Free online chess server. Play chess in a clean interface. No registration, no ads, no plugin required. Play chess with the computer, friends or random opponents."
+            },
+            "serp_desktop": {
+                "url": "http://lichess.org",
+                "title": "lichess.org • Free Online Chess",
+                "description": "Free online chess server. Play chess in a clean interface. No registration, no ads, no plugin required. Play chess with the computer, friends or random opponents."
+            },
+            "points": 50
+            },
+            "overall_results": {
+            "isCard": False,
+            "overall_rating": 60,
+            "overall_rating_text": "Die analysierte Webseite hat eine Gesamtbewertung von 60 von 100 Punkten. Die Webseite ist teilweise optimiert. Es bestehen noch einige Verbesserungsmöglichkeiten.",
+            "improvement_count": 10,
+            "improvement_count_text": "Es wurden 10 Verbesserungsmöglichkeiten gefunden."
+            }
         })
         db.session.add(example_website)
         

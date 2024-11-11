@@ -1,16 +1,9 @@
-const url = decodeURIComponent(document.location.href.split('/results/')[1] || document.location.href);
-
-document.addEventListener('DOMContentLoaded', function() {
-  const pageTitle = document.querySelector('.page-title h1');
-  pageTitle.innerHTML += url;
-});
-
 document.addEventListener('DOMContentLoaded', async function() {
     await fetchAndApplyResults();
 });
 async function fetchAndApplyResults() {
   try {
-      const response = await fetch(`/get_results/${url}`);
+      const response = await fetch(`/api/get_results/${uuid}`);
       if (!response.ok) {
         displayAPIError();
       }else{
@@ -29,15 +22,12 @@ async function fetchAndApplyResults() {
 function displayAPIError() {
   document.getElementById('seo-analyse-container').innerHTML = 
   `<section id="features" class="features section">
-    <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <span>Fehler</span>
         <h2>Fehler</h2>
-        <p><p>Es ist ein Fehler bei der Verarbeitung Ihrer Anfrage aufgetreten. Bitte versuchen Sie es erneut.</p></p>
+        <p>Es ist ein Fehler bei der Anzeige der Analyseergebnisse aufgetreten. Bitte versuchen Sie es erneut.</p>
       </div>
-      <!-- End Section Title -->   
-  </section>
-  <!-- /Features Section -->`;
+  </section>`;
 }
 
 function createCard(cardName, points, subcategories) {

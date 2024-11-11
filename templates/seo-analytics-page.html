@@ -4,12 +4,17 @@
 {% block content %}
 
 <!-- Serp Preview CSS File -->
-<link href="../static/assets/css/serp-preview.css" rel="stylesheet">
+<link href="/results/static/assets/css/serp-preview.css" rel="stylesheet">
 
 <!-- Page Title -->
-<div class="page-title dark-background" data-aos="fade" style="background-image: url(../static/assets/img/page-title-bg.jpg);">
+<div class="page-title dark-background" data-aos="fade">
+  <style>
+    .page-title {
+      background-image: url("{{ url_for('static', filename='assets/img/page-title-bg.jpg') }}");
+    }
+  </style>
   <div class="container position-relative">
-    <h1>SEO Analyse von </h1>
+    <h1>SEO Analyse von {{ url }}</h1>
     <p>Wir haben die Webseite unter die Lupe genommen und sind zu folgenden Ergebnissen gekommen</p>
   </div>
 </div><!-- End Page Title -->
@@ -184,6 +189,11 @@
 
   </div>
 
-<script src="../static/assets/js/api.js"></script>
+<script>
+  const url = "{{ url }}";
+  const uuid = "{{ uuid }}";
+</script>
+
+<script src="{{ url_for('static', filename='assets/js/api.js') }}"></script>
 
 {% endblock %}

@@ -1,5 +1,7 @@
 # Classes for the database
 
+import hashlib
+import uuid
 from flask_login import UserMixin
 from app import db
 
@@ -11,6 +13,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     role = db.Column(db.String)
+    authenticated = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f'<User {self.email}, Role {self.role}>'
@@ -20,7 +23,7 @@ class User(db.Model, UserMixin):
 
 class AnalyzedWebsite(db.Model, UserMixin):
     __tablename__ = 'analyzed_websites'
-    uuid = db.Column(db.Integer, primary_key=True)
+    uuid = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
     url = db.Column(db.String)
     results = db.Column(db.JSON)
 

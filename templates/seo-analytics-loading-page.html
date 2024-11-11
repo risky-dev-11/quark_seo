@@ -40,19 +40,14 @@
         .then(response => {
             if (response.status === 200) {
                 return response.json().then(data => {
-                    window.location.href = `/results/${url}`; 
+                    window.location.href = `/results/${url}/${data.uuid}`; 
                 });
             } else {
-                return response.json().then(data => {
-                    alert(data.error || 'An error occurred');
-                    window.close();
-                });
+                window.location.href = `/results/${url}/error`;
             }
         })
         .catch(error => {
-            console.log('Error:', error);
-            alert('An error occurred while analyzing the website.');
-            window.close();
+            window.location.href = `/results/${url}/error`;
         });
     </script>
 </body>

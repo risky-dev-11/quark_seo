@@ -13,8 +13,11 @@ def analyze_website(url, db):
     https_const = 'https://'
 
     try:
-        response = requests.get(url if url.startswith((http_const, https_const)) else http_const + url)
+        session = requests.Session()
+        session.max_redirects = 5
+        response = session.get(url if url.startswith((http_const, https_const)) else http_const + url, allow_redirects=True)
     except Exception:
+        print('Unser Server konnte die Webseite nicht erreichen. Bitte überprüfen Sie die URL und versuchen Sie es erneut.')
         raise requests.exceptions.RequestException('Unser Server konnte die Webseite nicht erreichen. Bitte überprüfen Sie die URL und versuchen Sie es erneut.')
     
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -131,9 +134,9 @@ def analyze_website(url, db):
     title_category = Category('Inhalt')
 
     # Add the content of the content category
-    title_category.add_content(set(soup.title.string.split()).issubset(set(soup.get_text().split())), get_comparison_title_text(set(soup.title.string.split()).issubset(set(soup.get_text().split()))))
+    title_category.add_content(not set(soup.title.string.split()).issubset(set(soup.get_text().split())), get_comparison_title_text(set(soup.title.string.split()).issubset(set(soup.get_text().split()))))
     title_category.add_content(word_count >= 300, get_content_length_comment(word_count))
-    title_category.add_content(len(sentences := [sentence.strip() for tag in ['p', 'div', 'span', 'li'] for element in soup.find_all(tag) for sentence in element.get_text().split('.') if sentence.strip()]) == len(set(sentences)), get_duplicate_text(len(sentences) != len(set(sentences))))
+    title_category.add_content(len(sentences := [sentence.strip() for tag in ['p', 'div', 'span', 'li'] for element in soup.find_all(tag) for sentence in element.get_text().split('.') if sentence.strip()]) != len(set(sentences)), get_duplicate_text(len(sentences) != len(set(sentences))))
 
     # Add the content category to the card
     pagequality_card.add_category(title_category)
@@ -190,10 +193,9 @@ def analyze_website(url, db):
     # Add the content of the internal links category
     internal_link_list = [link for link in soup.find_all('a', href=True) if url in link['href']]
     internal_link_count = len(internal_link_list)
-    internal_links_category.add_content(internal_link_count > 0, get_internal_length_linktext_text(internal_link_count > 0))
     internal_links_category.add_content(all(len(link.text) < 30 for link in internal_link_list), get_internal_length_linktext_text(all(len(link.text) < 30 for link in internal_link_list)))
-    internal_links_category.add_content(sum(1 for text in [link.text for link in internal_link_list] if not text.strip()) > 0, get_internal_no_linktext_text(sum(1 for text in [link.text for link in internal_link_list] if not text.strip()) > 0))
-    internal_links_category.add_content(len([link.text for link in internal_link_list]) != len(set([link.text for link in internal_link_list])), get_internal_linktext_repetitions_text(len([link.text for link in internal_link_list]) != len(set([link.text for link in internal_link_list]))))
+    internal_links_category.add_content(sum(1 for text in [link.text for link in internal_link_list] if not text.strip()) <= 0, get_internal_no_linktext_text(sum(1 for text in [link.text for link in internal_link_list] if not text.strip()) > 0))
+    internal_links_category.add_content(len([link.text for link in internal_link_list]) == len(set([link.text for link in internal_link_list])), get_internal_linktext_repetitions_text(len([link.text for link in internal_link_list]) != len(set([link.text for link in internal_link_list]))))
 
     # Add the internal links category to the card
     links_card.add_category(internal_links_category)
@@ -206,10 +208,9 @@ def analyze_website(url, db):
     # Add the content of the external links category
     external_link_list = [link for link in soup.find_all('a', href=True) if url not in link['href']]
     external_link_count = len(external_link_list)
-    external_links_category.add_content(external_link_count > 0, get_external_length_linktext_text(external_link_count > 0))
     external_links_category.add_content(all(len(link.text) < 30 for link in external_link_list), get_external_length_linktext_text(all(len(link.text) < 30 for link in external_link_list)))
-    external_links_category.add_content(sum(1 for text in [link.text for link in external_link_list] if not text.strip()) > 0, get_external_no_linktext_text(sum(1 for text in [link.text for link in external_link_list] if not text.strip()) > 0))
-    external_links_category.add_content(len([link.text for link in external_link_list]) != len(set([link.text for link in external_link_list])), get_external_linktext_repetitions_text(len([link.text for link in external_link_list]) != len(set([link.text for link in external_link_list]))))
+    external_links_category.add_content(sum(1 for text in [link.text for link in external_link_list] if not text.strip()) <= 0, get_external_no_linktext_text(sum(1 for text in [link.text for link in external_link_list] if not text.strip()) > 0))
+    external_links_category.add_content(len([link.text for link in external_link_list]) == len(set([link.text for link in external_link_list])), get_external_linktext_repetitions_text(len([link.text for link in external_link_list]) != len(set([link.text for link in external_link_list]))))
 
     # Add the external links category to the card
     links_card.add_category(external_links_category)
@@ -298,3 +299,5 @@ def analyze_website(url, db):
             
     db.session.add(analysis_results)
     db.session.commit()
+
+    return analysis_results.uuid
