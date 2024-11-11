@@ -1,4 +1,4 @@
-from text_snippet_functions import get_improvement_count_text, get_overall_rating_text, get_website_response_time_text, get_file_size_text, get_media_count_text, get_link_count_text, get_title_missing_text, get_domain_in_title_text, get_title_length_text, get_title_word_repetitions_text, get_description_missing_text, get_description_length_text, get_language_comment, get_favicon_included_text, get_comparison_title_text, get_content_length_comment, get_duplicate_text, get_alt_attributes_missing_text, get_h1_heading_text, get_structure_text, get_internal_length_linktext_text, get_internal_no_linktext_text, get_internal_linktext_repetitions_text, get_external_length_linktext_text, get_external_no_linktext_text, get_external_linktext_repetitions_text, get_site_redirects_text, get_redirecting_www_text, get_compression_text
+from text_snippet_functions import get_hierachy_text, get_improvement_count_text, get_overall_rating_text, get_website_response_time_text, get_file_size_text, get_media_count_text, get_link_count_text, get_title_missing_text, get_domain_in_title_text, get_title_length_text, get_title_word_repetitions_text, get_description_missing_text, get_description_length_text, get_language_comment, get_favicon_included_text, get_comparison_title_text, get_content_length_comment, get_duplicate_text, get_alt_attributes_missing_text, get_h1_heading_text, get_structure_text, get_internal_length_linktext_text, get_internal_no_linktext_text, get_internal_linktext_repetitions_text, get_external_length_linktext_text, get_external_no_linktext_text, get_external_linktext_repetitions_text, get_site_redirects_text, get_redirecting_www_text, get_compression_text
 from models import AnalyzedWebsite, Category, Card, calculate_improvement_count, calculate_overall_points
 import requests
 from bs4 import BeautifulSoup
@@ -169,10 +169,17 @@ def analyze_website(url, db):
 
     # Add the content of the headings category
     headings = [tag.name for tag in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])]
+
+    # structure_bool: Ensures that the second element of each consecutive pair in 
+    # headings is in a non-increasing order, allowing a difference of at most 1.
+    # hierarchy_bool: Ensures that if any heading from h{i} to h6 is present,
+    # then all preceding headings h1 to h{i-1} must also be present.
     structure_bool = all(int(headings[i][1]) >= int(headings[i + 1][1]) - 1 for i in range(len(headings) - 1))
+    hierarchy_bool = all(f'h{i}' in headings for i in range(1, 7) if any(f'h{j}' in headings for j in range(i, 7)))
     headings_category.add_content(soup.find('h1') is not None, get_h1_heading_text(soup.find('h1') is not None))
     headings_category.add_content(structure_bool, get_structure_text(structure_bool))
-
+    headings_category.add_content(hierarchy_bool, get_hierachy_text(hierarchy_bool))
+    
     # Add the headings category to the card
     pagestructure_card.add_category(headings_category)
 
@@ -230,14 +237,14 @@ def analyze_website(url, db):
     redirects_category = Category('Weiterleitungen')
 
     # Add the content of the redirects category
-    site_redirects_bool = response.url != http_const + url and response.url != https_const + url
+    site_redirects_bool = response.url != http_const + url and response.url != https_const + url and response.url != url
     www_url = (url if url.startswith((http_const, https_const)) else http_const + url).replace(http_const, 'http://www.').replace(https_const, 'https://www.')
     try:
         response_with_www = requests.get(www_url)
         redirecting_www_bool = response.status_code == 200 and response_with_www.status_code == 200
     except Exception:
         redirecting_www_bool = False
-    redirects_category.add_content(site_redirects_bool, get_site_redirects_text(site_redirects_bool))
+    redirects_category.add_content(not site_redirects_bool, get_site_redirects_text(site_redirects_bool))
     redirects_category.add_content(redirecting_www_bool, get_redirecting_www_text(redirecting_www_bool))
 
     # Add the redirects category to the card
