@@ -123,7 +123,7 @@ function createCard(cardName, points, subcategories) {
               // if no bool value was passed, create a row with the text only
               p.textContent = text;
 
-              // differentiate when no bool value was passed
+              // and style it to differentitate between text with icon and without
               p.style = "font-style: italic; font-size: 0.8em;";
             } 
 

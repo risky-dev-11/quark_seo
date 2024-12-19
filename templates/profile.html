@@ -13,7 +13,7 @@
 
   <!-- ======= Profile Section ======= -->
    <section>
-      <div class="container"></div>
+      <div class="container" id="profile-content">
         <div class="row">
           <div class="col-md-6">
             <h2>Persönliche Informationen</h2>
@@ -26,5 +26,30 @@
       </div>
    </section>
 
-   
+   <script>
+    fetch('/profile/get_analyses')
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById("profile-content");
+        const row = document.createElement('div');
+          row.className = 'row';
+        const col = document.createElement('div');
+          col.className ='col-md-6';
+        const h2 = document.createElement('h2')
+          h2.innerHTML = 'Deine Analysen';
+        const ul = document.createElement('ul')
+
+        data.forEach(analysis => {
+          const listItem = document.createElement('li');
+          url = `/results/${analysis.url}/${analysis.uuid}`;
+          listItem.innerHTML = `<a href='${url}'>Link</a>`;
+          ul.appendChild(listItem);
+        });
+        col.appendChild(h2);
+        col.appendChild(ul);
+        row.appendChild(col);
+        container.appendChild(row);
+      })
+      .catch(error => console.error('Error fetching analyses:', error));
+   </script>
 {% endblock %}

@@ -47,7 +47,6 @@ def register_routes(app, db, bcrypt):
     @app.login_manager.unauthorized_handler
     def unauthorized_callback():
         return render_template('unauthorized.html')
-
     
     @app.route('/api/analyze/<path:url>', methods=['GET'])
     def analyze_url(url):
@@ -70,6 +69,14 @@ def register_routes(app, db, bcrypt):
         else:
             return jsonify({"error": "Not Found"}), 404
         
+    @app.route('/profile/get_analyses')
+    @login_required
+    def get_users_analysis():
+        user_uuid = current_user.uuid
+        result = db.session.query(AnalyzedWebsite).filter_by(user_uuid=user_uuid).all()
+        results = [{"uuid": analysis.uuid, "url": analysis.url} for analysis in result]
+        return jsonify(results), 200
+
     # Routes for the templates
     @app.route('/results/<path:url>/<uuid:uuid>', methods=['GET'])
     def show_results(url, uuid):
