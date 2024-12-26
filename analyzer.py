@@ -1,4 +1,4 @@
-from text_snippet_functions import get_hierachy_text, get_improvement_count_text, get_overall_rating_text, get_website_response_time_text, get_file_size_text, get_media_count_text, get_link_count_text, get_title_missing_text, get_domain_in_title_text, get_title_length_text, get_title_word_repetitions_text, get_description_missing_text, get_description_length_text, get_language_comment, get_favicon_included_text, get_comparison_title_text, get_content_length_comment, get_duplicate_text, get_alt_attributes_missing_text, get_h1_heading_text, get_structure_text, get_internal_length_linktext_text, get_internal_no_linktext_text, get_internal_linktext_repetitions_text, get_external_length_linktext_text, get_external_no_linktext_text, get_external_linktext_repetitions_text, get_site_redirects_text, get_redirecting_www_text, get_compression_text
+from text_snippet_functions import get_hierarchy_text, get_improvement_count_text, get_overall_rating_text, get_website_response_time_text, get_file_size_text, get_media_count_text, get_link_count_text, get_title_missing_text, get_domain_in_title_text, get_title_length_text, get_title_word_repetitions_text, get_description_missing_text, get_description_length_text, get_language_comment, get_favicon_included_text, get_comparison_title_text, get_content_length_comment, get_duplicate_text, get_alt_attributes_missing_text, get_h1_heading_text, get_structure_text, get_internal_length_linktext_text, get_internal_no_linktext_text, get_internal_linktext_repetitions_text, get_external_length_linktext_text, get_external_no_linktext_text, get_external_linktext_repetitions_text, get_site_redirects_text, get_redirecting_www_text, get_compression_text
 from models import AnalyzedWebsite, Category, Card, calculate_improvement_count, calculate_overall_points
 import requests
 from bs4 import BeautifulSoup
@@ -178,7 +178,7 @@ def analyze_website(user_uuid, url, db):
     hierarchy_bool = all(f'h{i}' in headings for i in range(1, 7) if any(f'h{j}' in headings for j in range(i, 7)))
     headings_category.add_content(soup.find('h1') is not None, get_h1_heading_text(soup.find('h1') is not None))
     headings_category.add_content(structure_bool, get_structure_text(structure_bool))
-    headings_category.add_content(hierarchy_bool, get_hierachy_text(hierarchy_bool))
+    headings_category.add_content(hierarchy_bool, get_hierarchy_text(hierarchy_bool))
     
     # Add the headings category to the card
     pagestructure_card.add_category(headings_category)

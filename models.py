@@ -1,6 +1,5 @@
 # Classes for the database
 
-import hashlib
 import uuid
 from flask_login import UserMixin
 from app import db
@@ -127,3 +126,46 @@ class Card:
 
         points_percentage = (true_count / total_points) * 100 if total_points != 0 else 0
         self.update_points(points_percentage)
+
+
+# Snippet retriever
+
+import json
+import os
+
+class TextProvider:
+    def __init__(self, file_path):
+        """
+        Initialize the TextProvider with the path to the JSON file containing the texts.
+
+        :param file_path: Path to the JSON file.
+        """
+        self.file_path = file_path
+        self.texts = {}
+        self._load_texts()
+
+    def _load_texts(self):
+        """
+        Load texts from the JSON file into memory.
+        """
+        if not os.path.exists(self.file_path):
+            raise FileNotFoundError(f"File not found: {self.file_path}")
+        with open(self.file_path, "r", encoding="utf-8") as f:
+            self.texts = json.load(f)
+
+    def get_text(self, category, key, **kwargs):
+        """
+        Retrieve a specific text from the JSON structure.
+
+        :param category: The top-level category in the JSON file.
+        :param key: The specific key within the category.
+        :param kwargs: Optional placeholders to be replaced in the text.
+        :return: The formatted text.
+        """
+        try:
+            text = self.texts[category][key]
+            return text.format(**kwargs)
+        except KeyError as e:
+            raise KeyError(f"Missing key: {e}") from e
+        except ValueError as e:
+            raise ValueError(f"Formatting error with placeholders: {e}") from e
