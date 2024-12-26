@@ -246,6 +246,21 @@ function applyGeneralResults(result) {
 
 function applySerpPreview(result){
   try {
+
+    // Update serp rating SVG and text
+    document.querySelector("#serpRatingValue").textContent = result.points;
+    document.querySelector("#serpRatingCircle").setAttribute("stroke-dashoffset", `${(100 - result.points) * 5.65}`); // Adjust stroke based on value
+
+        // Adjust the x position based on the overall rating value
+        const serpRatingTextElement = document.querySelector("#serpRatingValue");
+
+        if (result.overall_rating_value < 10) {
+            serpRatingTextElement.setAttribute("x", parseInt(serpRatingTextElement.getAttribute("x")) + 14);
+        } else if (result.overall_rating_value >= 100) {
+            serpRatingTextElement.setAttribute("x", parseInt(serpRatingTextElement.getAttribute("x")) - 14);
+        }
+
+
     // Update SERP preview for desktop
     document.querySelector("#serpPreviewDesktopURL").innerHTML = result.serp_desktop.url;
     document.querySelector("#serpPreviewDesktopTitle").innerHTML = result.serp_desktop.title;

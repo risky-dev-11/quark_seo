@@ -272,6 +272,19 @@ def analyze_website(user_uuid, url, db):
     description_tag = soup.find('meta', attrs={'name': 'description'})
     description_of_the_website = description_tag['content'] if description_tag else ""
 
+    # Calculate the SERP preview points
+    try:
+        serp_points = 0
+        description_length_in_pixels = round(len(description_of_the_website) * 6.11)  # Ensure this variable is defined
+        if 110 <= len(description_of_the_website) <= 165:
+            serp_points += 25
+        if 100 <= len(description_of_the_website) <= 120:
+            serp_points += 25
+        if 30 <= len(title_text) <= 60:
+            serp_points += 50
+    except Exception:
+        serp_points = 0
+
     serp_preview = {
             'isCard': False,
             'serp_mobile': {
@@ -284,7 +297,7 @@ def analyze_website(user_uuid, url, db):
                 'title': title_text,
                 'description': description_of_the_website,
             },
-            "points": 50,
+            "points": serp_points,
         }
     results['serp_preview'] = serp_preview
 
