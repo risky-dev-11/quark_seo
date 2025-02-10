@@ -75,7 +75,7 @@ def analyze_website(user_uuid, url, db):
     description_category = Category('Beschreibung')
 
      # Add the content of the description category
-    description_missing_bool = soup.find('meta', attrs={'name': 'description'}) is None
+    description_missing_bool = soup.find('meta', attrs={'name': 'description'}) is None or not soup.find('meta', attrs={'name': 'description'})['content'].strip()
     description_category.add_content(not description_missing_bool, get_description_missing_text(description_missing_bool))
     # if the description is not missing, add more details about it
     if (not description_missing_bool):
