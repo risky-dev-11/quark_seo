@@ -194,7 +194,7 @@ function applyOverallResults(result) {
           // Update the improvement circle based on the improvement count
 
           // Maximum expected improvements, used to calculate the percentage that the circle displays
-          maximum_expected_improvements = 15; 
+          const maximum_expected_improvements = 15; 
 
           // Cap the improvement count at 30 for the circle display
           const improvementCount = Math.min(result.improvement_count, maximum_expected_improvements);

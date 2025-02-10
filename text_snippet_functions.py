@@ -134,7 +134,7 @@ def get_external_no_linktext_text(no_linktext_count_external):
     elif no_linktext_count_external == 1:
         return text_provider.get_text("external_no_linktext", "one")
     else:
-        return text_provider.get_text("external_no_linktext.multiple").format(count=no_linktext_count_external)
+        return text_provider.get_text("external_no_linktext", "multiple", count=no_linktext_count_external)
 
 def get_internal_linktext_repetitions_text(linktext_repetitions_internal_bool):
     if linktext_repetitions_internal_bool:
@@ -159,6 +159,9 @@ def get_redirecting_www_text(redirecting_www_bool):
         return text_provider.get_text("redirecting_www", "true")
     else:
         return text_provider.get_text("redirecting_www", "false")
+    
+def get_redirecting_history_text(url):
+    return text_provider.get_text("redirecting_history", "text", redirected_url=url)
 
 def get_compression_text(compression, compression_bool):
     if compression_bool:

@@ -1,4 +1,4 @@
-from text_snippet_functions import get_hierarchy_text, get_improvement_count_text, get_overall_rating_text, get_website_response_time_text, get_file_size_text, get_media_count_text, get_link_count_text, get_title_missing_text, get_domain_in_title_text, get_title_length_text, get_title_word_repetitions_text, get_description_missing_text, get_description_length_text, get_language_comment, get_favicon_included_text, get_comparison_title_text, get_content_length_comment, get_duplicate_text, get_alt_attributes_missing_text, get_h1_heading_text, get_structure_text, get_internal_length_linktext_text, get_internal_no_linktext_text, get_internal_linktext_repetitions_text, get_external_length_linktext_text, get_external_no_linktext_text, get_external_linktext_repetitions_text, get_site_redirects_text, get_redirecting_www_text, get_compression_text
+from text_snippet_functions import get_hierarchy_text, get_improvement_count_text, get_overall_rating_text, get_redirecting_history_text, get_website_response_time_text, get_file_size_text, get_media_count_text, get_link_count_text, get_title_missing_text, get_domain_in_title_text, get_title_length_text, get_title_word_repetitions_text, get_description_missing_text, get_description_length_text, get_language_comment, get_favicon_included_text, get_comparison_title_text, get_content_length_comment, get_duplicate_text, get_alt_attributes_missing_text, get_h1_heading_text, get_structure_text, get_internal_length_linktext_text, get_internal_no_linktext_text, get_internal_linktext_repetitions_text, get_external_length_linktext_text, get_external_no_linktext_text, get_external_linktext_repetitions_text, get_site_redirects_text, get_redirecting_www_text, get_compression_text
 from models import AnalyzedWebsite, Category, Card, calculate_improvement_count, calculate_overall_points
 import requests
 from bs4 import BeautifulSoup
@@ -16,6 +16,7 @@ def analyze_website(user_uuid, url, db):
         session = requests.Session()
         session.max_redirects = 5
         response = session.get(url if url.startswith((http_const, https_const)) else http_const + url, allow_redirects=True)
+        
     except Exception:
         print('Unser Server konnte die Webseite nicht erreichen. Bitte überprüfen Sie die URL und versuchen Sie es erneut.')
         raise requests.exceptions.RequestException('Unser Server konnte die Webseite nicht erreichen. Bitte überprüfen Sie die URL und versuchen Sie es erneut.')
@@ -237,14 +238,17 @@ def analyze_website(user_uuid, url, db):
     redirects_category = Category('Weiterleitungen')
 
     # Add the content of the redirects category
-    site_redirects_bool = response.url != http_const + url and response.url != https_const + url and response.url != url
+    site_redirects_bool = bool(response.history)
     www_url = (url if url.startswith((http_const, https_const)) else http_const + url).replace(http_const, 'http://www.').replace(https_const, 'https://www.')
     try:
         response_with_www = requests.get(www_url)
         redirecting_www_bool = response.status_code == 200 and response_with_www.status_code == 200
     except Exception:
         redirecting_www_bool = False
+
     redirects_category.add_content(not site_redirects_bool, get_site_redirects_text(site_redirects_bool))
+    if site_redirects_bool:
+        redirects_category.add_content('', get_redirecting_history_text(response.history[-1].headers['Location']))
     redirects_category.add_content(redirecting_www_bool, get_redirecting_www_text(redirecting_www_bool))
 
     # Add the redirects category to the card

@@ -117,6 +117,9 @@
     "true": "Die Weiterleitung von Adressen mit und ohne www. ist korrekt konfiguriert.",
     "false": "Die Weiterleitung von Adressen mit und ohne www. ist nicht korrekt konfiguriert."
   },
+  "redirecting_history": {
+    "text": "Es erfolgte eine Weiterleitung auf die Seite {redirected_url}."
+  },
   "compression": {
     "true": "Der Webserver nutzt {method} zur komprimierten Übertragung der Webseite.",
     "false": "Der Webserver nutzt keine Komprimierung zur Übertragung der Webseite."
