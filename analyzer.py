@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import langdetect
 import socket
+from ai_analyzer import ai_analyzer
 
 
 def analyze_website(user_uuid, url, db):
@@ -277,20 +278,31 @@ def analyze_website(user_uuid, url, db):
     ai_results_card = Card('KI - Analyse')
 
     ##########
-
-    # Create the title category
-    title_category = Category('Ai xxx')
-
-
-    # Add the content of the title category
- 
-
-    title_missing_bool = soup.title is None or not soup.title.string.strip()
-    title_category.add_content(not title_missing_bool, get_title_missing_text(title_missing_bool))
-
     
-    # Add the title category to the card
-    ai_results_card.add_category(title_category)
+    # Add the content of the ai_description category
+    ai_analyzer_results = ai_analyzer(soup.find('meta', attrs={'name': 'description'})['content'] if soup.find('meta', attrs={'name': 'description'}) else "", soup.title.string if soup.title and soup.title.string.strip() else "")
+    
+    # Create the ai_description category
+    ai_description_category = Category('Beschreibung')
+
+    ai_description_category.add_content(ai_analyzer_results['description_rating'] >= 70, ai_analyzer_results['description_reason'])
+    ai_description_category.add_content("", ai_analyzer_results['description_improvement'])
+
+    # Add the ai_description category to the card
+    ai_results_card.add_category(ai_description_category)
+
+    ####################
+
+    # Create the ai_title category
+    ai_title_category = Category('Titel')
+
+    ai_title_category.add_content(ai_analyzer_results['title_rating'] >= 70, ai_analyzer_results['title_reason'])
+    ai_title_category.add_content("", ai_analyzer_results['title_improvement'])
+
+    # Add the ai_title category to the card
+    ai_results_card.add_category(ai_title_category)
+
+    ####################
 
     # Add the metadata card to the results
     ai_results_card.add_to_results(results)
@@ -298,8 +310,7 @@ def analyze_website(user_uuid, url, db):
     ########################################
 
     title_text = soup.title.string if soup.title and soup.title.string.strip() else ""
-    description_tag = soup.find('meta', attrs={'name': 'description'})
-    description_of_the_website = description_tag['content'] if description_tag else ""
+    description_of_the_website = soup.find('meta', attrs={'name': 'description'})['content'] if soup.find('meta', attrs={'name': 'description'}) else ""
 
     # Calculate the SERP preview points
     try:
