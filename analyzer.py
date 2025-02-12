@@ -15,6 +15,7 @@ def analyze_website(user_uuid, url, db):
     https_const = 'https://'
 
     try:
+        DIFFERENT WAY OF PULLING THE WEBSITE IS NEEDED BECAUSE DYNAMIC CONTENT ISNT CAPTURED USING SESSION.GET
         session = requests.Session()
         session.max_redirects = 5
         response = session.get(url if url.startswith((http_const, https_const)) else http_const + url, allow_redirects=True)
@@ -25,7 +26,6 @@ def analyze_website(user_uuid, url, db):
     
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    
     # General results
     website_response_time = response.elapsed.total_seconds()
     file_size = len(response.content)
