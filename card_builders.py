@@ -118,6 +118,8 @@ def build_pagequality_card(soup):
     images_category = Category('Bilder')
     missing_alts = sum(1 for img in soup.find_all('img') if not img.get('alt') or not img.get('alt').strip())
     images_category.add_content(missing_alts == 0, get_alt_attributes_missing_text(missing_alts))
+    if missing_alts > 0:
+        images_category.add_content('improvement', "Fügen Sie Alt-Attribute zu allen Bildern hinzu! Sie verbessern damit die Barrierefreiheit Ihrer Website und helfen Suchmaschinen, den Bildinhalt zu verstehen. Das steigert sowohl die Nutzerfreundlichkeit als auch Ihr Ranking.")
     card.add_category(images_category)
     
     return card
@@ -196,13 +198,13 @@ def build_ai_card(soup):
     # AI Description Category
     ai_description_category = Category('Beschreibung')
     ai_description_category.add_content(ai_results['description_rating'] >= 70, ai_results['description_reason'])
-    ai_description_category.add_content("", ai_results['description_improvement'])
+    ai_description_category.add_content("improvement", ai_results['description_improvement'])
     card.add_category(ai_description_category)
     
     # AI Title Category
     ai_title_category = Category('Titel')
     ai_title_category.add_content(ai_results['title_rating'] >= 70, ai_results['title_reason'])
-    ai_title_category.add_content("", ai_results['title_improvement'])
+    ai_title_category.add_content("improvement", ai_results['title_improvement'])
     card.add_category(ai_title_category)
     
     return card

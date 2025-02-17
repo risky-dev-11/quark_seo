@@ -124,8 +124,21 @@ function createCard(cardName, points, subcategories) {
               // add the icon to the cell & set the text
               td.appendChild(icon);
               p.textContent = text;
+            } else if (bool == "improvement") {
+              // if the provided text is an improvement, create a row with the text & a lightbulb icon
+              const icon = document.createElement('i');
+                // set the icon class & color based on the bool value
+                icon.className = 'bi bi-lightbulb-fill';
+                icon.style.color = 'yellow';
+                td.style.backgroundColor = 'var(--accent-color)';
+
+                p.style = "color: white; font-weight: bold;";
+
+              // add the icon to the cell & set the text
+              td.appendChild(icon);
+              p.textContent = text;
             } else {
-              // if no bool value was passed, create a row with the text only
+              // if no bool value or improvement was passed, create a row with the text only
               p.textContent = text;
 
               // and style it to differentitate between text with icon and without
