@@ -26,6 +26,7 @@ class AnalyzedWebsite(db.Model, UserMixin):
     uuid = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
     url = db.Column(db.String)
     results = db.Column(db.JSON)
+    computation_time = db.Column(db.String)
 
     def __repr__(self):
         return f'<AnalyzedWebsite {self.website}>'

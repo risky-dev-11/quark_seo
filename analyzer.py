@@ -2,11 +2,13 @@ from bs4 import BeautifulSoup
 from models import AnalyzedWebsite, calculate_improvement_count, calculate_overall_points
 from fetcher import format_url, fetch_website_content
 from card_builders import build_all_cards, build_serp_preview, build_overall_results
+import time
 from text_snippet_functions import (
     get_content_length_comment, get_website_response_time_text, get_file_size_text, get_media_count_text, get_link_count_text
 )
 
 def analyze_website(user_uuid, url, db):
+    start_time = time.time()
     # URL korrekt formatieren
     formatted_url = format_url(url)
     
@@ -47,9 +49,11 @@ def analyze_website(user_uuid, url, db):
     results['serp_preview'] = build_serp_preview(soup, formatted_url, response)
     results['overall_results'] = build_overall_results(results)
     
+    computation_time = f"{time.time() - start_time:.2f} Sekunden"
+
     # Analyseergebnis in der Datenbank speichern
-    analysis_results = AnalyzedWebsite(user_uuid=user_uuid, url=formatted_url, results=results)
+    analysis_results = AnalyzedWebsite(user_uuid=user_uuid, url=formatted_url, results=results, computation_time=computation_time)
     db.session.add(analysis_results)
     db.session.commit()
-    
+
     return analysis_results.uuid
