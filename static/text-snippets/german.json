@@ -59,7 +59,7 @@
     "all_used": "Alle Wörter aus dem Seitentitel werden im Text bzw. Inhalt der Seite verwendet."
   },
   "content_length": {
-    "short": "Der Inhalt ist mit {word_count} Wörtern etwas kurz.",
+    "short": "Der Inhalt ist mit {word_count} Wörtern etwas kurz. Je nach Website-Design und -Zweck kann dies jedoch ausreichend sein.",
     "sufficient": "Der Inhalt ist mit {word_count} Wörtern ausreichend."
   },
   "duplicate_content": {

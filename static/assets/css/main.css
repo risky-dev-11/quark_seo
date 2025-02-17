@@ -2044,3 +2044,7 @@ td {
   margin: 0 30px;
   vertical-align: top;
 }
+
+.i_tag_general_results{
+  align-self: center;
+}
