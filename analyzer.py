@@ -5,26 +5,52 @@ from bs4 import BeautifulSoup
 import langdetect
 import socket
 from ai_analyzer import ai_analyzer
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
+# Set up Chrome driver with DevTools logging enabled
+service = Service()
+options = webdriver.ChromeOptions()
+options.add_argument("--headless=new")  # Headless mode
+
+driver = webdriver.Chrome(service=service, options=options)
 
 def analyze_website(user_uuid, url, db):
-
     results = {}
 
     http_const = 'http://'
     https_const = 'https://'
 
     try:
-        DIFFERENT WAY OF PULLING THE WEBSITE IS NEEDED BECAUSE DYNAMIC CONTENT ISNT CAPTURED USING SESSION.GET
-        session = requests.Session()
-        session.max_redirects = 5
-        response = session.get(url if url.startswith((http_const, https_const)) else http_const + url, allow_redirects=True)
-        
+        response = requests.get(url if url.startswith((http_const, https_const)) else http_const + url, allow_redirects=True)
+
+        # Navigate to the target webpage
+        driver.get(url if url.startswith((http_const, https_const)) else http_const + url)
+
+        # Wait for possible dynamic content to load
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, "//*"))
+        )
+
+        # Extract the HTML content of the webpage before closing the browser
+        page_source = driver.page_source
+
+        # Save screenshot
+        screenshot = driver.get_screenshot_as_png()
+
     except Exception:
         print('Unser Server konnte die Webseite nicht erreichen. Bitte überprüfen Sie die URL und versuchen Sie es erneut.')
         raise requests.exceptions.RequestException('Unser Server konnte die Webseite nicht erreichen. Bitte überprüfen Sie die URL und versuchen Sie es erneut.')
+
+    finally:
+        # Close the browser
+        driver.quit()
     
-    soup = BeautifulSoup(response.text, 'html.parser')
+    # extract the html content of the webpage
+    soup = BeautifulSoup(page_source, 'html.parser')
 
     # General results
     website_response_time = response.elapsed.total_seconds()
@@ -77,18 +103,27 @@ def analyze_website(user_uuid, url, db):
     # Create the description category
     description_category = Category('Beschreibung')
 
-     # Add the content of the description category
-    description_missing_bool = soup.find('meta', attrs={'name': 'description'}) is None or not soup.find('meta', attrs={'name': 'description'})['content'].strip()
-    description_category.add_content(not description_missing_bool, get_description_missing_text(description_missing_bool))
-    # if the description is not missing, add more details about it
-    if (not description_missing_bool):
-        description_category.add_content('', soup.find('meta', attrs={'name': 'description'})['content'])
-        # Calculate the approximate length of the description in pixels
-        description_length_in_pixels = round(len(soup.find('meta', attrs={'name': 'description'})['content']) * 6.11) # 1 character is about 6 pixels
-        description_category.add_content(description_length_in_pixels >= 300 and description_length_in_pixels <= 960, get_description_length_text(description_length_in_pixels))
+    # Extract content safely
+    description_content = next((meta.get('content', '').strip() for meta in soup.find_all('meta', attrs={'name': 'description'}) if meta.get('content', '').strip()), "")
 
-    # Add the description category to the card
+    # Check if the description is missing
+    description_missing_bool = not bool(description_content)
+    description_category.add_content(not description_missing_bool, get_description_missing_text(description_missing_bool))
+
+    # If the description is present, add details
+    if description_content:
+        description_category.add_content('', description_content)
+        
+        # Calculate the approximate length of the description in pixels
+        description_length_in_pixels = round(len(description_content) * 6.11)  # 1 character ≈ 6 pixels
+        description_category.add_content(
+            300 <= description_length_in_pixels <= 960, 
+            get_description_length_text(description_length_in_pixels)
+        )
+
+    # Add the description category to the metadata card
     metadata_card.add_category(description_category)
+
 
     ####################
 
@@ -280,7 +315,10 @@ def analyze_website(user_uuid, url, db):
     ##########
     
     # Add the content of the ai_description category
-    ai_analyzer_results = ai_analyzer(soup.find('meta', attrs={'name': 'description'})['content'] if soup.find('meta', attrs={'name': 'description'}) else "", soup.title.string if soup.title and soup.title.string.strip() else "")
+    ai_analyzer_results = ai_analyzer(
+        next((meta.get('content', '').strip() for meta in soup.find_all('meta', attrs={'name': 'description'}) if meta.get('content', '').strip()), ""),
+        soup.title.string if soup.title and soup.title.string.strip() else ""
+    )
     
     # Create the ai_description category
     ai_description_category = Category('Beschreibung')
@@ -310,7 +348,7 @@ def analyze_website(user_uuid, url, db):
     ########################################
 
     title_text = soup.title.string if soup.title and soup.title.string.strip() else ""
-    description_of_the_website = soup.find('meta', attrs={'name': 'description'})['content'] if soup.find('meta', attrs={'name': 'description'}) else ""
+    description_of_the_website = next((meta.get('content', '').strip() for meta in soup.find_all('meta', attrs={'name': 'description'}) if meta.get('content', '').strip()), "")
 
     # Calculate the SERP preview points
     try:

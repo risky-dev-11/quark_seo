@@ -48,7 +48,7 @@ function createCard(cardName, points, subcategories) {
     progressBar.setAttribute('aria-valuemin', '0');
     progressBar.setAttribute('aria-valuemax', '100');
     progressBar.setAttribute('aria-valuenow', points);
-    progressBar.style.width = `${points}%`;
+    progressBar.style.width = `${points === 0 ? 5 : points}%`; // Set a minimum width of 5% if the value is 0 - otherwise the bar is not visible
   
     console.log(points);
   // insert the progress bar into the progress container
@@ -115,6 +115,11 @@ function createCard(cardName, points, subcategories) {
                 // set the icon class & color based on the bool value
                 icon.className = bool ? 'bi bi-check-circle' : 'bi bi-x-circle';
                 icon.style.color = bool ? 'green' : 'red';
+                
+                // if the bool value is false, set the background color of the cell to a light red
+                if (!bool) {
+                  td.style = "background: #F7D1CD;";
+                }
 
               // add the icon to the cell & set the text
               td.appendChild(icon);

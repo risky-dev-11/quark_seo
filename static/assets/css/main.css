@@ -2017,6 +2017,8 @@ section,
   flex-direction: row;
   gap: 0.5em;
   align-items: center;
+  width: fit-content;
+  border-radius: 3px;
 }
 
 /* overwrite padding of the card-text bootstrap styles*/
@@ -2038,7 +2040,7 @@ section,
 }
 
 td {
-  padding: 10px 30px;
-  margin: 0;
+  padding: 10px 30px 10px 10px;
+  margin: 0 30px;
   vertical-align: top;
 }
