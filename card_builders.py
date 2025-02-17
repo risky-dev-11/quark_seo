@@ -197,12 +197,14 @@ def build_ai_card(soup):
     
     # AI Description Category
     ai_description_category = Category('Beschreibung')
+    ai_description_category.add_content("", description)
     ai_description_category.add_content(ai_results['description_rating'] >= 70, ai_results['description_reason'])
     ai_description_category.add_content("improvement", ai_results['description_improvement'])
     card.add_category(ai_description_category)
     
     # AI Title Category
     ai_title_category = Category('Titel')
+    ai_title_category.add_content("", title_text)
     ai_title_category.add_content(ai_results['title_rating'] >= 70, ai_results['title_reason'])
     ai_title_category.add_content("improvement", ai_results['title_improvement'])
     card.add_category(ai_title_category)
