@@ -1,102 +1,114 @@
+import asyncio
 import json
 from dotenv import load_dotenv
 import os
-from openai import OpenAI 
+from openai import OpenAI
 
 load_dotenv()
 openai_api_key = os.getenv('OPENAI_API_KEY')
 
 # Tool for AI-Feedback for the description
 description = [{
-        "type": "function",
-        "function": {
-            "name": "rate_website_description",
-            "description": "Bewerte bitte die Beschreibung der Webseite. Bewerte, ob die Beschreibung eine gute Zusammenfassung ist, sie prägnant und klar ist, Schlüsselwörter verwendet werden, sie einen Unique Selling Point hervorheben, nicht die Länge von 155 Zeichen überschreitet und eine Handlungsaufforderung enthält.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "rating": {
-                        "type": "integer",
-                        "description": "Bewertung der Beschreibung auf einer Skala von 1-100."
-                    },
-                    "reason": {
-                        "type": "string",
-                        "description": "Eine knappe Bewertung der Beschreibung nach den Kriterien."
-                    },
-                    "improvement": {
-                        "type": "string",
-                        "description": "Vorschläge zur Verbesserung der Beschreibung - falls die Kriterien nicht erfüllt sind!"
-                    },
+    "type": "function",
+    "function": {
+        "name": "rate_website_description",
+        "description": "Bewerte bitte die Beschreibung der Webseite. Bewerte, ob die Beschreibung eine gute Zusammenfassung ist, sie prägnant und klar ist, Schlüsselwörter verwendet werden, sie einen Unique Selling Point hervorheben, nicht die Länge von 155 Zeichen überschreitet und eine Handlungsaufforderung enthält.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "rating": {
+                    "type": "integer",
+                    "description": "Bewertung der Beschreibung auf einer Skala von 1-100."
                 },
-                "required": [
-                    "rating",
-                    "reason",
-                    "improvement"
-                ],
-                "additionalProperties": False
+                "reason": {
+                    "type": "string",
+                    "description": "Eine knappe Bewertung der Beschreibung nach den Kriterien."
+                },
+                "improvement": {
+                    "type": "string",
+                    "description": "Vorschläge zur Verbesserung der Beschreibung - falls die Kriterien nicht erfüllt sind!"
+                },
             },
-            "strict": True
-        }
-    }]
+            "required": [
+                "rating",
+                "reason",
+                "improvement"
+            ],
+            "additionalProperties": False
+        },
+        "strict": True
+    }
+}]
+
 title = [{
-        "type": "function",
-        "function": {
-            "name": "rate_website_title",
-            "description": "Bitte bewerte den Titel der Webseite daraufhin, ob er die Länge von 55 Zeichen nicht überschreitet, das Haupt-Keyword an erster Stelle oder zumindest am Anfang steht, kein Keyword-Spamming enthält, einen Marken- oder Firmennamen nutzt, eine klare Handlungsaufforderung beinhaltet und Sonderzeichen passend zur Hervorhebung verwendet.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "rating": {
-                        "type": "integer",
-                        "description": "Bewertung des Titels auf einer Skala von 1-100."
-                    },
-                    "reason": {
-                        "type": "string",
-                        "description": "Eine knappe Bewertung des Titels nach den Kriterien."
-                    },
-                    "improvement": {
-                        "type": "string",
-                        "description": "Vorschläge zur Verbesserung des Titels - falls die Kriterien nicht erfüllt sind!"
-                    },
+    "type": "function",
+    "function": {
+        "name": "rate_website_title",
+        "description": "Bitte bewerte den Titel der Webseite daraufhin, ob er die Länge von 55 Zeichen nicht überschreitet, das Haupt-Keyword an erster Stelle oder zumindest am Anfang steht, kein Keyword-Spamming enthält, einen Marken- oder Firmennamen nutzt, eine klare Handlungsaufforderung beinhaltet und Sonderzeichen passend zur Hervorhebung verwendet.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "rating": {
+                    "type": "integer",
+                    "description": "Bewertung des Titels auf einer Skala von 1-100."
                 },
-                "required": [
-                    "rating",
-                    "reason",
-                    "improvement"
-                ],
-                "additionalProperties": False
+                "reason": {
+                    "type": "string",
+                    "description": "Eine knappe Bewertung des Titels nach den Kriterien."
+                },
+                "improvement": {
+                    "type": "string",
+                    "description": "Vorschläge zur Verbesserung des Titels - falls die Kriterien nicht erfüllt sind!"
+                },
             },
-            "strict": True
-        }
-    }]
+            "required": [
+                "rating",
+                "reason",
+                "improvement"
+            ],
+            "additionalProperties": False
+        },
+        "strict": True
+    }
+}]
 
-
-
-
-
-def ai_analyzer(website_description, website_title):
-    
+async def ai_analyzer(website_description, website_title):
     client = OpenAI(api_key=openai_api_key, max_retries=1)
 
-    # Bewertung der Beschreibung
-    completion_description = client.chat.completions.create(
+    description_message = [{
+        "role": "user",
+        "content": (
+            f"Bitte bewerte die Beschreibung einer Webseite - Verwende Formulierungen wie 'Die Beschreibung deiner Webseite' - "
+            f"###Beginn der Beschreibung###{website_description}.###Ende der Beschreibung###"
+        )
+    }]
+    title_message = [{
+        "role": "user",
+        "content": (
+            f"Bitte bewerte den Titel einer Webseite - Verwende Formulierungen wie 'Der Titel deiner Webseite' - "
+            f"###Beginn des Titels###{website_title}.###Ende des Titels###"
+        )
+    }]
+
+    # Use asyncio.to_thread to run the synchronous create() calls concurrently.
+    task_description = asyncio.to_thread(
+        client.chat.completions.create,
         model="gpt-4o",
-        messages=[{"role": "user", "content": f"Bitte bewerte die Beschreibung einer Webseite - Verwende Formulierungen wie 'Die Beschreibung deiner Webseite' - ###Beginn der Beschreibung###{website_description}.###Ende der Beschreibung###"}],
+        messages=description_message,
         tools=description,
-        tool_choice = {"type": "function", "function": {"name": "rate_website_description"}}
+        tool_choice={"type": "function", "function": {"name": "rate_website_description"}}
     )
+    task_title = asyncio.to_thread(
+        client.chat.completions.create,
+        model="gpt-4o",
+        messages=title_message,
+        tools=title,
+        tool_choice={"type": "function", "function": {"name": "rate_website_title"}}
+    )
+
+    completion_description, completion_title = await asyncio.gather(task_description, task_title)
 
     ai_output_description = json.loads(completion_description.choices[0].message.tool_calls[0].function.arguments)
-
-
-    # Bewertung des Titels
-    completion_title = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[{"role": "user", "content": f"Bitte bewerte den Titel einer Webseite - Verwende Formulierungen wie 'Der Titel deiner Webseite' - ###Beginn des Titels###{website_title}.###Ende des  Titels###"}],
-        tools=title,
-        tool_choice = {"type": "function", "function": {"name": "rate_website_title"}}
-    )
-
     ai_output_title = json.loads(completion_title.choices[0].message.tool_calls[0].function.arguments)
 
     return {

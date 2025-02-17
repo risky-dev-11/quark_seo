@@ -13,6 +13,7 @@ from ai_analyzer import ai_analyzer
 import requests
 import socket
 import langdetect
+import asyncio
 
 def build_all_cards(results, soup, url, response):
     """
@@ -190,7 +191,7 @@ def build_ai_card(soup):
     card = Card('KI - Analyse')
     description = next((meta.get('content', '').strip() for meta in soup.find_all('meta', attrs={'name': 'description'}) if meta.get('content', '').strip()), "")
     title_text = soup.title.string if soup.title and soup.title.string.strip() else ""
-    ai_results = ai_analyzer(description, title_text)
+    ai_results = asyncio.run(ai_analyzer(description, title_text))
     
     # AI Description Category
     ai_description_category = Category('Beschreibung')
