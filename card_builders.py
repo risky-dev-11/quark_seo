@@ -12,7 +12,7 @@ from models import Card, Category, calculate_improvement_count, calculate_overal
 from ai_analyzer import ai_analyzer
 import requests
 import socket
-import langdetect
+from langdetect import detect, DetectorFactory
 import asyncio
 
 def build_all_cards(results, soup, url, response):
@@ -56,8 +56,12 @@ def build_metadata_card(soup, url):
         title_category.add_content('', title_text)
         title_category.add_content(url not in title_text, get_domain_in_title_text(url in title_text))
         title_category.add_content(len(title_text) < 30 or len(title_text) > 60, get_title_length_text(len(title_text)))
-        repetitions = len(set(title_text.split())) != len(title_text.split())
-        title_category.add_content(repetitions, get_title_word_repetitions_text(repetitions))
+        title_words = title_text.split()
+        repeated_words = [word for word in set(title_words) if title_words.count(word) > 1]
+        title_word_repetition_bool = len(repeated_words) > 0
+        title_category.add_content(not title_word_repetition_bool, get_title_word_repetitions_text(title_word_repetition_bool))
+        if title_word_repetition_bool:
+            title_category.add_content("improvement", f"Die folgenden Wörter werden wiederholt: {', '.join(repeated_words)}. Doppelte Wörter im Meta-Titel verschwenden wertvollen Platz, mindern die Lesbarkeit und können als Spam gewertet werden, was die Klickrate und das SEO-Ranking negativ beeinflussen kann.")
     card.add_category(title_category)
     
     # Beschreibung Category
@@ -74,7 +78,9 @@ def build_metadata_card(soup, url):
     # Sprache Category
     language_category = Category('Sprache')
     meta_lang = soup.find('meta', attrs={'name': 'language'}) or soup.html.get('lang') or 'Unbekannt'
-    detected_lang = langdetect.detect(soup.get_text())
+    # langdetect is not deterministic by default, so we set a seed to make it deterministic
+    DetectorFactory.seed = 0
+    detected_lang = detect(soup.get_text())
     language_category.add_content('', 'Meta/HTML-Sprache: ' + meta_lang)
     language_category.add_content('', 'Im Text erkannte Sprache: ' + detected_lang)
     try:
@@ -148,7 +154,7 @@ def build_links_card(soup, url):
     no_text_internal = sum(1 for link in internal_links if not link.text.strip()) > 0
     internal_category.add_content(not no_text_internal, get_internal_no_linktext_text(no_text_internal))
     duplicate_internal = len([link.text for link in internal_links]) != len(set([link.text for link in internal_links]))
-    internal_category.add_content(duplicate_internal, get_internal_linktext_repetitions_text(duplicate_internal))
+    internal_category.add_content(not duplicate_internal, get_internal_linktext_repetitions_text(duplicate_internal))
     card.add_category(internal_category)
     
     # External links
@@ -158,7 +164,7 @@ def build_links_card(soup, url):
     no_text_external = sum(1 for link in external_links if not link.text.strip()) > 0
     external_category.add_content(not no_text_external, get_external_no_linktext_text(no_text_external))
     duplicate_external = len([link.text for link in external_links]) != len(set([link.text for link in external_links]))
-    external_category.add_content(duplicate_external, get_external_linktext_repetitions_text(duplicate_external))
+    external_category.add_content(not duplicate_external, get_external_linktext_repetitions_text(duplicate_external))
     card.add_category(external_category)
     
     return card
@@ -168,12 +174,21 @@ def build_server_card(soup, url, response):
     
     redirects_category = Category('Weiterleitungen')
     has_redirects = bool(response.history)
-    redirects_category.add_content(not has_redirects, get_site_redirects_text(has_redirects))
     if has_redirects:
-        # Show the last redirect location
-        redirects_category.add_content('', get_redirecting_history_text(response.history[-1].headers.get('Location', '')))
+        last_redirect_url = response.history[-1].headers.get('Location', '')
+        https_url = url.replace("http://", "https://")
+        redirects_to_https = last_redirect_url == https_url
+        print(last_redirect_url)
+        print(https_url)
+        if redirects_to_https:
+            redirects_category.add_content(True, "Es erfolgt eine Weiterleitung von HTTP zu HTTPS. Dies ist eine empfohlene Best Practice, da verschlüsselte Verbindungen die Sicherheit und Vertrauenswürdigkeit der Website verbessern.")
+        else:
+            redirects_category.add_content(False, f"Die Seite leitet zu {last_redirect_url} weiter. Eine automatische Weiterleitung auf eine andere Seite hat negative Auswirkungen auf das SEO-Ranking, da Suchmaschinen Weiterleitungen als irreführend betrachten.")
+    else:
+        redirects_category.add_content(True, "Es erfolgt keine Weiterleitung auf eine andere Webseite.")
+
     # Check www-redirect (simplified check)
-    www_url = url.replace("http://", "http://www.").replace("https://", "https://www.")
+    www_url = url.replace("http://", "http://www.")
     try:
         response_www = requests.get(www_url)
         redirecting_www = response.status_code == 200 and response_www.status_code == 200

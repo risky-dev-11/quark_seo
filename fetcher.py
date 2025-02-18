@@ -7,9 +7,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 def format_url(url: str) -> str:
-    """Ensure that the URL starts with 'http://' or 'https://'."""
-    if not url.startswith(("http://", "https://")):
-        return "http://" + url
+    url = url.replace("https://", "http://").replace("www.", "")
+    if not url.startswith("http://"):
+        url = "http://" + url
+    if not url.endswith("/"):
+        url = url + "/"
     return url
 
 def get_driver():
