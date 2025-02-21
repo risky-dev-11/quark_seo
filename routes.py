@@ -1,3 +1,4 @@
+import json
 from flask import jsonify, render_template, request, redirect, url_for
 from models import AnalyzedWebsite, User
 from flask_login import login_user, login_required, logout_user
@@ -75,7 +76,20 @@ def register_routes(app, db, bcrypt):
     def get_users_analysis():
         user_uuid = current_user.uuid
         result = db.session.query(AnalyzedWebsite).filter_by(user_uuid=user_uuid).all()
-        results = [{"uuid": analysis.uuid, "url": analysis.url} for analysis in result]
+
+        results = []
+        for analysis in result:
+            data = analysis.results
+            overall_rating = data['overall_results']['overall_rating']
+            improvement_count = data['overall_results']['improvement_count']
+            
+            results.append({
+                "uuid": analysis.uuid,
+                "time": analysis.time if analysis.time is not None else "Unknown",
+                "url": analysis.url,
+                "overall_rating": overall_rating,
+                "improvement_count": improvement_count
+            })
         return jsonify(results), 200
 
     # Routes for the templates
