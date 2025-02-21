@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from models import AnalyzedWebsite, calculate_improvement_count, calculate_overall_points
+from models import AnalyzedWebsite
 from fetcher import format_url, fetch_website_content
 from card_builders import build_all_cards, build_serp_preview, build_overall_results
 import time

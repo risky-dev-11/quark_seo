@@ -1,12 +1,10 @@
 from text_snippet_functions import (
-    get_hierarchy_text, get_improvement_count_text, get_overall_rating_text, get_redirecting_history_text,
-    get_website_response_time_text, get_file_size_text, get_media_count_text, get_link_count_text, get_title_missing_text,
+    get_hierarchy_text, get_improvement_count_text, get_overall_rating_text, get_title_incorrect_length_text, get_title_missing_improvement_text, get_title_word_repetitions_improvement_text, get_title_missing_text,
     get_domain_in_title_text, get_title_length_text, get_title_word_repetitions_text, get_description_missing_text,
     get_description_length_text, get_language_comment, get_favicon_included_text, get_comparison_title_text,
     get_content_length_comment, get_duplicate_text, get_alt_attributes_missing_text, get_h1_heading_text, get_structure_text,
     get_internal_length_linktext_text, get_internal_no_linktext_text, get_internal_linktext_repetitions_text,
-    get_external_length_linktext_text, get_external_no_linktext_text, get_external_linktext_repetitions_text,
-    get_site_redirects_text, get_redirecting_www_text, get_compression_text
+    get_external_length_linktext_text, get_external_no_linktext_text, get_external_linktext_repetitions_text, get_redirecting_www_text, get_compression_text
 )
 from models import Card, Category, calculate_improvement_count, calculate_overall_points
 from ai_analyzer import ai_analyzer
@@ -51,17 +49,22 @@ def build_metadata_card(soup, url):
     title_category = Category('Titel')
     title_missing = (soup.title is None or not soup.title.string.strip())
     title_category.add_content(not title_missing, get_title_missing_text(title_missing))
-    if not title_missing:
+    if title_missing:
+        title_category.add_content("improvement", get_title_missing_improvement_text())
+    else:
         title_text = soup.title.string
         title_category.add_content('', title_text)
         title_category.add_content(url not in title_text, get_domain_in_title_text(url in title_text))
-        title_category.add_content(len(title_text) < 30 or len(title_text) > 60, get_title_length_text(len(title_text)))
+        title_correct_length_bool = 50 <= len(title_text) <= 60
+        title_category.add_content(title_correct_length_bool, get_title_length_text(len(title_text)))
+        if not title_correct_length_bool:
+            title_category.add_content("improvement", get_title_incorrect_length_text(len(title_text)))
         title_words = title_text.split()
         repeated_words = [word for word in set(title_words) if title_words.count(word) > 1]
         title_word_repetition_bool = len(repeated_words) > 0
         title_category.add_content(not title_word_repetition_bool, get_title_word_repetitions_text(title_word_repetition_bool))
         if title_word_repetition_bool:
-            title_category.add_content("improvement", f"Die folgenden Wörter werden wiederholt: {', '.join(repeated_words)}. Doppelte Wörter im Meta-Titel verschwenden wertvollen Platz, mindern die Lesbarkeit und können als Spam gewertet werden, was die Klickrate und das SEO-Ranking negativ beeinflussen kann.")
+            title_category.add_content("improvement", get_title_word_repetitions_improvement_text(', '.join(repeated_words)))
     card.add_category(title_category)
     
     # Beschreibung Category
