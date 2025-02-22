@@ -6,3 +6,5 @@ if __name__ == "__main__":
     #from waitress import serve
     #serve(flask_app, host="0.0.0.0", port=5000) # for prod
     flask_app.run(debug=True) #for development
+
+# Next Implementation steps: add screenshot, more and more specific improvement suggestions, wiki and links to it, fix comments & other stuff in html (picture on log in page), server routing with log in and registration system - false password redirect to error site instead of outputting a error, etc.  

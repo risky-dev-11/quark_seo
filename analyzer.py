@@ -54,7 +54,14 @@ def analyze_website(user_uuid, url, db):
 
     # Analyseergebnis in der Datenbank speichern
     basic_url = formatted_url.split("://")[1].lstrip("www.").rstrip("/")
-    analysis_results = AnalyzedWebsite(user_uuid=user_uuid, url=basic_url, results=results, computation_time=computation_time, time=datetime.datetime.now())
+    analysis_results = AnalyzedWebsite(
+        user_uuid=user_uuid,
+        url=basic_url,
+        results=results,
+        computation_time=computation_time,
+        time=datetime.datetime.now(),
+        screenshot=screenshot
+    )
     db.session.add(analysis_results)
     db.session.commit()
 

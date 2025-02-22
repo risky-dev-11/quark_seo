@@ -181,8 +181,6 @@ def build_server_card(soup, url, response):
         last_redirect_url = response.history[-1].headers.get('Location', '')
         https_url = url.replace("http://", "https://")
         redirects_to_https = last_redirect_url == https_url
-        print(last_redirect_url)
-        print(https_url)
         if redirects_to_https:
             redirects_category.add_content(True, "Es erfolgt eine Weiterleitung von HTTP zu HTTPS. Dies ist eine empfohlene Best Practice, da verschlüsselte Verbindungen die Sicherheit und Vertrauenswürdigkeit der Website verbessern.")
         else:

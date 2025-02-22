@@ -1,4 +1,4 @@
-import json
+import base64
 from flask import jsonify, render_template, request, redirect, url_for
 from models import AnalyzedWebsite, User
 from flask_login import login_user, login_required, logout_user
@@ -67,7 +67,11 @@ def register_routes(app, db, bcrypt):
     def get_results(uuid):
         result = db.session.query(AnalyzedWebsite).filter_by(uuid=str(uuid)).first()
         if result:
-            return jsonify(result.results), 200
+            if result.screenshot is None:
+                screenshot_blob = None
+            else:
+                screenshot_blob = base64.b64encode(result.screenshot).decode('utf-8')
+            return jsonify({"results": result.results, "screenshot": screenshot_blob}), 200
         else:
             return jsonify({"error": "Not Found"}), 404
         

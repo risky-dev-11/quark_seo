@@ -8,10 +8,17 @@ async function fetchAndApplyResults() {
         displayAPIError();
       }else{
         const data = await response.json();
-        applyGeneralResults(data.general_results);
-        applyOverallResults(data.overall_results);
-        applySerpPreview(data.serp_preview)
-        display(data);
+        const results = data.results;
+        if (data.screenshot === null) {
+          document.getElementById("screenshot-container").style.display = "none";
+        } else {
+          const screenshotUrl = `data:image/png;base64,${data.screenshot}`;
+          document.getElementById('screenshot').src = screenshotUrl;
+        }
+        applyGeneralResults(results.general_results);
+        applyOverallResults(results.overall_results);
+        applySerpPreview(results.serp_preview)
+        display(results);
       }
     } catch (error) {
       console.error('Error:', error); 
@@ -49,8 +56,6 @@ function createCard(cardName, points, subcategories) {
     progressBar.setAttribute('aria-valuemax', '100');
     progressBar.setAttribute('aria-valuenow', points);
     progressBar.style.width = `${points === 0 ? 5 : points}%`; // Set a minimum width of 5% if the value is 0 - otherwise the bar is not visible
-  
-    console.log(points);
   // insert the progress bar into the progress container
   progress.appendChild(progressBar);
 
@@ -181,7 +186,6 @@ function display(data) {
 
 function applyOverallResults(result) {
   try {
-    console.log(result);
       // Update overall rating SVG and text
       document.querySelector("#overallRatingValue").textContent = result.overall_rating;
       document.querySelector("#overallRatingCircle").setAttribute("stroke-dashoffset", `${(100 - result.overall_rating) * 5.65}`); // Adjust stroke based on value
