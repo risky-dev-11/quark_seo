@@ -88,7 +88,6 @@
       $(document).ready(function() {
         // Initialize the DataTable
         var table = $('#analysis-table').DataTable({
-          searching: false,
           scrollY: 400,
           autoWidth: false,
           colReorder: { headerRows: [0] },
@@ -250,7 +249,9 @@
     #table-content thead, .table th {
       text-align: center !important;
     }
-
+    .dt-search {
+      display: none; /* Hide the search input - if done by passing the "searching: false" parameter to the Datatable the filtering by url doesnt work anymore -> therefore just hide it */
+    }
    </style>
 
 {% endblock %}
