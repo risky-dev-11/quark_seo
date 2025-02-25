@@ -2,14 +2,29 @@
 
 {% block title %}Anmelden{% endblock %}
 {% block content %}
+<!-- CSS Imports -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css">
+<link href="https://cdn.datatables.net/v/bs5/dt-2.2.2/cr-2.0.4/rg-1.5.1/rr-1.5.0/sb-1.8.2/sp-2.3.3/datatables.min.css" rel="stylesheet" integrity="sha384-Z9fVgEHPJlPO209VwdwcMQYh1Rg3cFttWR+xjB1A79P6jA2CgERjwuj50l4mNYWc" crossorigin="anonymous">
+ 
+<!-- JS Imports -->
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/v/bs5/dt-2.2.2/cr-2.0.4/rg-1.5.1/rr-1.5.0/sb-1.8.2/sp-2.3.3/datatables.min.js" integrity="sha384-V0AmCX4Ej/ttFhiwc54YdMcngyF3Oubb4Wi5byVAbTJhac9CQJUz7PMi+UQ1F6+M" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.min.js"></script>
+
 
  <!-- Page Title -->
  <div class="page-title dark-background" data-aos="fade" style="background-image: url(../static/assets/img/page-title-bg.jpg);">
     <div class="container position-relative">
       <h1>Hey, {{ current_user.first_name }}!</h1>
-    <p>Willkommen auf Ihrem Profil! Hier können Sie Ihre persönlichen Informationen einsehen und bearbeiten.</p>
+    <p>Willkommen auf Ihrem Profil! Hier können Sie Ihre persönlichen Informationen und alle Ihre Analysen einsehen.</p>
     </div>
   </div><!-- End Page Title -->
+
+
 
   <!-- ======= Profile Section ======= -->
    <section>
@@ -17,39 +32,226 @@
         <div class="row">
           <div class="col-md-6">
             <h2>Persönliche Informationen</h2>
-            <ul>
-              <li><strong>Name:</strong> {{ current_user.first_name }} {{ current_user.last_name }}</li>
-              <li><strong>Email:</strong> {{ current_user.email }}</li>
-            </ul>
+            <div class="mb-3">
+              <label for="fullName" class="form-label"><strong>Vor- und Nachname:</strong></label>
+              <input type="text" class="form-control" id="fullName" value="{{ current_user.first_name }} {{ current_user.last_name }}" readonly>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label"><strong>Email:</strong></label>
+              <input type="email" class="form-control" id="email" value="{{ current_user.email }}" readonly>
+            </div>
           </div>
         </div>
+        <div class="row" style="padding-top: 30px;">
+          <h2>Deine Analysen</h2>
+          
+            <div class="mb-3">
+              <select id="urlFilter" class="form-select" style="width: auto;">
+                <option value="">Alle URLs</option>
+              </select>
+            </div>
+          <table id="analysis-table" class="table table-striped" style="width:100%" >
+            <thead>
+                <tr>
+                    <th>Zeitstempel</th>
+                    <th>URL</th>
+                    <th>Link zur Analyse</th>
+                    <th>Bewertung</th>
+                    <th>Verbesserungsmöglichkeiten</th>
+                </tr>
+            </thead>
+            <tbody id="table-content">
+
+            </tbody>
+          </table>
+        </div>
+
+      <div class="row" style="padding-top: 30px;">
+        <h2>Fortschrittsverlauf</h2>
+
+        <!-- Dropdown for selecting URL -->
+        <div class="mb-3">
+          <select id="urlSelect" class="form-select" style="width: auto;" onchange="updateChart()">
+            <option value="">URL auswählen</option>
+          </select>
+        </div>
+
+        <div id="chart"></div>
       </div>
-   </section>
+    </div>
+  </section>
 
-   <script>
-    fetch('/profile/get_analyses')
-      .then(response => response.json())
-      .then(data => {
-        const container = document.getElementById("profile-content");
-        const row = document.createElement('div');
-          row.className = 'row';
-        const col = document.createElement('div');
-          col.className ='col-md-6';
-        const h2 = document.createElement('h2')
-          h2.innerHTML = 'Deine Analysen';
-        const ul = document.createElement('ul')
+    <script>
+      // Global variable to store API data for both chart and table.
+      let analysesData = [];
 
-        data.forEach(analysis => {
-          const listItem = document.createElement('li');
-          url = `/results/${analysis.url}/${analysis.uuid}`;
-          listItem.innerHTML = `<a href='${url}'>Link</a>`;
-          ul.appendChild(listItem);
+      $(document).ready(function() {
+        // Initialize the DataTable
+        var table = $('#analysis-table').DataTable({
+          scrollY: 400,
+          autoWidth: false,
+          colReorder: { headerRows: [0] },
+          columns: [ null, { orderable: false }, { orderable: false }, null, null ],
+          order: [[0, 'desc']],
+          columnDefs: [
+            {
+              targets: 0,
+              render: function(data, type, row) {
+                if (type === 'sort' || type === 'type') {
+                  return new Date(data).getTime(); // Convert date for sorting
+                }
+                return new Date(data).toLocaleString('de-DE', { 
+                  day: '2-digit', month: '2-digit', year: 'numeric', 
+                  hour: '2-digit', minute: '2-digit' 
+                });
+              }
+            }
+          ]
         });
-        col.appendChild(h2);
-        col.appendChild(ul);
-        row.appendChild(col);
-        container.appendChild(row);
-      })
-      .catch(error => console.error('Error fetching analyses:', error));
-   </script>
+
+        // Fetch analyses from your API once.
+        fetch('/profile/get_analyses')
+          .then(response => response.json())
+          .then(data => {
+            analysesData = data; // Store fetched data for later use
+            
+            // For table filtering dropdown
+            let tableUrls = new Set();
+            // Add rows to the DataTable
+            data.forEach(analysis => {
+              tableUrls.add(analysis.url);
+              table.row.add([
+                analysis.time,
+                analysis.url,
+                `<button class="btn btn-primary" onclick="window.location.href='/results/${analysis.url}/${analysis.uuid}'">
+                    <i class="bi bi-box-arrow-right"></i> Ergebnis anzeigen
+                  </button>`,
+                `<div class="text-center align-middle">
+                  <svg width="50" height="50" viewBox="-25 -25 250 250" style="transform:rotate(-90deg)">
+                    <circle r="90" cx="100" cy="100" fill="transparent" stroke="#e0e0e0" stroke-width="16" stroke-dasharray="565.48" stroke-dashoffset="0"></circle>
+                    <circle r="90" cx="100" cy="100" stroke="#0d6efd" stroke-width="16" stroke-linecap="round"
+                            stroke-dashoffset="${(100 - analysis.overall_rating) * 5.65}" fill="transparent" stroke-dasharray="565.48"></circle>
+                    <text x="${analysis.overall_rating < 10 ? 87 : (analysis.overall_rating >= 100 ? 59 : 73)}" y="117"
+                          fill="#0d6efd" font-size="52" font-weight="bold"
+                          style="transform:rotate(90deg) translate(0, -196px)">
+                      ${analysis.overall_rating}
+                    </text>
+                  </svg>
+                </div>`,
+                `<div class="text-center align-middle">
+                  <svg width="50" height="50" viewBox="-25 -25 250 250" style="transform:rotate(-90deg)">
+                    <circle r="90" cx="100" cy="100" fill="transparent" stroke="#e0e0e0" stroke-width="16" stroke-dasharray="565.48" stroke-dashoffset="0"></circle>
+                    <circle r="90" cx="100" cy="100" 
+                            stroke="${
+                              ((analysis.improvement_count / 15) * 100) <= 30 ? '#28a745' : 
+                              ((analysis.improvement_count / 15) * 100) <= 70 ? '#ffc107' : '#dc3545'
+                            }" 
+                            stroke-width="16" stroke-linecap="round" 
+                            stroke-dashoffset="${(100 - ((Math.min(analysis.improvement_count, 15) / 15) * 100)) * 5.65}" 
+                            fill="transparent" stroke-dasharray="565.48"></circle>
+                    <text x="${analysis.improvement_count < 10 ? 87 : (analysis.improvement_count >= 100 ? 59 : 73)}" y="117"
+                          fill="${
+                            ((analysis.improvement_count / 15) * 100) <= 30 ? '#28a745' : 
+                            ((analysis.improvement_count / 15) * 100) <= 70 ? '#ffc107' : '#dc3545'
+                          }" 
+                          font-size="52" font-weight="bold"
+                          style="transform:rotate(90deg) translate(0, -196px)">
+                      ${analysis.improvement_count}
+                    </text>
+                  </svg>
+                </div>`
+              ]);
+            });
+
+            // Populate the table filter dropdown
+            let urlFilter = $("#urlFilter");
+            tableUrls.forEach(url => {
+              urlFilter.append(new Option(url, url));
+            });
+
+            // Populate the chart dropdown (id="urlSelect")
+            let chartUrlSelect = document.getElementById('urlSelect');
+            let chartUrls = new Set(data.map(item => item.url));
+            chartUrls.forEach(url => {
+              const option = document.createElement('option');
+              option.value = url;
+              option.textContent = url;
+              chartUrlSelect.appendChild(option);
+            });
+
+            table.draw(); // Redraw the table with new rows
+          })
+          .catch(error => console.error('Error fetching analyses:', error));
+
+        // Apply table filter on URL selection (optional)
+        $("#urlFilter").on("change", function() {
+          table.column(1).search(this.value).draw();
+        });
+      });
+
+      // Function to update the ApexCharts line chart based on the selected URL.
+      function updateChart() {
+        const chartUrlSelect = document.getElementById('urlSelect');
+        const selectedUrl = chartUrlSelect.value;
+        if (!selectedUrl) {
+          return;
+        }
+
+        // Filter the fetched data for the chosen URL.
+        const filteredData = analysesData.filter(item => item.url === selectedUrl);
+        const timeLabels = filteredData.map(item => item.time);
+        const overallRatings = filteredData.map(item => item.overall_rating);
+        const improvementCounts = filteredData.map(item => item.improvement_count);
+
+        // Configure the chart options.
+        const options = {
+          chart: {
+            type: 'line',
+            height: 350
+          },
+          series: [
+            {
+              name: 'Overall Rating',
+              data: overallRatings
+            },
+            {
+              name: 'Improvement Count',
+              data: improvementCounts
+            }
+          ],
+          xaxis: {
+            categories: timeLabels,
+            labels: {
+              show: false
+            }
+          },
+        };
+
+        // Clear any previous chart and render the new one.
+        document.getElementById('chart').innerHTML = "";
+        const chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+      }
+    </script>
+
+   <style>
+    /*Overwrite some styles from the imported datatables css file*/
+    div.dt-container .dt-paging .dt-paging-button {
+      padding: 0 !important;
+      margin: 0 !important; 
+      border: 0 !important;
+    }
+
+    #table-content tr td {
+      vertical-align: middle;
+      text-align: center;
+    }
+    #table-content thead, .table th {
+      text-align: center !important;
+    }
+    .dt-search {
+      display: none; /* Hide the search input - if done by passing the "searching: false" parameter to the Datatable the filtering by url doesnt work anymore -> therefore just hide it */
+    }
+   </style>
+
 {% endblock %}

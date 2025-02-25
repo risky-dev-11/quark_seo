@@ -68,7 +68,7 @@ body {
 
 a {
   color: var(--accent-color);
-  text-decoration: none;
+  text-decoration: none !important; /* Twitter Bootstrap inside the profile.html otherwise overwrites this*/
   transition: 0.3s;
 }
 

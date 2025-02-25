@@ -40,21 +40,32 @@ def get_title_missing_text(title_missing_bool):
     key = "missing" if title_missing_bool else "present"
     return text_provider.get_text("title_missing", key)
 
+def get_title_missing_improvement_text():
+    return text_provider.get_text("title_missing_improvement", "text")
+
 def get_domain_in_title_text(domain_in_title_bool):
     key = "included" if domain_in_title_bool else "not_included"
     return text_provider.get_text("domain_in_title", key)
 
 def get_title_length_text(title_length):
-    if title_length < 35:
+    if title_length < 50:
         return text_provider.get_text("title_length", "short", length=title_length)
-    elif 35 <= title_length <= 60:
+    elif 50 <= title_length <= 60:
         return text_provider.get_text("title_length", "optimal", length=title_length)
     else:
         return text_provider.get_text("title_length", "long", length=title_length)
+    
+def get_title_incorrect_length_text(title_length):
+    key = "too_long" if title_length > 60 else "too_short"
+    return text_provider.get_text("incorrect_title_length", key, length=title_length)
+   
 
 def get_title_word_repetitions_text(word_repetitions_bool):
     key = "repetitions" if word_repetitions_bool else "no_repetitions"
     return text_provider.get_text("title_word_repetitions", key)
+
+def get_title_word_repetitions_improvement_text(repeated_words):
+    return text_provider.get_text("title_word_repetitions_improvement", "text", repeated_words=repeated_words)
 
 def get_description_missing_text(description_missing_bool):
     key = "missing" if description_missing_bool else "present"

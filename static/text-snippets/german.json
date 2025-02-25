@@ -23,6 +23,9 @@
     "present": "Der Titel ist vorhanden.",
     "missing": "Der Titel fehlt."
   },
+  "title_missing_improvement": {
+    "text": "Füge unbedingt einen aussagekräftigen Meta-Titel mit relevanten Keywords hinzu! Er ist essenziell für die Suchmaschinenoptimierung, da er das Ranking beeinflusst und Nutzern in den Suchergebnissen als erstes ins Auge fällt. Ohne ihn sinken Sichtbarkeit und Klickrate deutlich!"
+  },
   "domain_in_title": {
     "included": "Die Domain steht im Seitentitel.",
     "not_included": "Die Domain steht nicht im Seitentitel."
@@ -32,9 +35,16 @@
     "optimal": "Die Länge des Titels ist mit {length} Zeichen optimal.",
     "long": "Die Länge des Titels ist mit {length} Zeichen zu lang."
   },
+  "incorrect_title_length": {
+    "too_short": "Die Länge des Titels beträgt nur {length} Zeichen und nutzt das verfügbare Potenzial nicht aus. Google zeigt Titel-Tags in der Regel mit 50-60 Zeichen an. Es ist empfehlenswert, den Titel so weit wie möglich auszureizen, um möglich viele Informationen und Keywords unterzubringen.",
+    "too_long": "Die Länge des Titels beträgt {length} Zeichen und ist zu lang. Google beginnt, den Titel-Tag nach 50-60 Zeichen abzuschneiden. Achte darauf, die wichtigsten Informationen und Keywords innerhalb dieser Grenze zu platzieren, um eine optimale Darstellung in den Suchergebnissen zu gewährleisten."
+  },
   "title_word_repetitions": {
     "repetitions": "Es gibt Wortwiederholungen im Titel.",
     "no_repetitions": "Es gibt keine Wortwiederholungen im Titel."
+  },
+  "title_word_repetitions_improvement": {
+    "text": "Die folgenden Wörter werden wiederholt: {repeated_words}. Doppelte Wörter im Meta-Titel verschwenden wertvollen Platz, mindern die Lesbarkeit und können als Spam gewertet werden, was die Klickrate und das SEO-Ranking negativ beeinflussen kann."
   },
   "description_missing": {
     "present": "Die Beschreibung ist vorhanden.",

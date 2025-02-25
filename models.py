@@ -27,6 +27,8 @@ class AnalyzedWebsite(db.Model, UserMixin):
     url = db.Column(db.String)
     results = db.Column(db.JSON)
     computation_time = db.Column(db.String)
+    time = db.Column(db.DateTime)
+    screenshot = db.Column(db.BLOB)
 
     def __repr__(self):
         return f'<AnalyzedWebsite {self.website}>'

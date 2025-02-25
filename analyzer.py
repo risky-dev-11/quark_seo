@@ -1,5 +1,6 @@
+import datetime
 from bs4 import BeautifulSoup
-from models import AnalyzedWebsite, calculate_improvement_count, calculate_overall_points
+from models import AnalyzedWebsite
 from fetcher import format_url, fetch_website_content
 from card_builders import build_all_cards, build_serp_preview, build_overall_results
 import time
@@ -52,7 +53,15 @@ def analyze_website(user_uuid, url, db):
     computation_time = f"{time.time() - start_time:.2f} Sekunden"
 
     # Analyseergebnis in der Datenbank speichern
-    analysis_results = AnalyzedWebsite(user_uuid=user_uuid, url=formatted_url, results=results, computation_time=computation_time)
+    basic_url = formatted_url.split("://")[1].lstrip("www.").rstrip("/")
+    analysis_results = AnalyzedWebsite(
+        user_uuid=user_uuid,
+        url=basic_url,
+        results=results,
+        computation_time=computation_time,
+        time=datetime.datetime.now(),
+        screenshot=screenshot
+    )
     db.session.add(analysis_results)
     db.session.commit()
 
