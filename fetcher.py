@@ -32,7 +32,7 @@ def fetch_website_content(url: str):
     driver = get_driver()
     try:
         driver.get(url)
-        WebDriverWait(driver, 10).until(
+        WebDriverWait(driver, 2).until(
             EC.presence_of_all_elements_located((By.XPATH, "//*"))
         )
         page_source = driver.page_source
