@@ -1,18 +1,21 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
+from dotenv import load_dotenv
+import os
 
 db = SQLAlchemy()
+
+load_dotenv()
 
 def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
     app.json.sort_keys = False
     
-    app.secret_key  = 'super secret key'
+    app.secret_key  = os.getenv('FLASK_SECRET_KEY')
 
     db.init_app(app)
 
