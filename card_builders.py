@@ -10,7 +10,7 @@ from models import Card, Category, calculate_improvement_count, calculate_overal
 from ai_analyzer import ai_analyzer
 import requests
 import socket
-from langdetect import detect, DetectorFactory
+from langdetect import detect_langs, DetectorFactory
 import asyncio
 
 def build_all_cards(results, soup, url, response):
@@ -77,15 +77,34 @@ def build_metadata_card(soup, url):
         desc_length_px = round(len(description_content) * 6.11)
         description_category.add_content(300 <= desc_length_px <= 960, get_description_length_text(desc_length_px))
     card.add_category(description_category)
-    
+
+    # Rich Snippets & Rich Results
+    rich_snippets_category = Category('Rich Snippets')
+    rich_snippets = soup.find_all(attrs={"itemtype": True})
+    rich_snippets_used = len(rich_snippets) > 0
+    rich_snippets_category.add_content(rich_snippets_used, "Die Webseite verwendet Rich Snippets." if rich_snippets_used else "Die Webseite verwendet keine Rich Snippets.")
+    if rich_snippets_used:
+        for snippet in rich_snippets:
+            itemprops = snippet.find_all(attrs={"itemprop": True})
+            itemprops_text = ', '.join([itemprop.get('itemprop') for itemprop in itemprops])
+            rich_snippets_category.add_content('', f"Gefundenes Snippet: {snippet.get('itemtype')}, mit itemprops: {itemprops_text}")
+    else:
+        rich_snippets_category.add_content("improvement", f"Es wurden keine Rich Snippets oder Rich Results gefunden. Möglicherweise sind diese nur auf spezifischen Produktseiten o. Ä. vorhanden, in dieser Analyse wurde lediglich die Seite {url} analysiert.")
+    card.add_category(rich_snippets_category)
+
     # Sprache Category
     language_category = Category('Sprache')
     meta_lang = soup.find('meta', attrs={'name': 'language'}) or soup.html.get('lang') or 'Unbekannt'
+    language_category.add_content('', 'Meta/HTML-Sprache: ' + meta_lang)
+    
     # langdetect is not deterministic by default, so we set a seed to make it deterministic
     DetectorFactory.seed = 0
-    detected_lang = detect(soup.get_text())
-    language_category.add_content('', 'Meta/HTML-Sprache: ' + meta_lang)
-    language_category.add_content('', 'Im Text erkannte Sprache: ' + detected_lang)
+    detected_languages_with_probabilities = detect_langs(soup.get_text())
+    detected_languages_with_probability = detected_languages_with_probabilities[0]
+    detected_lang = detected_languages_with_probability.lang
+    detected_lang_probability = detected_languages_with_probability.prob
+    language_category.add_content('', 'Im Text erkannte Sprache: ' + detected_lang + f' (mit {detected_lang_probability:.2%} Wahrscheinlichkeit)')
+
     try:
         domain = url.split('/')[2] if '//' in url else url.split('/')[0]
         ip = socket.gethostbyname(domain)
@@ -94,6 +113,8 @@ def build_metadata_card(soup, url):
         server_location = 'Unbekannt'
     language_category.add_content('', 'Serverstandort: ' + server_location)
     language_category.add_content(detected_lang in meta_lang, get_language_comment(meta_lang, detected_lang))
+    if detected_lang not in meta_lang:
+        language_category.add_content("improvement", "Hinweis: Unser Spracherkennungssystem kann auch falsch liegen. Bitte stellen Sie sicher, dass die im Meta-Tag angegebene Sprache auch der tatsächlichen Sprache des Inhalts entspricht.")
     card.add_category(language_category)
     
     # Favicon Category
@@ -173,8 +194,61 @@ def build_links_card(soup, url):
     return card
 
 def build_server_card(soup, url, response):
-    card = Card('Server')
+    card = Card('Technische SEO')
     
+    # Extract the base domain
+    base_domain = url.split('//')[-1].split('/')[0]
+    print(base_domain)
+
+    # Check for robots.txt
+    robots_category = Category('Robots.txt')
+    possible_robots_urls = [
+        f"http://{base_domain}/robots.txt",
+        f"https://{base_domain}/robots.txt"
+    ]
+    robots_found = False
+    sitemap_found_in_robots = False
+    sitemap_url_from_robots = ""
+    for robots_url in possible_robots_urls:
+        try:
+            response_robots = requests.get(robots_url)
+            if response_robots.status_code == 200:
+                robots_found = True
+                robots_content = response_robots.text
+                if "Sitemap:" in robots_content:
+                    sitemap_url_from_robots = robots_content.split("Sitemap:")[1].strip().split()[0]
+                    sitemap_found_in_robots = True
+                break
+        except Exception:
+            continue
+    robots_category.add_content(robots_found, f"Robots.txt gefunden unter {robots_url}" if robots_found else "Keine Robots.txt gefunden.")
+    card.add_category(robots_category)
+
+    # Check for sitemap
+    sitemap_category = Category('Sitemap')
+    if sitemap_found_in_robots:
+        sitemap_found = True
+        sitemap_url = sitemap_url_from_robots
+    else:
+        possible_sitemap_urls = [
+            f"http://{base_domain}/sitemap.xml",
+            f"https://{base_domain}/sitemap.xml",
+            f"http://{base_domain}/sitemap_index.xml",
+            f"https://{base_domain}/sitemap_index.xml"
+        ]
+        sitemap_found = False
+        for sitemap_url in possible_sitemap_urls:
+            try:
+                response_sitemap = requests.get(sitemap_url)
+                if response_sitemap.status_code == 200:
+                    sitemap_found = True
+                    break
+            except Exception:
+                continue
+    sitemap_category.add_content(sitemap_found, f"Sitemap gefunden unter {sitemap_url}" if sitemap_found else "Keine Sitemap gefunden.")
+    card.add_category(sitemap_category)
+    card.add_category(robots_category)
+
     redirects_category = Category('Weiterleitungen')
     has_redirects = bool(response.history)
     if has_redirects:
@@ -214,14 +288,14 @@ def build_ai_card(soup):
     # AI Description Category
     ai_description_category = Category('Beschreibung')
     ai_description_category.add_content("", description)
-    ai_description_category.add_content(ai_results['description_rating'] >= 70, ai_results['description_reason'])
+    ai_description_category.add_content(ai_results['description_rating'] >= 80, ai_results['description_reason'])
     ai_description_category.add_content("improvement", ai_results['description_improvement'])
     card.add_category(ai_description_category)
     
     # AI Title Category
     ai_title_category = Category('Titel')
     ai_title_category.add_content("", title_text)
-    ai_title_category.add_content(ai_results['title_rating'] >= 70, ai_results['title_reason'])
+    ai_title_category.add_content(ai_results['title_rating'] >= 80, ai_results['title_reason'])
     ai_title_category.add_content("improvement", ai_results['title_improvement'])
     card.add_category(ai_title_category)
     
