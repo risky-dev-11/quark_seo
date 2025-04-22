@@ -10,6 +10,7 @@ from text_snippet_functions import (
 
 def analyze_website(user_uuid, url, db):
     start_time = time.time()
+    
     # URL korrekt formatieren
     formatted_url = format_url(url)
     

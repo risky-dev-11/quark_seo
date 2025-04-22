@@ -116,7 +116,7 @@ def build_metadata_card(soup, url):
     description_category.add_content(not description_missing, get_description_missing_text(description_missing))
     if description_content:
         description_category.add_content('', description_content)
-        desc_length_px = round(len(description_content) * 6.11)
+        desc_length_px = round(len(description_content) * 6.19)
         description_category.add_content(300 <= desc_length_px <= 960, get_description_length_text(desc_length_px))
     card.add_category(description_category)
 
