@@ -8,7 +8,7 @@ from text_snippet_functions import (
     get_content_length_comment, get_website_response_time_text, get_file_size_text, get_media_count_text, get_link_count_text
 )
 
-def analyze_website(user_uuid, url, db):
+def analyze_website(user_uuid, url, db, is_premium_user):
     start_time = time.time()
     
     # URL korrekt formatieren
@@ -25,9 +25,8 @@ def analyze_website(user_uuid, url, db):
     file_size = len(response.content)
     word_count = len(soup.get_text().split())
     media_count = len(soup.find_all('img')) + len(soup.find_all('video')) + len(soup.find_all('audio'))
-    internal_link_count = len([link for link in soup.find_all('a', href=True) if formatted_url in link['href']])
-    external_link_count = len([link for link in soup.find_all('a', href=True) if formatted_url not in link['href']])
-    
+    internal_link_count = len([link for link in soup.find_all('a', href=True) if not link['href'].startswith('http') or (link['href'].startswith('http') and formatted_url in link['href'])])
+    external_link_count = len([link for link in soup.find_all('a', href=True) if link['href'].startswith('http') and formatted_url not in link['href']])
     # General Results mit den entsprechenden Texten füllen
     results = {}
     results['general_results'] = {
@@ -45,7 +44,7 @@ def analyze_website(user_uuid, url, db):
     }
     
     # Weitere Karten (Metadaten, Seitenqualität, Seitenstruktur, Links, Server, KI-Analyse) erstellen
-    build_all_cards(results, soup, formatted_url, response)
+    build_all_cards(results, soup, formatted_url, response, is_premium_user)
     
     # SERP-Vorschau und Gesamtbewertung erstellen
     results['serp_preview'] = build_serp_preview(soup, formatted_url, response)
@@ -63,6 +62,7 @@ def analyze_website(user_uuid, url, db):
         time=datetime.datetime.now(),
         screenshot=screenshot
     )
+
     db.session.add(analysis_results)
     db.session.commit()
 

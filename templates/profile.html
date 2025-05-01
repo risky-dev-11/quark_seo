@@ -33,13 +33,16 @@
           <div class="col-md-6">
             <h2>Persönliche Informationen</h2>
             <div class="mb-3">
-              <label for="fullName" class="form-label"><strong>Vor- und Nachname:</strong></label>
+              <label for="fullName" class="form-label"><strong>Vor- und Nachname</strong></label>
               <input type="text" class="form-control" id="fullName" value="{{ current_user.first_name }} {{ current_user.last_name }}" readonly>
             </div>
             <div class="mb-3">
-              <label for="email" class="form-label"><strong>Email:</strong></label>
+              <label for="email" class="form-label"><strong>Email</strong></label>
               <input type="email" class="form-control" id="email" value="{{ current_user.email }}" readonly>
             </div>
+            <div class="mb-3">
+              <label for="username" class="form-label"><strong>Dein aktueller Plan</strong></label>
+                <input type="text" class="form-control" id="username" value="{% if current_user.role == 'basic' %}Basic Abonnement (Kostenlose Version){% elif current_user.role == 'premium' %}Premium Abonnement{% elif current_user.role == 'admin' %}Administrator{% endif %}" readonly>
           </div>
         </div>
         <div class="row" style="padding-top: 30px;">
@@ -110,7 +113,7 @@
         });
 
         // Fetch analyses from your API once.
-        fetch('/profile/get_analyses')
+        fetch('/api/profile/get_analyses')
           .then(response => response.json())
           .then(data => {
             analysesData = data; // Store fetched data for later use

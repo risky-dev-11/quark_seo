@@ -1,8 +1,10 @@
 # Classes for the database
-
-import uuid
+from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
-from app import db
+import uuid
+from sqlalchemy.dialects.postgresql import JSON
+
+db = SQLAlchemy()
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -25,7 +27,7 @@ class AnalyzedWebsite(db.Model, UserMixin):
     user_uuid = db.Column(db.Integer, db.ForeignKey('users.uuid'))
     uuid = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
     url = db.Column(db.String)
-    results = db.Column(db.JSON)
+    results = db.Column(JSON)  # <-- Wichtig: Nicht db.JSON!
     computation_time = db.Column(db.String)
     time = db.Column(db.DateTime)
     screenshot = db.Column(db.BLOB)
@@ -46,7 +48,7 @@ def calculate_overall_points(results):
     for card in results.values():
         if 'points' in card:
             overall_points += 100
-            achieved_points += card.get('points', 0)
+            achieved_points += int(card.get('points', 0) or 0)
     return round((achieved_points / overall_points) * 100) if overall_points != 0 else 0
 
 def calculate_improvement_count(results):
@@ -109,9 +111,12 @@ class Card:
             **self.categories
         }
 
-    def add_to_results(self, results):
-        self.calculate_points()
-        results[self.card_name.lower()] = self.to_dict()
+    def add_to_results(self, results, index, manual_points=None):
+        if manual_points is not None:
+            self.update_points(manual_points)
+        else:
+            self.calculate_points()
+        results[index] = self.to_dict()
     
     def update_points(self, points):
         self.points = points
@@ -172,3 +177,24 @@ class TextProvider:
             raise KeyError(f"Missing key: {e}") from e
         except ValueError as e:
             raise ValueError(f"Formatting error with placeholders: {e}") from e
+
+# User hierarchy
+
+class UserHierarchy:
+    ROLES = {
+        'basic': 1,
+        'premium': 2,
+        'admin': 3
+    }
+
+    @staticmethod
+    def is_higher_than_basic(user):
+        """
+        Check if the given user's role is higher than a basic user.
+        If the user's role is unknown, assign 'basic'.
+
+        :param user: The user object to check.
+        :return: True if the user's role is higher than 'basic', False otherwise.
+        """
+        role = user.role if user.role in UserHierarchy.ROLES else 'basic'
+        return UserHierarchy.ROLES.get(role, 0) > UserHierarchy.ROLES['basic']

@@ -17,31 +17,39 @@ import os
 
 dotenv.load_dotenv() 
 
-def build_all_cards(results, soup, url, response):
+def build_all_cards(results, soup, url, response, isPremiumUser):
     """
     Builds and adds all the card sections to the results.
     This function delegates to smaller helper functions for each card.
-    """
 
-    # Core Web Vitals Card
-    core_web_vitals_card = build_core_web_vitals_card(url)
-    core_web_vitals_card.add_to_results(results)
-    
-    # Technical SEO Card
-    technicalseo_card = build_technicalseo_card(soup, url, response)
-    technicalseo_card.add_to_results(results)
-    
+    The index is used to determine the order of the cards in the results. This also circumvents the issue with JSON sorting, which could not be resolved.
+    """
     # Metadata Card
     metadata_card = build_metadata_card(soup, url)
-    metadata_card.add_to_results(results)
-    
-    # AI Analysis Card
-    ai_results_card = build_ai_card(soup)
-    ai_results_card.add_to_results(results)
+    metadata_card.add_to_results(results, index=1)
+
+    if isPremiumUser:
+        core_web_vitals_card = build_core_web_vitals_card(url)
+        core_web_vitals_card.add_to_results(results, index=2)
+    else:
+        core_web_vitals_card = build_not_available_card('Core Web Vitals', 'Core Web Vitals nicht verfügbar', 'Die Core Web Vitals sind nur für Premium-Nutzer verfügbar. Bitte aktualisieren Sie Ihr Abonnement, um diese Funktion zu nutzen.')
+        core_web_vitals_card.add_to_results(results, manual_points=100, index=2)
+
+    # Technical SEO Card
+    technicalseo_card = build_technicalseo_card(soup, url, response)
+    technicalseo_card.add_to_results(results, index=3)
 
     # Page Quality Card
     pagequality_and_links_card = build_pagequality_and_links_card(soup, url)
-    pagequality_and_links_card.add_to_results(results)
+    pagequality_and_links_card.add_to_results(results, index=4)
+        
+    # AI Analysis Card (only for premium users)
+    if isPremiumUser:
+        ai_results_card = build_ai_card(soup)
+        ai_results_card.add_to_results(results, index=5)
+    else:
+        ai_results_card = build_not_available_card('KI - Analyse', 'KI-Analyse nicht verfügbar', 'Die KI-Analyse ist nur für Premium-Nutzer verfügbar. Bitte aktualisieren Sie Ihr Abonnement, um diese Funktion zu nutzen.')
+        ai_results_card.add_to_results(results, manual_points=100, index=5)
     
     
 def build_core_web_vitals_card(url):
@@ -82,6 +90,15 @@ def build_core_web_vitals_card(url):
         error_category = Category('Error')
         error_category.add_content(False, 'Es ist ein Fehler bei dem Abrufen der Core Web Vitals aufgetreten. Bitte entschuldigen Sie die Unannehmlichkeiten.')
     
+    return card
+
+def build_not_available_card(card_title, cards_subtitle, card_text):
+    card = Card(card_title)
+    
+    category = Category(cards_subtitle)
+    category.add_content("improvement", card_text)
+    card.add_category(category)
+ 
     return card
 
 def build_metadata_card(soup, url):
@@ -222,7 +239,9 @@ def build_pagequality_and_links_card(soup, url):
     links_category = Category('Verlinkung')
     
     # Internal links
-    internal_links = [link for link in soup.find_all('a', href=True) if url in link['href']]
+    formatted_url = url.rstrip('/')
+    internal_links = [link for link in soup.find_all('a', href=True) if not link['href'].startswith('http') or (link['href'].startswith('http') and formatted_url in link['href'])]
+    internal_link_count = len(internal_links)
     links_category.add_content(all(len(link.text) < 30 for link in internal_links), get_internal_length_linktext_text(all(len(link.text) < 30 for link in internal_links)))
     no_text_internal = sum(1 for link in internal_links if not link.text.strip()) > 0
     links_category.add_content(not no_text_internal, get_internal_no_linktext_text(no_text_internal))
@@ -230,7 +249,8 @@ def build_pagequality_and_links_card(soup, url):
     links_category.add_content(not duplicate_internal, get_internal_linktext_repetitions_text(duplicate_internal))
     
     # External links
-    external_links = [link for link in soup.find_all('a', href=True) if url not in link['href']]
+    external_links = [link for link in soup.find_all('a', href=True) if link['href'].startswith('http') and formatted_url not in link['href']]
+    external_link_count = len(external_links)
     links_category.add_content(all(len(link.text) < 30 for link in external_links), get_external_length_linktext_text(all(len(link.text) < 30 for link in external_links)))
     no_text_external = sum(1 for link in external_links if not link.text.strip()) > 0
     links_category.add_content(not no_text_external, get_external_no_linktext_text(no_text_external))
@@ -256,7 +276,6 @@ def build_technicalseo_card(soup, url, response):
 
     # Extract the base domain
     base_domain = url.split('//')[-1].split('/')[0]
-    print(base_domain)
 
     # Check for robots.txt
     robots_category = Category('Robots.txt')
@@ -289,9 +308,7 @@ def build_technicalseo_card(soup, url, response):
         sitemap_url = sitemap_url_from_robots
     else:
         possible_sitemap_urls = [
-            f"http://{base_domain}/sitemap.xml",
             f"https://{base_domain}/sitemap.xml",
-            f"http://{base_domain}/sitemap_index.xml",
             f"https://{base_domain}/sitemap_index.xml"
         ]
         sitemap_found = False

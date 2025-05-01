@@ -11,78 +11,55 @@
   <div class="container">
     <div class="row gy-4 d-flex justify-content-between">
       <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
-        <h2 data-aos="fade-up">Überprüfe Deine Webseite mit unserem SEO Check!</h2>
-        <p data-aos="fade-up" data-aos-delay="100">Mit unserem Tool kannst du die Sichtbarkeit deiner Website in Suchmaschinen verbessern! Es analysiert automatisch die wichtigsten SEO-Faktoren und gibt dir gezielte Empfehlungen, um besser in den Suchergebnissen aufzutauchen und mehr potenzielle Kunden zu erreichen.</p>
-
+        <h2 data-aos="fade-up">Analyze Your Website with Our SEO Checker!</h2>
+        <p data-aos="fade-up" data-aos-delay="100">Boost your website's visibility in search engines with our powerful tool! It automatically evaluates key SEO factors and provides actionable recommendations to help you rank higher in search results and attract more potential customers.</p>
 
         <form id="url-form" class="form-search d-flex align-items-stretch mb-3" data-aos="fade-up" data-aos-delay="200">
-          <input type="text" id="url-input" class="form-control" placeholder="Die URL deiner Webseite" required>
+            <input type="text" id="url-input" class="form-control" placeholder="Enter your website URL" required>
           <button type="submit" class="btn btn-primary">Analyse starten</button>
         </form>
         <script>
-          document.getElementById('url-form').addEventListener('submit', function(event) {
+          document.getElementById('url-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             
             // Get the URL input value
             let inputUrl = document.getElementById('url-input').value;
-            // bring the URL to the correct format
-            inputUrl = inputUrl.trim().replace(/^(https?:\/\/)?(www\.)?/, '');
-            if (inputUrl.endsWith('/')) {
-              inputUrl = inputUrl.slice(0, -1);
-            }
+            
             // open the loading page
             if (inputUrl) {
+              const submitButton = document.querySelector('#url-form button[type="submit"]');
+              submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+              submitButton.disabled = true;
+
               const encodedUrl = encodeURIComponent(inputUrl);
-              const newTabUrl = `/seo/analyze/${encodedUrl}`;
-              window.open(newTabUrl, '_blank');
+
+              await fetch(`/api/analyze/${encodedUrl}`, { 
+                method: 'GET',
+                headers: {
+                  'Accept': 'application/json'
+                }
+              })
+              .then(response => {
+                if (response.status === 200) {
+                  return response.json().then(data => {
+                    window.location.href = `/results/${encodedUrl}/${data.uuid}`;
+                  });
+                } else {
+                  window.location.href = `/results/${encodedUrl}/error`;
+                }
+              })
+              .catch(error => {
+                window.location.href = `/results/${encodedUrl}/error`;
+              });
             }
+
+            const submitButton = document.querySelector('#url-form button[type="submit"]');
+              submitButton.innerHTML = 'Analyse starten';
+              submitButton.disabled = false;
           });
+
+
         </script>
-
-        <!--<div class="row gy-4 mt-1" data-aos="fade-up" data-aos-delay="300">
-
-          <div class="col-lg-3 col-6">
-            <div class="stats-item text-center w-100 h-100">
-              <span id="analyzed-websites-count" data-purecounter-start="0" data-purecounter-end="0" data-purecounter-duration="1" class="purecounter">0</span>
-              <p>analysierte Webseiten</p>
-            </div>
-          </div>
-          <script>
-            document.addEventListener('DOMContentLoaded', async () => {
-              await fetch('/api/count_of_analyzed_websites')
-                .then(response => response.json())
-                .then(data => {
-                  const countElement = document.getElementById('analyzed-websites-count');
-                  countElement.setAttribute('data-purecounter-end', data.count);
-                  countElement.textContent = data.count;
-                  new PureCounter();
-                })
-                .catch(error => console.error('Error fetching analyzed websites count:', error));
-            });
-          </script>
-          <div class="col-lg-3 col-6">
-            <div class="stats-item text-center w-100 h-100">
-              <span>1233</span>
-              <p>zufriedene Kunden</p>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-6">
-            <div class="stats-item text-center w-100 h-100">
-              <span>75%</span>
-                <p>Der Klicks gehen auf die ersten 3 Suchergebnisse</p>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-6">
-            <div class="stats-item text-center w-100 h-100">
-              <span></span>
-              <p>Internetnutzer weltweit</p>
-            </div>
-          </div>
-
-        </div>-->
-
       </div>
 
         <div class="col-lg-5 order-1 order-lg-2 hero-img d-flex align-items-center" data-aos="zoom-out">
@@ -105,8 +82,8 @@
         <div class="icon flex-shrink-0"><i class="fa-sharp fa-solid fa-s"></i></div>
         <div>
           <h4 class="title">Search</h4>
-          <p class="description">Erhalten Sie tiefere Einblicke in die Leistung Ihrer Website und identifizieren Sie Bereiche, die das Suchmaschinenranking beeinflussen. Mit unserer Lösung finden Sie die besten Keywords und können Ihre Sichtbarkeit steigern.</p>
-          <a href="#" class="readmore stretched-link"><span>Mehr erfahren</span><i class="bi bi-arrow-right"></i></a>
+          <p class="description">Gain valuable insights into your website's performance and identify key areas that impact search engine rankings. Discover the best keywords to enhance your visibility and attract more visitors.</p>
+          <a href="#" class="readmore stretched-link"><span>Learn More</span><i class="bi bi-arrow-right"></i></a>
         </div>
       </div>
       <!-- End Service Item -->
@@ -115,8 +92,8 @@
         <div class="icon flex-shrink-0"><i class="fa-sharp fa-solid fa-e"></i></div>
         <div>
           <h4 class="title">Engine</h4>
-          <p class="description">Nutzen Sie unser automatisiertes Tool, um ungenutztes Potenzial zu erschließen. Wir bieten Ihnen detaillierte Vorschläge zur Verbesserung der Performance und Sichtbarkeit Ihrer Website.</p>
-          <a href="#" class="readmore stretched-link"><span>Mehr erfahren</span><i class="bi bi-arrow-right"></i></a>
+          <p class="description">Leverage our automated tools to unlock untapped potential. We provide detailed recommendations to improve your website's performance and boost its visibility in search results.</p>
+          <a href="#" class="readmore stretched-link"><span>Learn More</span><i class="bi bi-arrow-right"></i></a>
         </div>
       </div>
       <!-- End Service Item -->
@@ -125,8 +102,8 @@
         <div class="icon flex-shrink-0"><i class="fa-sharp fa-solid fa-o"></i></div>
         <div>
           <h4 class="title">Optimization</h4>
-          <p class="description">Optimieren Sie Ihre Website mit modernen SEO-Techniken, um von Suchmaschinen besser erfasst zu werden. Erhöhen Sie Ihre Chance, von Ihrer Zielgruppe schneller gefunden zu werden.</p>
-          <a href="#" class="readmore stretched-link"><span>Mehr erfahren</span><i class="bi bi-arrow-right"></i></a>
+          <p class="description">Enhance your website using advanced SEO techniques to ensure better indexing by search engines. Increase your chances of being discovered by your target audience effectively.</p>
+          <a href="#" class="readmore stretched-link"><span>Learn More</span><i class="bi bi-arrow-right"></i></a>
         </div>
       </div>
       <!-- End Service Item -->
@@ -227,7 +204,7 @@
 
       <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
         <div class="pricing-item">
-          <h3>Entwickler Plan</h3>
+          <h3>Premium Plan</h3>
           <h4><sup>€</sup>7<span> / Monat</span></h4>
           <ul>
             <li><i class="bi bi-check"></i> Zugriff auf alle SEO-Analysefunktionen</li>
@@ -236,7 +213,43 @@
             <li><i class="bi bi-check"></i> KI-basierte Textanalyse und Keyword-Bewertung</li>
             <li><i class="bi bi-check"></i> Automatische Optimierungsvorschläge</li>
           </ul>
-          <a href="#" class="buy-btn">Bald verfügbar</a>
+            {% if current_user.role == 'premium' %}
+              <a href="#" class="buy-btn" style="background: var(--accent-color); color: var(--contrast-color); pointer-events: none; cursor: default;">
+              <i class="bi bi-check-circle" style="color: white;"></i> Dein aktueller Plan
+              </a>
+            {% else %}
+              <a href="#" class="buy-btn" id="upgrade-btn">Jetzt kostenlos upgraden</a>
+              <script>
+              document.getElementById('upgrade-btn').addEventListener('click', async function(event) {
+              event.preventDefault();
+              const button = event.target;
+              button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+              button.disabled = true;
+
+              try {
+              const response = await fetch('/api/roles/upgrade_user', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+                }
+              });
+
+              if (response.ok) {
+                button.outerHTML = `
+                <a href="#" class="buy-btn" style="background: var(--accent-color); color: var(--contrast-color); pointer-events: none; cursor: default;">
+                <i class="bi bi-check-circle" style="color: white;"></i> Dein aktueller Plan
+                </a>`;
+              } else {
+                button.innerHTML = 'Fehler, bitte erneut versuchen';
+                button.disabled = false;
+              }
+              } catch (error) {
+              button.innerHTML = 'Fehler, bitte erneut versuchen';
+              button.disabled = false;
+              }
+              });
+              </script>
+            {% endif %}
         </div>
       </div><!-- End Pricing Item -->
 

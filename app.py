@@ -6,33 +6,31 @@ from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 import os
 
-db = SQLAlchemy()
+from models import db, User
+from routes import register_routes
 
 load_dotenv()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-    app.json.sort_keys = False
-    
-    app.secret_key  = os.getenv('FLASK_SECRET_KEY')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('POSTGRES_DATABASE_URL')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.secret_key = os.getenv('FLASK_SECRET_KEY')
+    app.config['JSON_SORT_KEYS'] = False
 
     db.init_app(app)
 
     login_manager = LoginManager()
     login_manager.init_app(app)
 
-    from models import User
     @login_manager.user_loader
-    def load_user(uuid):
-        return User.query.get(uuid)
+    def load_user(user_id):
+        return db.session.get(User, user_id)
 
-    bycrypt = Bcrypt(app)
+    bcrypt = Bcrypt(app)
 
-    from routes import register_routes
-    register_routes(app, db, bycrypt)
+    register_routes(app, db, bcrypt)
 
-    # enable CORS
     CORS(app)
 
     return app
@@ -43,15 +41,3 @@ if __name__ == "__main__":
     #from waitress import serve
     #serve(flask_app, host="0.0.0.0", port=5000) # for prod
     flask_app.run(debug=True) #for development
-
-# Next Implementation steps: add screenshot, more and more specific improvement suggestions, wiki and links to it, fix comments & other stuff in html (picture on log in page), server routing with log in and registration system - false password redirect to error site instead of outputting a error, etc.  
-
-# an bewertungsparameter wirtschaftlichkeit - wie kunden gewinnnen, etc. mit einbauen
-
-# wissenschaftliche neutrale ausarbeitung der grundlagen von seo
-
-# wirtschaftliche betrachtung
-
-# wo habe ich fehler gemacvht und wo habe ich draus gelern
-
-   

@@ -9,6 +9,7 @@ async function fetchAndApplyResults() {
       }else{
         const data = await response.json();
         const results = data.results;
+
         if (data.screenshot === null) {
           document.getElementById("screenshot-container").style.display = "none";
         } else {

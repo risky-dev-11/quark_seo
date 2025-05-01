@@ -182,7 +182,7 @@ def get_compression_text(compression, compression_bool):
 
 def get_overall_rating_text(overall_rating):
     if overall_rating < 40:
-        return text_provider.get_text("overall_rating", "loe", rating=overall_rating)
+        return text_provider.get_text("overall_rating", "low", rating=overall_rating)
     elif 40 <= overall_rating < 55:
         return text_provider.get_text("overall_rating", "medium_low", rating=overall_rating)
     elif 55 <= overall_rating < 70:

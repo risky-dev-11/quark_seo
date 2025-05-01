@@ -42,26 +42,26 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="/" class="active">Home<br></a></li>
-          <li><a href="{{ url_for('about') }}">About</a></li>
-          <li><a href="{{ url_for('pricing') }}">Pricing</a></li>
-          <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <li><a href="/" class="{% if request.endpoint == 'index' or request.endpoint == '' %}active{% endif %}">Home</a></li>
+          <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
+          <li><a href="{{ url_for('pricing') }}" class="{% if request.endpoint == 'pricing' %}active{% endif %}">Pricing</a></li>
+          <li class="dropdown">
+        <a href="#" class="{% if 'dropdown' in request.endpoint %}active{% endif %}">
+          <span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i>
+        </a>
+        <ul>
+          <li><a href="#" class="{% if request.endpoint == 'dropdown1' %}active{% endif %}">Dropdown 1</a></li>
+          <li class="dropdown">
+            <a href="#" class="{% if 'deep_dropdown' in request.endpoint %}active{% endif %}">
+          <span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i>
+            </a>
             <ul>
-              <li><a href="#">Dropdown 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                <ul>
-                  <li><a href="#">Deep Dropdown 2</a></li>
-                  <li><a href="#">Deep Dropdown 3</a></li>
-                  <li><a href="#">Deep Dropdown 4</a></li>
-                  <li><a href="#">Deep Dropdown 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Dropdown 2</a></li>
-              <li><a href="#">Dropdown 3</a></li>
-              <li><a href="#">Dropdown 4</a></li>
+          <li><a href="#" class="{% if request.endpoint == 'deep_dropdown2' %}active{% endif %}">Deep Dropdown 2</a></li>
             </ul>
           </li>
-          <li><a href="contact">Contact</a></li>
+        </ul>
+          </li>
+          <li><a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}">Contact</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>

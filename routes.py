@@ -1,29 +1,31 @@
 import base64
 from flask import jsonify, render_template, request, redirect, url_for
-from models import AnalyzedWebsite, User
+from models import AnalyzedWebsite, User, UserHierarchy
 from flask_login import login_user, login_required, logout_user
 from analyzer import analyze_website
 from flask_login import current_user
 
 def register_routes(app, db, bcrypt):
 
-    @app.route('/')
-    def index():
-        return render_template('index.html')
-    
     @app.route('/signup', methods=['GET', 'POST'])
     def signup():
         if request.method == 'GET':
             return render_template('signup.html')
         elif request.method == 'POST':
-            first_name = request.form['first_name']
-            last_name = request.form['last_name']
-            email = request.form['email']
+            first_name = request.form['first_name'].strip()
+            last_name = request.form['last_name'].strip()
+            email = request.form['email'].strip()
             password = request.form['password']
-            hashed_password = bcrypt.generate_password_hash(password)
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
             user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, role='user')
+
+            if User.query.filter_by(email=email).first() is not None:
+                return 'Email already exists'
             db.session.add(user)
             db.session.commit()
+
+            # Log in the user after signing up
+            login_user(user, force=True, remember=True)
             return redirect(url_for('index')) #maybe redirect elsewhere - or determe if redirect to results page!!!!!
 
     @app.route('/login', methods=['GET', 'POST'])
@@ -31,11 +33,11 @@ def register_routes(app, db, bcrypt):
         if request.method == 'GET':
             return render_template('login.html')
         elif request.method == 'POST':
-            email = request.form['email']
+            email = request.form['email'].strip()
             password = request.form['password']
             user = User.query.filter_by(email=email).first()
             if bcrypt.check_password_hash(user.password, password):
-                login_user(user)
+                login_user(user, remember=True)
                 return redirect(url_for('index'))
             else:
                 return 'Failed to login'
@@ -45,18 +47,16 @@ def register_routes(app, db, bcrypt):
         logout_user()
         return redirect(url_for('index'))
     
-    @app.login_manager.unauthorized_handler
-    def unauthorized_callback():
-        return render_template('unauthorized.html')
-    
     @app.route('/api/analyze/<path:url>', methods=['GET'])
     def analyze_url(url):
         if not current_user.is_authenticated:
             user_uuid = None
+            is_premium_user = False
         else:
             user_uuid = current_user.uuid
+            is_premium_user = UserHierarchy.is_higher_than_basic(current_user)
         try: 
-            uuid = analyze_website(user_uuid, url, db)
+            uuid = analyze_website(user_uuid, url, db, is_premium_user)
         except Exception as e:
             print(e)
             return jsonify({"message": "There was an error while analyzing the website", "error": str(e)}), 400
@@ -75,7 +75,7 @@ def register_routes(app, db, bcrypt):
         else:
             return jsonify({"error": "Not Found"}), 404
         
-    @app.route('/profile/get_analyses')
+    @app.route('/api/profile/get_analyses')
     @login_required
     def get_users_analysis():
         user_uuid = current_user.uuid
@@ -95,8 +95,24 @@ def register_routes(app, db, bcrypt):
                 "improvement_count": improvement_count
             })
         return jsonify(results), 200
+    
+    @app.route('/api/roles/upgrade_user', methods=['POST'])
+    def upgrade_user():
+        if not current_user.is_authenticated:
+            return redirect(url_for('signup'))
+        user_uuid = current_user.uuid
+        user = db.session.query(User).filter_by(uuid=user_uuid).first()
+        user.role = 'premium'
+        db.session.commit()
+        return jsonify({"message": "User upgraded to premium"}), 200
 
     # Routes for the templates
+    @app.route('/')
+    def index():
+        return render_template('index.html')
+    @app.login_manager.unauthorized_handler
+    def unauthorized_callback():
+        return render_template('unauthorized.html')
     @app.route('/results/<path:url>/<uuid:uuid>', methods=['GET'])
     def show_results(url, uuid):
         return render_template("seo-analytics-page.html", url=url, uuid=uuid)
