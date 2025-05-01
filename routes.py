@@ -75,27 +75,101 @@ def register_routes(app, db, bcrypt):
         else:
             return jsonify({"error": "Not Found"}), 404
         
-    @app.route('/api/profile/get_analyses')
+    @app.route('/api/profile/get_analyses', methods=['POST'])
     @login_required
     def get_users_analysis():
-        user_uuid = current_user.uuid
-        result = db.session.query(AnalyzedWebsite).filter_by(user_uuid=user_uuid).all()
+        draw = int(request.form.get('draw', 1))
+        start = int(request.form.get('start', 0))
+        length = int(request.form.get('length', 10))
+        search_value = request.form.get('search[value]', '').lower()
+        url_filter = request.form.get('url_filter', '').lower()  # ⬅️ Neue Filtervariable
 
-        results = []
-        for analysis in result:
-            data = analysis.results
-            overall_rating = data['overall_results']['overall_rating']
-            improvement_count = data['overall_results']['improvement_count']
-            
-            results.append({
+        user_uuid = current_user.uuid
+
+        query = db.session.query(AnalyzedWebsite).filter_by(user_uuid=user_uuid)
+
+        # globale Suche
+        if search_value:
+            query = query.filter(AnalyzedWebsite.url.ilike(f'%{search_value}%'))
+
+        # gezielter URL-Filter
+        if url_filter:
+            query = query.filter(AnalyzedWebsite.url.ilike(f'%{url_filter}%'))
+
+        records_filtered = query.count()
+        results_paginated = query.order_by(AnalyzedWebsite.time.desc()).offset(start).limit(length).all()
+
+        data = []
+        for analysis in results_paginated:
+            results_data = analysis.results
+            overall_rating = results_data['overall_results']['overall_rating']
+            improvement_count = results_data['overall_results']['improvement_count']
+            data.append({
                 "uuid": analysis.uuid,
-                "time": analysis.time if analysis.time is not None else "Unknown",
+                "time": analysis.time.isoformat() if analysis.time else "Unknown",
                 "url": analysis.url,
                 "overall_rating": overall_rating,
                 "improvement_count": improvement_count
             })
-        return jsonify(results), 200
+
+        records_total = db.session.query(AnalyzedWebsite).filter_by(user_uuid=user_uuid).count()
+
+        return jsonify({
+            "draw": draw,
+            "recordsTotal": records_total,
+            "recordsFiltered": records_filtered,
+            "data": data
+        })
+    @app.route('/api/profile/get_all_urls', methods=['GET'])
+    @login_required
+    def get_all_urls():
+        user_uuid = current_user.uuid
+
+        urls = (
+            db.session.query(AnalyzedWebsite.url)
+            .filter_by(user_uuid=user_uuid)
+            .distinct()
+            .all()
+        )
+
+        # Liste aus Tupeln extrahieren
+        url_list = [url[0] for url in urls]
+        return jsonify(url_list)
     
+
+    @app.route('/api/profile/get_analyses_by_url', methods=['GET'])
+    @login_required
+    def get_analyses_by_url():
+        user_uuid = current_user.uuid
+        url = request.args.get('url', type=str)
+
+        # Fetch all analyses for this user + URL, ordered by time
+        analyses = (
+            db.session
+            .query(AnalyzedWebsite)
+            .filter_by(user_uuid=user_uuid, url=url)
+            .order_by(AnalyzedWebsite.time)
+            .all()
+        )
+
+        # Build the JSON response
+        data = []
+        for analysis in analyses:
+            # `analysis.results` is your JSON/dict column
+            rd = analysis.results.get('overall_results', {})
+            overall_rating    = rd.get('overall_rating', None)
+            improvement_count = rd.get('improvement_count', None)
+
+            data.append({
+                'time':             analysis.time.isoformat() if analysis.time else None,
+                'overall_rating':   overall_rating,
+                'improvement_count':improvement_count
+            })
+
+        return jsonify(data)
+
+
+
     @app.route('/api/roles/upgrade_user', methods=['POST'])
     def upgrade_user():
         if not current_user.is_authenticated:

@@ -15,6 +15,7 @@
   --default-font: "Roboto",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --heading-font: "Poppins",  sans-serif;
   --nav-font: "Poppins",  sans-serif;
+  --improvement-circle-color: #0d6efd;
 }
 
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
@@ -2047,4 +2048,60 @@ td {
 
 .i_tag_general_results{
   align-self: center;
+}
+
+/*--------------------------------------------------------------
+# Circular Progress 
+--------------------------------------------------------------*/
+
+#overallRatingCircle::part(base),
+#improvementCircle::part(base),
+#serpRatingCircle::part(base) {
+  width: 150px; 
+  height: 150px; 
+  display: block;
+}
+#overallRatingCircleProfilePage::part(base),
+#improvementCountCircleProfilePage::part(base) {
+  width: 70px; 
+  height: 70px; 
+  display: block;
+}
+
+#overallRatingCircle::part(circle),
+#overallRatingCircleProfilePage::part(circle),
+#improvementCircle::part(circle),
+#improvementCountCircleProfilePage::part(circle),
+#serpRatingCircle::part(circle) {
+  stroke-width: 5px;
+}
+
+#overallRatingCircle::part(value),
+#overallRatingCircleProfilePage::part(value),
+#serpRatingCircle::part(value) {
+  stroke-width: 10px;
+  stroke: #0d6efd;
+  stroke-linecap: round;
+}
+
+#overallRatingCircle::part(text),
+#overallRatingCircleProfilePage::part(text),
+#serpRatingCircle::part(text) {
+  font-size: 1.6em;
+  font-weight: bold;
+  fill: #0d6efd;
+}
+
+#improvementCircle::part(value),
+#improvementCountCircleProfilePage::part(value) {
+  stroke-width: 10px;
+  stroke: var(--improvement-circle-color);
+  stroke-linecap: round;
+}
+
+#improvementCircle::part(text),
+#improvementCountCircleProfilePage::part(text) {
+  font-size: 1.6em;
+  font-weight: bold;
+  fill: var(--improvement-circle-color);
 }

@@ -149,6 +149,8 @@ function createCard(cardName, points, subcategories) {
 
               // and style it to differentitate between text with icon and without
               p.style = "font-style: italic; font-size: 0.8em;";
+
+              td.style.paddingTop = "0"; // make it closer to the element above, because this is mostly used to add basic information to the element above
             } 
 
             td.appendChild(p);
@@ -187,57 +189,45 @@ function display(data) {
 
 function applyOverallResults(result) {
   try {
-      // Update overall rating SVG and text
-      document.querySelector("#overallRatingValue").textContent = result.overall_rating;
-      document.querySelector("#overallRatingCircle").setAttribute("stroke-dashoffset", `${(100 - result.overall_rating) * 5.65}`); // Adjust stroke based on value
-      document.querySelector("#overallRatingText").textContent = result.overall_rating_text;
 
-          // Adjust the x position based on the overall rating value
-          const overallRatingTextElement = document.querySelector("#overallRatingValue");
+      // Update the overall rating circle progress
+      const overallRatingCircle = document.querySelector("#overallRatingCircle");
+      overallRatingCircle.setAttribute("value", result.overall_rating);
+      overallRatingCircle.setAttribute("max", "100");
+      overallRatingCircle.setAttribute("text-format", "value");
+      overallRatingCircle.setAttribute("animation", "linear");
+      overallRatingCircle.setAttribute("animation-duration", "1200");
 
-          if (result.overall_rating_value < 10) {
-              overallRatingTextElement.setAttribute("x", parseInt(overallRatingTextElement.getAttribute("x")) + 14);
-          } else if (result.overall_rating_value >= 100) {
-              overallRatingTextElement.setAttribute("x", parseInt(overallRatingTextElement.getAttribute("x")) - 14);
-          }
+      // Update the improvement circle progress
+      const maximum_expected_improvements = 15; 
 
-      // Update improvement count and text
-      document.querySelector("#improvementCount").textContent = result.improvement_count;
-      document.querySelector("#improvementCountText").textContent = result.improvement_count_text;
-      
-          // Adjust the x position based on the improvement count value
-          const improvementCountTextElement = document.querySelector("#improvementCount");
+      const improvementCircle = document.querySelector("#improvementCircle");
+      if (result.improvement_count > maximum_expected_improvements) {
+        improvementCircle.setAttribute("max", result.improvementCount); // Set the max value to the improvement count, if it's greater than 15
+      } else {
+        improvementCircle.setAttribute("max", maximum_expected_improvements);
+      }
+      improvementCircle.setAttribute("value", result.improvement_count); 
+      improvementCircle.setAttribute("text-format", "value");
+      improvementCircle.setAttribute("animation", "linear");
+      improvementCircle.setAttribute("animation-duration", "1200");
 
-          if (result.improvement_count < 10) {
-              improvementCountTextElement.setAttribute("x", parseInt(improvementCountTextElement.getAttribute("x")) + 14);
-          } else if (result.improvement_count >= 100) {
-              improvementCountTextElement.setAttribute("x", parseInt(improvementCountTextElement.getAttribute("x")) - 14);
-          }
+      const improvementPercentage = (result.improvement_count / maximum_expected_improvements) * 100;
+       // Set the color based on the percentage
+       let improvementColor;
+       if (improvementPercentage <= 30) {
+           improvementColor = '#28a745'; // Green
+       } else if (improvementPercentage <= 70) {
+           improvementColor = '#ffc107'; // Yellow
+       } else {
+           improvementColor = '#dc3545'; // Red
+       }
 
-          // Update the improvement circle based on the improvement count
-
-          // Maximum expected improvements, used to calculate the percentage that the circle displays
-          const maximum_expected_improvements = 15; 
-
-          // Cap the improvement count at 30 for the circle display
-          const improvementCount = Math.min(result.improvement_count, maximum_expected_improvements);
-          const improvementPercentage = (improvementCount / maximum_expected_improvements) * 100;
-
-          // Set the stroke-dashoffset based on the capped improvement count
-          document.querySelector("#improvementCircle").setAttribute("stroke-dashoffset", `${(100 - improvementPercentage) * 5.65}`);
-
-          // Set the color based on the percentage
-          let improvementColor;
-          if (improvementPercentage <= 30) {
-              improvementColor = '#28a745'; // Green
-          } else if (improvementPercentage <= 70) {
-              improvementColor = '#ffc107'; // Yellow
-          } else {
-              improvementColor = '#dc3545'; // Red
-          }
-          document.querySelector("#improvementCircle").style.stroke = improvementColor;
-          document.querySelector("#improvementCount").style.fill = improvementColor;
-
+      // Overwrite CSS fills with the improvement color using CSS variables only for the improvement circle
+      const improvementCircleElement = document.querySelector("#improvementCircle");
+      if (improvementCircleElement) {
+        improvementCircleElement.style.setProperty('--improvement-circle-color', improvementColor);
+      }
   } catch (error) {
       console.error('Error in overall results', error);
   }
@@ -271,18 +261,11 @@ function applySerpPreview(result){
   try {
 
     // Update serp rating SVG and text
-    document.querySelector("#serpRatingValue").textContent = result.points;
-    document.querySelector("#serpRatingCircle").setAttribute("stroke-dashoffset", `${(100 - result.points) * 5.65}`); // Adjust stroke based on value
-
-        // Adjust the x position based on the overall rating value
-        const serpRatingTextElement = document.querySelector("#serpRatingValue");
-
-        if (result.overall_rating_value < 10) {
-            serpRatingTextElement.setAttribute("x", parseInt(serpRatingTextElement.getAttribute("x")) + 14);
-        } else if (result.overall_rating_value >= 100) {
-            serpRatingTextElement.setAttribute("x", parseInt(serpRatingTextElement.getAttribute("x")) - 14);
-        }
-
+    const serpRating = document.querySelector("#serpRatingCircle");
+    serpRating.setAttribute("value", result.points);
+    serpRating.setAttribute("max", "100");
+    serpRating.setAttribute("text-format", "value");
+    // no animation because not visible when loading the page
 
     // Update SERP preview for desktop
     document.querySelector("#serpPreviewDesktopURL").innerHTML = result.serp_desktop.url;

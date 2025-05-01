@@ -378,23 +378,34 @@ def build_ai_card(soup):
 
 def build_serp_preview(soup, url, response):
     # Simplified SERP preview builder – adjust as needed.
-    title_text = soup.title.string if soup.title and soup.title.string.strip() else ""
+    title = soup.title.string if soup.title and soup.title.string.strip() else ""
     description = next((meta.get('content', '').strip() for meta in soup.find_all('meta', attrs={'name': 'description'}) if meta.get('content', '').strip()), "")
     
     serp_points = 0
 
-    desc_length_px = round(len(description) * 6.11)
-    if 110 <= desc_length_px <= 165:
-        serp_points += 25
-    if 100 <= desc_length_px <= 120:
-        serp_points += 25
-    if 30 <= desc_length_px <= 60:
-        serp_points += 50
+    if title != "":
+        serp_points += 5
+        if 50 <= len(title) <= 60:
+            serp_points += 45
+        elif 25 <= len(title) < 50:
+            serp_points += 20
+        elif 60 < len(title) < 85:
+            serp_points += 20
     
+    desc_length_px = round(len(description) * 6.11)
+    if description != "":
+        serp_points += 5
+        if 500 <= desc_length_px <= 960:
+            serp_points += 45
+        elif 200 <= desc_length_px < 500:
+            serp_points += 20
+        elif 500 < desc_length_px < 1260:
+            serp_points += 20
+
     serp_preview = {
         'isCard': False,
-        'serp_mobile': {'url': url, 'title': title_text, 'description': description},
-        'serp_desktop': {'url': url, 'title': title_text, 'description': description},
+        'serp_mobile': {'url': url, 'title': title, 'description': description},
+        'serp_desktop': {'url': url, 'title': title, 'description': description},
         "points": serp_points,
     }
     return serp_preview

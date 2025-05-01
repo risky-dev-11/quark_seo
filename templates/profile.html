@@ -8,12 +8,12 @@
 <link href="https://cdn.datatables.net/v/bs5/dt-2.2.2/cr-2.0.4/rg-1.5.1/rr-1.5.0/sb-1.8.2/sp-2.3.3/datatables.min.css" rel="stylesheet" integrity="sha384-Z9fVgEHPJlPO209VwdwcMQYh1Rg3cFttWR+xjB1A79P6jA2CgERjwuj50l4mNYWc" crossorigin="anonymous">
  
 <!-- JS Imports -->
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.datatables.net/v/bs5/dt-2.2.2/cr-2.0.4/rg-1.5.1/rr-1.5.0/sb-1.8.2/sp-2.3.3/datatables.min.js" integrity="sha384-V0AmCX4Ej/ttFhiwc54YdMcngyF3Oubb4Wi5byVAbTJhac9CQJUz7PMi+UQ1F6+M" crossorigin="anonymous"></script>
-<script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
+<script rel="preload" src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script rel="preload" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script rel="preload" src="https://cdn.datatables.net/v/bs5/dt-2.2.2/cr-2.0.4/rg-1.5.1/rr-1.5.0/sb-1.8.2/sp-2.3.3/datatables.min.js" integrity="sha384-V0AmCX4Ej/ttFhiwc54YdMcngyF3Oubb4Wi5byVAbTJhac9CQJUz7PMi+UQ1F6+M" crossorigin="anonymous"></script>
+<script rel="preload" src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.min.js"></script>
+<script rel="preload" src="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.min.js"></script>
 
 
  <!-- Page Title -->
@@ -84,159 +84,166 @@
     </div>
   </section>
 
-    <script>
-      // Global variable to store API data for both chart and table.
-      let analysesData = [];
-
-      $(document).ready(function() {
-        // Initialize the DataTable
-        var table = $('#analysis-table').DataTable({
-          scrollY: 400,
-          autoWidth: false,
-          colReorder: { headerRows: [0] },
-          columns: [ null, { orderable: false }, { orderable: false }, null, null ],
-          order: [[0, 'desc']],
-          columnDefs: [
-            {
-              targets: 0,
-              render: function(data, type, row) {
-                if (type === 'sort' || type === 'type') {
-                  return new Date(data).getTime(); // Convert date for sorting
-                }
-                return new Date(data).toLocaleString('de-DE', { 
-                  day: '2-digit', month: '2-digit', year: 'numeric', 
-                  hour: '2-digit', minute: '2-digit' 
-                });
+  <script>
+    $(document).ready(function () {
+      const chartUrlSelect = document.getElementById('urlSelect');
+    
+      // DataTable initialisieren
+      const table = $('#analysis-table').DataTable({
+        processing: true,
+        serverSide: true,
+        scrollY: 400,
+        autoWidth: false,
+        colReorder: { headerRows: [0] },
+        ajax: {
+          url: '/api/profile/get_analyses',
+          type: 'POST',
+          data: function (d) {
+            d.url_filter = $('#urlFilter').val();  // ⬅️ Hier wird der Filterwert übergeben
+          },
+          dataSrc: function (json) {
+            analysesData = json.data;
+            return json.data;
+          }
+        },
+        columns: [
+          {
+            data: 'time',
+            render: function (data, type, row) {
+              if (type === 'sort' || type === 'type') {
+                return new Date(data).getTime();
               }
+              return new Date(data).toLocaleString('de-DE', {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+              });
             }
-          ]
-        });
-
-        // Fetch analyses from your API once.
-        fetch('/api/profile/get_analyses')
-          .then(response => response.json())
-          .then(data => {
-            analysesData = data; // Store fetched data for later use
-            
-            // For table filtering dropdown
-            let tableUrls = new Set();
-            // Add rows to the DataTable
-            data.forEach(analysis => {
-              tableUrls.add(analysis.url);
-              table.row.add([
-                analysis.time,
-                analysis.url,
-                `<button class="btn btn-primary" onclick="window.location.href='/results/${analysis.url}/${analysis.uuid}'">
-                    <i class="bi bi-box-arrow-right"></i> Ergebnis anzeigen
-                  </button>`,
-                `<div class="text-center align-middle">
-                  <svg width="50" height="50" viewBox="-25 -25 250 250" style="transform:rotate(-90deg)">
-                    <circle r="90" cx="100" cy="100" fill="transparent" stroke="#e0e0e0" stroke-width="16" stroke-dasharray="565.48" stroke-dashoffset="0"></circle>
-                    <circle r="90" cx="100" cy="100" stroke="#0d6efd" stroke-width="16" stroke-linecap="round"
-                            stroke-dashoffset="${(100 - analysis.overall_rating) * 5.65}" fill="transparent" stroke-dasharray="565.48"></circle>
-                    <text x="${analysis.overall_rating < 10 ? 87 : (analysis.overall_rating >= 100 ? 59 : 73)}" y="117"
-                          fill="#0d6efd" font-size="52" font-weight="bold"
-                          style="transform:rotate(90deg) translate(0, -196px)">
-                      ${analysis.overall_rating}
-                    </text>
-                  </svg>
-                </div>`,
-                `<div class="text-center align-middle">
-                  <svg width="50" height="50" viewBox="-25 -25 250 250" style="transform:rotate(-90deg)">
-                    <circle r="90" cx="100" cy="100" fill="transparent" stroke="#e0e0e0" stroke-width="16" stroke-dasharray="565.48" stroke-dashoffset="0"></circle>
-                    <circle r="90" cx="100" cy="100" 
-                            stroke="${
-                              ((analysis.improvement_count / 15) * 100) <= 30 ? '#28a745' : 
-                              ((analysis.improvement_count / 15) * 100) <= 70 ? '#ffc107' : '#dc3545'
-                            }" 
-                            stroke-width="16" stroke-linecap="round" 
-                            stroke-dashoffset="${(100 - ((Math.min(analysis.improvement_count, 15) / 15) * 100)) * 5.65}" 
-                            fill="transparent" stroke-dasharray="565.48"></circle>
-                    <text x="${analysis.improvement_count < 10 ? 87 : (analysis.improvement_count >= 100 ? 59 : 73)}" y="117"
-                          fill="${
-                            ((analysis.improvement_count / 15) * 100) <= 30 ? '#28a745' : 
-                            ((analysis.improvement_count / 15) * 100) <= 70 ? '#ffc107' : '#dc3545'
-                          }" 
-                          font-size="52" font-weight="bold"
-                          style="transform:rotate(90deg) translate(0, -196px)">
-                      ${analysis.improvement_count}
-                    </text>
-                  </svg>
-                </div>`
-              ]);
-            });
-
-            // Populate the table filter dropdown
-            let urlFilter = $("#urlFilter");
-            tableUrls.forEach(url => {
-              urlFilter.append(new Option(url, url));
-            });
-
-            // Populate the chart dropdown (id="urlSelect")
-            let chartUrlSelect = document.getElementById('urlSelect');
-            let chartUrls = new Set(data.map(item => item.url));
-            chartUrls.forEach(url => {
-              const option = document.createElement('option');
-              option.value = url;
-              option.textContent = url;
-              chartUrlSelect.appendChild(option);
-            });
-
-            table.draw(); // Redraw the table with new rows
-          })
-          .catch(error => console.error('Error fetching analyses:', error));
-
-        // Apply table filter on URL selection (optional)
-        $("#urlFilter").on("change", function() {
-          table.column(1).search(this.value).draw();
-        });
+          },
+          { data: 'url' },
+          {
+            data: 'uuid',
+            orderable: false,
+            render: function (data, type, row) {
+              return `<button class="btn btn-primary" onclick="window.location.href='/results/${row.url}/${data}'">
+                <i class="bi bi-box-arrow-right"></i> Ergebnis anzeigen
+              </button>`;
+            }
+          },
+          {
+            data: 'overall_rating',
+            render: function (data) {
+              return `<div class="d-flex justify-content-center align-items-center">
+                <div class="icon flex-shrink-0" style="width: 100px; height: 100px; padding: 15px; box-sizing: border-box;">
+                <circle-progress id="overallRatingCircleProfilePage" value="${data}" max="100" text-format="value"
+                  animation="linear" animation-duration="1200"></circle-progress>
+                </div>
+              </div>`;
+            }
+          },
+          {
+            data: 'improvement_count',
+            render: function (data) {
+              const color = (data / 15) * 100 <= 30 ? '#28a745'
+                            : (data / 15) * 100 <= 70 ? '#ffc107' : '#dc3545';
+              return `<div class="d-flex justify-content-center align-items-center">
+                <div class="icon flex-shrink-0" style="width: 100px; height: 100px; padding: 15px; box-sizing: border-box;">
+                <circle-progress id="improvementCountCircleProfilePage" value="${data}" max="${Math.max(data, 15)}"
+                  text-format="value" animation="linear" animation-duration="1200"
+                  style="--improvement-circle-color: ${color};"></circle-progress>
+                </div>
+              </div>`;
+            }
+          }
+        ]
       });
-
-      // Function to update the ApexCharts line chart based on the selected URL.
-      function updateChart() {
-        const chartUrlSelect = document.getElementById('urlSelect');
-        const selectedUrl = chartUrlSelect.value;
-        if (!selectedUrl) {
-          return;
-        }
-
-        // Filter the fetched data for the chosen URL.
-        const filteredData = analysesData.filter(item => item.url === selectedUrl);
-        const timeLabels = filteredData.map(item => item.time);
-        const overallRatings = filteredData.map(item => item.overall_rating);
-        const improvementCounts = filteredData.map(item => item.improvement_count);
-
-        // Configure the chart options.
-        const options = {
-          chart: {
-            type: 'line',
-            height: 350
-          },
-          series: [
-            {
-              name: 'Overall Rating',
-              data: overallRatings
-            },
-            {
-              name: 'Improvement Count',
-              data: improvementCounts
-            }
-          ],
-          xaxis: {
-            categories: timeLabels,
-            labels: {
-              show: false
-            }
-          },
-        };
-
-        // Clear any previous chart and render the new one.
-        document.getElementById('chart').innerHTML = "";
-        const chart = new ApexCharts(document.querySelector("#chart"), options);
-        chart.render();
+    
+      // Filter aus Dropdown anwenden
+      $("#urlFilter").on("change", function () {
+        table.ajax.reload();  // serverseitige Neulistung
+      });
+    
+      chartUrlSelect.addEventListener('change', updateChart);
+    
+      // Wenn noch keine URLs im Dropdown sind, laden wir sie manuell
+      function loadAllUrls() {
+        fetch('/api/profile/get_all_urls')
+          .then(response => response.json())
+          .then(urls => {
+            // —— populate chart dropdown ——
+            const chartSelect = document.getElementById('urlSelect');
+            chartSelect.innerHTML = `<option value="">-- Bitte wählen --</option>`;
+            // —— populate filter dropdown ——
+            const filterSelect = document.getElementById('urlFilter');
+            filterSelect.innerHTML = `<option value="">Alle URLs</option>`;
+      
+            urls.forEach(url => {
+              const opt1 = document.createElement('option');
+              opt1.value   = url;
+              opt1.text    = url;
+              chartSelect.appendChild(opt1);
+      
+              const opt2 = document.createElement('option');
+              opt2.value   = url;
+              opt2.text    = url;
+              filterSelect.appendChild(opt2);
+            });
+          })
+          .catch(error => console.error('Fehler beim Laden der URLs:', error));
       }
-    </script>
-
+    
+      // Direkt nach DOM-Ready laden
+      loadAllUrls();
+    });
+    
+    // ApexChart aktualisieren
+    function updateChart() {
+      const selectedUrl = document.getElementById('urlSelect').value;
+      const chartEl     = document.getElementById('chart');
+    
+      // clear if nothing selected
+      if (!selectedUrl) {
+        chartEl.innerHTML = '';
+        return;
+      }
+    
+      fetch(`/api/profile/get_analyses_by_url?url=${encodeURIComponent(selectedUrl)}`)
+        .then(res => {
+          if (!res.ok) throw new Error('Netzwerkantwort war nicht ok');
+          return res.json();
+        })
+        .then(data => {
+          // map to labels & series
+          const timeLabels        = data.map(item =>
+            new Date(item.time)
+              .toLocaleString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' })
+          );
+          const overallRatings    = data.map(item => item.overall_rating);
+          const improvementCounts = data.map(item => item.improvement_count);
+    
+          const options = {
+            chart: { type: 'line', height: 350 },
+            series: [
+              { name: 'Overall Rating',    data: overallRatings },
+              { name: 'Improvement Count', data: improvementCounts }
+            ],
+            xaxis: {
+              categories: timeLabels,
+              labels: { rotate: -45, hideOverlappingLabels: true }
+            }
+          };
+    
+          // render fresh
+          chartEl.innerHTML = '';
+          new ApexCharts(chartEl, options).render();
+        })
+        .catch(err => {
+          console.error('Fehler beim Laden der Chart-Daten:', err);
+          chartEl.innerHTML = '<p class="text-danger">Daten konnten nicht geladen werden.</p>';
+        });
+    }
+  </script>
+  
+  
    <style>
     /*Overwrite some styles from the imported datatables css file*/
     div.dt-container .dt-paging .dt-paging-button {
@@ -254,6 +261,21 @@
     }
     .dt-search {
       display: none; /* Hide the search input - if done by passing the "searching: false" parameter to the Datatable the filtering by url doesnt work anymore -> therefore just hide it */
+    }
+    /* Stelle sicher, dass der Ladeindikator korrekt über der Tabelle angezeigt wird */
+    #analysis-table_processing {
+      margin-top: 0;
+      top: 85%;
+    }
+    @media (max-width: 768px) {
+      #analysis-table_processing {
+        top: 90%;
+      }
+    }
+    @media (max-width: 992px) {
+      #analysis-table_processing {
+        top: 90%;
+      }
     }
    </style>
 
