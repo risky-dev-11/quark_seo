@@ -24,31 +24,37 @@
 
     <div class="row g-0" data-aos="fade-up" data-aos-delay="100">
 
-      <div class="col-lg-5 quote-bg" style="background-image: url(../static/assets/img/quote-bg.jpg);"></div>
+      <div class="col-lg-5 quote-bg" style="background-image: url(../static/assets/img/login-register.png);"></div>
 
       <div class="col-lg-7" data-aos="fade-up" data-aos-delay="200">
-        <form action="{{ url_for('login') }}" method="post" class="login-signup-form">
+        <form id="login-form" class="login-signup-form">
           <h3>Anmelden</h3>
           <p>Melde dich mit deiner Email und deinem Passwort an</p>
-
+        
           <div class="row gy-4" style="flex-direction: column; align-items: center;">
             <div class="col-md-6" style="width: 80%;">
-              <input type="text" name="email" placeholder="Email" required="required" autocomplete="email" style="width: 100%;">
+                <input type="email" id="email" name="email" placeholder="Email" required="required" autocomplete="email" style="width: 100%;">
             </div>
-
-            <div class="col-md-6" style="width: 80%;">
-              <input type="password" name="password" placeholder="Passwort" required="required" autocomplete="current-password" style="width: 100%;">
+        
+            <div class="col-md-6" style="width: 80%; position: relative;">
+              <input type="password" id="password" name="password" placeholder="Passwort" required="required" autocomplete="current-password" style="width: 100%;">
+              <button type="button" id="toggle-password" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+              <i class="fa fa-eye" aria-hidden="true" style="color: #cccccc;"></i>
+              </button>
             </div>
-            
+            <div class="col-md-6" style="width: 80%; margin-top: 0; padding-top: 0.5em;" >
+              <div id="error-message" style="color: red; text-align: center;font-size: smaller;"></div>
+            </div>
             <div class="col-12" style="justify-content: center; display: flex;">
-              <button type="submit" value="Login">Anmelden</button>
+              <button type="submit">Anmelden</button>
             </div>
-
+        
             <div class="col-lg-12">
-              <h4>Du hast noch kein Konto? <a href="{{ url_for('signup') }}">Jetzt registrieren</a></h4>
+              <h4><span style="font-size: small;">Du hast noch kein Konto?</span> <a href="{{ url_for('signup') }}">Jetzt registrieren!</a></h4>
             </div>
           </div>
         </form>
+        
       </div><!-- End Quote Form -->
 
     </div>
@@ -56,5 +62,46 @@
   </div>
 
 </section><!-- Login Section -->
+
+<script>
+  document.getElementById('login-form').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Verhindert Seitenreload
+  
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+  
+    const response = await fetch('{{ url_for("login") }}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: JSON.stringify({ email, password })
+    });
+  
+    const result = await response.json();
+  
+    if (result.success) {
+      window.location.href = result.redirect;
+    } else {
+      document.getElementById('error-message').textContent = result.error;
+    }
+  });
+
+  document.getElementById('toggle-password').addEventListener('click', function() {
+    const passwordField = document.getElementById('password');
+    const toggleIcon = this.querySelector('i');
+    if (passwordField.type === 'password') {
+      passwordField.type = 'text';
+      toggleIcon.classList.remove('fa-eye');
+      toggleIcon.classList.add('fa-eye-slash');
+    } else {
+      passwordField.type = 'password';
+      toggleIcon.classList.remove('fa-eye-slash');
+      toggleIcon.classList.add('fa-eye');
+    }
+    });
+  </script>
+  
 
 {% endblock %}

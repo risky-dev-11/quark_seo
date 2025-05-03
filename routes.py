@@ -7,40 +7,73 @@ from flask_login import current_user
 
 def register_routes(app, db, bcrypt):
 
+    @app.route('/check_email')
+    def check_email():
+        email = request.args.get('email', '').strip().lower()
+        exists = User.query.filter_by(email=email).first() is not None
+        return jsonify({ 'exists': exists })
+
     @app.route('/signup', methods=['GET', 'POST'])
     def signup():
         if request.method == 'GET':
             return render_template('signup.html')
-        elif request.method == 'POST':
-            first_name = request.form['first_name'].strip()
-            last_name = request.form['last_name'].strip()
-            email = request.form['email'].strip()
-            password = request.form['password']
-            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-            user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, role='user')
 
-            if User.query.filter_by(email=email).first() is not None:
-                return 'Email already exists'
-            db.session.add(user)
-            db.session.commit()
+        # POST
+        data = request.get_json() if request.is_json else request.form
+        first_name = data.get('first_name', '').strip()
+        last_name  = data.get('last_name', '').strip()
+        email      = data.get('email', '').strip().lower()
+        password   = data.get('password', '')
 
-            # Log in the user after signing up
-            login_user(user, force=True, remember=True)
-            return redirect(url_for('index')) #maybe redirect elsewhere - or determe if redirect to results page!!!!!
+        # 1) E-Mail-Duplikat?
+        if User.query.filter_by(email=email).first():
+            payload = {
+                'success': False,
+                'field': 'email',
+                'error': 'Diese E-Mail ist bereits in Verwendung.'
+            }
+            return jsonify(payload)
+
+        # 2) Passwortstärke serverseitig prüfen (z.B. gleiche Regex)
+        import re
+        if not re.match(r'^(?=.*[A-Z])(?=.*\d).{8,}$', password):
+            return jsonify({
+                'success': False,
+                'field': 'password',
+                'error': 'Passwort entspricht nicht den Mindestanforderungen.'
+            })
+
+        # 3) Neuen User anlegen
+        hashed = bcrypt.generate_password_hash(password).decode('utf-8')
+        user = User(first_name=first_name, last_name=last_name,
+                    email=email, password=hashed, role='basic')
+        db.session.add(user)
+        db.session.commit()
+
+        # 4) Automatisch einloggen und zurückmelden
+        login_user(user, remember=True)
+        return jsonify({ 'success': True, 'redirect': url_for('index') })
+
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
         if request.method == 'GET':
             return render_template('login.html')
-        elif request.method == 'POST':
-            email = request.form['email'].strip()
-            password = request.form['password']
+
+        # AJAX-POST
+        if request.is_json:
+            data = request.get_json()
+            email = data.get('email', '').strip()
+            password = data.get('password', '')
             user = User.query.filter_by(email=email).first()
-            if bcrypt.check_password_hash(user.password, password):
-                login_user(user, remember=True)
-                return redirect(url_for('index'))
-            else:
-                return 'Failed to login'
+
+            if user is None or not bcrypt.check_password_hash(user.password, password):
+                return jsonify({'success': False, 'error': 'E-Mail oder Passwort ist falsch.'})
+
+            login_user(user, remember=True)
+            return jsonify({'success': True, 'redirect': url_for('index')})
+
+        return '', 400  # Bad request if not JSON
     
     @app.route('/logout')
     def logout():
@@ -168,8 +201,6 @@ def register_routes(app, db, bcrypt):
 
         return jsonify(data)
 
-
-
     @app.route('/api/roles/upgrade_user', methods=['POST'])
     def upgrade_user():
         if not current_user.is_authenticated:
@@ -193,9 +224,6 @@ def register_routes(app, db, bcrypt):
     @app.route('/results/<path:url>/error', methods=['GET'])
     def show_results_error(url):
         return render_template("seo-analytics-error-page.html", url=url)
-    @app.route('/seo/analyze/<path:url>', methods=['GET'])
-    def show_loading_page(url):
-        return render_template("seo-analytics-loading-page.html")
     @app.route('/profile')
     @login_required
     def profile():

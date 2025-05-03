@@ -3,66 +3,213 @@
 {% block title %}Registrieren{% endblock %}
 {% block content %}
 
-
 <!-- Page Title -->
 <div class="page-title dark-background" data-aos="fade" style="background-image: url(../static/assets/img/page-title-bg.jpg);">
-    <div class="container position-relative">
-      <h1>Willkommen</h1>
-      <p>Registrieren Sie sich oder melden Sie sich an, um alle Funktionen nutzen zu können.</p>
-      <nav class="breadcrumbs">
-        <ol>
-          <li><a href="{{url_for('login')}}" style="font-weight: bold;font-size: x-large;">Anmelden</a></li>
-          <li><a href="{{url_for('signup')}}" style="color: #fff; font-weight: bold; font-size: x-large;">Registrieren</a></li>
-        </ol>
-      </nav>
-    </div>
+  <div class="container position-relative">
+    <h1>Willkommen</h1>
+    <p>Registrieren Sie sich oder melden Sie sich an, um alle Funktionen nutzen zu können.</p>
+    <nav class="breadcrumbs">
+      <ol>
+        <li><a href="{{url_for('login')}}" style="font-weight: bold;font-size: x-large;">Anmelden</a></li>
+        <li><a href="{{url_for('signup')}}" style="color: #fff; font-weight: bold; font-size: x-large;">Registrieren</a></li>
+      </ol>
+    </nav>
+  </div>
 </div><!-- End Page Title -->
 
 <section id="login-signup-section" class="login-signup-section section">
+  <div class="container">
+    <div class="row g-0" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-lg-5 quote-bg" style="background-image: url(../static/assets/img/login-register.png);"></div>
+      <div class="col-lg-7" data-aos="fade-up" data-aos-delay="200">
+        <form id="signup-form" class="login-signup-form">
+          <h3>Registrieren</h3>
+          <p>Erstellen Sie jetzt Ihren Account...</p>
 
-<div class="container">
+          <div class="row gy-4" style="flex-direction: column; align-items: center;">
+            <div class="col-md-6" style="width: 80%;">
+              <input type="text" name="first_name" placeholder="Vorname" required="required" autocomplete="given-name" style="width: 100%;">
+            </div>
+  
+            <div class="col-md-6" style="width: 80%;">
+              <input type="text" name="last_name" placeholder="Nachname" required="required" autocomplete="additional-name" style="width: 100%;">
+            </div>
 
-  <div class="row g-0" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-md-6" style="width: 80%;">
+              <input type="email" id="email" name="email" placeholder="Email" required autocomplete="email" style="width: 100%;">
+              <div id="email-error" style="color: red; font-size: small; margin-top: 0.5em;"></div>
+            </div>
 
-    <div class="col-lg-5 quote-bg" style="background-image: url(../static/assets/img/quote-bg.jpg);"></div>
+            <div class="col-md-6" style="width: 80%;" id="password-field-container">
+              <div style="position: relative;">
+                <input type="password" id="password" name="password"
+                      placeholder="Passwort" required autocomplete="new-password" style="width: 100%;">
+                <button type="button" id="toggle-password" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                  <i class="fa fa-eye" aria-hidden="true" style="color: #cccccc;"></i>
+                </button>
+              </div>
+              <!-- checklist for requirements -->
+              <ul id="password-requirements" style="list-style: none; padding: 0; margin-top: 0.5em; font-size: smaller; margin-bottom: 0;">
+                <li data-rule="length">
+                  <i class="fa fa-times-circle" aria-hidden="true"></i>
+                  Mindestens 8 Zeichen
+                </li>
+                <li data-rule="uppercase">
+                  <i class="fa fa-times-circle" aria-hidden="true"></i>
+                  Mindestens ein Großbuchstabe
+                </li>
+                <li data-rule="number">
+                  <i class="fa fa-times-circle" aria-hidden="true"></i>
+                  Mindestens eine Zahl
+                </li>
+              </ul>
+            
+              <div id="password-error" style="color: red; font-size: small; margin-top: 0.5em;"></div>
+            </div>
 
-    <div class="col-lg-7" data-aos="fade-up" data-aos-delay="200">
-      <form action="{{ url_for('signup') }}" method="post" class="login-signup-form">
-        <h3>Registrieren</h3>
-        <p>Erstellen Sie jetzt Ihren Account, um alle Vorteile und Funktionen unserer Plattform nutzen zu können!</p>
+            <div class="col-12" style="justify-content: center; display: flex;">
+              <button type="submit">Jetzt registrieren</button>
+            </div>
 
-        <div class="row gy-4" style="flex-direction: column; align-items: center;">
-          <div class="col-md-6" style="width: 80%;">
-            <input type="text" name="first_name" placeholder="Vorname" required="required" autocomplete="given-name" style="width: 100%;">
+            <div class="col-lg-12">
+              <h4><span style="font-size: small;">Du hast bereits ein Konto?</span> <a href="{{ url_for('login') }}">Jetzt anmelden</a></h4>
+            </div>
           </div>
-
-          <div class="col-md-6" style="width: 80%;">
-            <input type="text" name="last_name" placeholder="Nachname" required="required" autocomplete="additional-name" style="width: 100%;">
-          </div>
-
-          <div class="col-md-6" style="width: 80%;">
-            <input type="text" name="email" placeholder="Email" required="required" autocomplete="email" style="width: 100%;">
-          </div>
-
-          <div class="col-md-6" style="width: 80%;">
-            <input type="password" name="password" placeholder="Passwort" required="required" autocomplete="current-password" style="width: 100%;">
-          </div>
-          
-          <div class="col-12" style="justify-content: center; display: flex;">
-            <button type="submit" value="Login">Jetzt registrieren</button>
-          </div>
-
-          <div class="col-lg-12">
-            <h4>Du hast bereits ein Konto? <a href="{{ url_for('login') }}">Jetzt anmelden</a></h4>
-          </div>
-        </div>
-      </form>
-    </div><!-- End Quote Form -->
-
+        </form>
+      </div>
+    </div>
   </div>
+</section>
 
-</div>
+<script>
+  const pwdInput = document.getElementById('password');
+  const rules = {
+    length: pwd => pwd.length >= 8,
+    uppercase: pwd => /[A-Z]/.test(pwd),
+    number: pwd => /\d/.test(pwd)
+  };
 
-</section><!-- Signup Section -->
+  const listItems = Array.from(document.querySelectorAll('#password-requirements li'));
+
+  pwdInput.addEventListener('input', () => {
+    const pwd = pwdInput.value;
+
+    // Update each rule’s LI
+    listItems.forEach(li => {
+      const rule = li.getAttribute('data-rule');
+      const ok = rules[rule](pwd);
+      const icon = li.querySelector('i');
+
+      if (ok) {
+        li.classList.add('valid');
+        icon.classList.replace('fa-times-circle', 'fa-check-circle');
+      } else {
+        li.classList.remove('valid');
+        icon.classList.replace('fa-check-circle', 'fa-times-circle');
+      }
+    });
+  });
+
+  // On form submit, prevent if any rule still invalid
+  document.getElementById('signup-form').addEventListener('submit', function(e) {
+    const allValid = listItems.every(li => li.classList.contains('valid'));
+    if (!allValid) {
+      e.preventDefault();
+      document.getElementById('password-error').textContent =
+        'Bitte erfülle alle Passwort-Anforderungen.';
+    }
+  });
+
+  // E-Mail prüfen, sobald das Feld verlassen wird
+  document.getElementById('email').addEventListener('blur', async function() {
+    const email = this.value.trim();
+    const errDiv = document.getElementById('email-error');
+    errDiv.textContent = '';
+    if (!email) return;
+
+    try {
+      const res = await fetch(`{{ url_for('check_email') }}?email=${encodeURIComponent(email)}`);
+      const { exists } = await res.json();
+      if (exists) {
+        errDiv.textContent = 'Diese E-Mail ist bereits in Verwendung.';
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  });
+
+  // Formular-Absenden per AJAX
+  document.getElementById('signup-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const emailErr = document.getElementById('email-error');
+    const pwdErr   = document.getElementById('password-error');
+    emailErr.textContent = '';
+    pwdErr.textContent   = '';
+
+    // Client-seitige Passwortprüfung
+    if (!passwordRegex.test(password)) {
+      pwdErr.textContent = 'Passwort muss mind. 8 Zeichen, 1 Großbuchstabe und 1 Zahl enthalten.';
+      return;
+    }
+
+    // Absenden
+    const res = await fetch('{{ url_for("signup") }}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: JSON.stringify({ email, password, 
+        first_name: document.querySelector('[name=first_name]').value.trim(),
+        last_name:  document.querySelector('[name=last_name]').value.trim()
+      })
+    });
+    const result = await res.json();
+
+    if (result.success) {
+      window.location.href = result.redirect;
+    } else {
+      // z. B. { success: false, field: 'email', error: 'Email already exists' }
+      if (result.field === 'email') {
+        emailErr.textContent = result.error;
+      } else if (result.field === 'password') {
+        pwdErr.textContent = result.error;
+      } else {
+        alert(result.error);
+      }
+    }
+  });
+  document.getElementById('toggle-password').addEventListener('click', function() {
+    const passwordField = document.getElementById('password');
+    const toggleIcon = this.querySelector('i');
+    if (passwordField.type === 'password') {
+      passwordField.type = 'text';
+      toggleIcon.classList.remove('fa-eye');
+      toggleIcon.classList.add('fa-eye-slash');
+    } else {
+      passwordField.type = 'password';
+      toggleIcon.classList.remove('fa-eye-slash');
+      toggleIcon.classList.add('fa-eye');
+    }
+    });
+</script>
+
+<style>
+  #password-requirements li {
+    color: #d9534f;  /* bootstrap “danger” red */
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+  #password-requirements li.valid {
+    color: #5cb85c;  /* bootstrap “success” green */
+  }
+  #password-requirements li i {
+    width: 1em;
+    text-align: center;
+  }
+</style>
 
 {% endblock %}
