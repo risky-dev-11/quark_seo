@@ -188,7 +188,10 @@ function display(data) {
 }
 
 function applyOverallResults(result) {
+
   try {
+      // add the text to the paragraph
+      document.getElementById("overallRatingText").innerText = result.overall_rating_text;
 
       // Update the overall rating circle progress
       const overallRatingCircle = document.querySelector("#overallRatingCircle");
@@ -198,12 +201,15 @@ function applyOverallResults(result) {
       overallRatingCircle.setAttribute("animation", "linear");
       overallRatingCircle.setAttribute("animation-duration", "1200");
 
+      // add the text to the paragraph
+      document.getElementById("improvementCountText").innerText = result.improvement_count_text;
+
       // Update the improvement circle progress
       const maximum_expected_improvements = 15; 
 
       const improvementCircle = document.querySelector("#improvementCircle");
       if (result.improvement_count > maximum_expected_improvements) {
-        improvementCircle.setAttribute("max", result.improvementCount); // Set the max value to the improvement count, if it's greater than 15
+        improvementCircle.setAttribute("max", result.improvementCount); 
       } else {
         improvementCircle.setAttribute("max", maximum_expected_improvements);
       }

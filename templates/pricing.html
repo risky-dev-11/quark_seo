@@ -82,6 +82,92 @@
 
 </section><!-- /Pricing Section -->
 
+<!-- Pricing Section -->
+<section id="pricing" class="pricing section">
+
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up">
+    <span>Preise</span>
+    <h2>Preise</h2>
+    <p>Wählen Sie den Plan, der am besten zu Ihren Bedürfnissen passt und beginnen Sie noch heute mit der Optimierung Ihrer Website.</p>
+  </div><!-- End Section Title -->
+
+  <div class="container">
+
+    <div class="row gy-4 justify-content-center">
+
+      <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
+        <div class="pricing-item">
+            <h3>Kostenloser Plan</h3>
+          <h4><sup>€</sup>0<span> / Monat</span></h4>
+          <ul>
+            <li><i class="bi bi-check"></i> Grundlegende SEO-Analysefunktionen</li>
+            <li><i class="bi bi-check"></i> Analyse von Meta-Tags und technischen SEO-Aspekten</li>
+            <li><i class="bi bi-check"></i> Ladezeiten- und Performance-Berichte</li>
+            <li class="na"><i class="bi bi-x"></i> KI-basierte Textanalyse und Keyword-Bewertung</li>
+            <li class="na"><i class="bi bi-x"></i> Automatische Optimierungsvorschläge</li>
+          </ul>
+          <a href="#" class="buy-btn">Dein aktueller Plan</a>
+        </div>
+      </div><!-- End Pricing Item -->
+
+      <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
+        <div class="pricing-item">
+          <h3>Premium Plan</h3>
+          <h4><sup>€</sup>7<span> / Monat</span></h4>
+          <ul>
+            <li><i class="bi bi-check"></i> Zugriff auf alle SEO-Analysefunktionen</li>
+            <li><i class="bi bi-check"></i> Analyse von Meta-Tags und technischen SEO-Aspekten</li>
+            <li><i class="bi bi-check"></i> Ladezeiten- und Performance-Berichte</li>
+            <li><i class="bi bi-check"></i> KI-basierte Textanalyse und Keyword-Bewertung</li>
+            <li><i class="bi bi-check"></i> Automatische Optimierungsvorschläge</li>
+          </ul>
+            {% if current_user.role == 'premium' %}
+              <a href="#" class="buy-btn" style="background: var(--accent-color); color: var(--contrast-color); pointer-events: none; cursor: default;">
+              <i class="bi bi-check-circle" style="color: white;"></i> Dein aktueller Plan
+              </a>
+            {% else %}
+              <a href="#" class="buy-btn" id="upgrade-btn">Jetzt kostenlos upgraden</a>
+              <script>
+              document.getElementById('upgrade-btn').addEventListener('click', async function(event) {
+              event.preventDefault();
+              const button = event.target;
+              button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+              button.disabled = true;
+
+              try {
+              const response = await fetch('/api/roles/upgrade_user', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+                }
+              });
+
+              if (response.ok) {
+                button.outerHTML = `
+                <a href="#" class="buy-btn" style="background: var(--accent-color); color: var(--contrast-color); pointer-events: none; cursor: default;">
+                <i class="bi bi-check-circle" style="color: white;"></i> Dein aktueller Plan
+                </a>`;
+              } else {
+                button.innerHTML = 'Fehler, bitte erneut versuchen';
+                button.disabled = false;
+              }
+              } catch (error) {
+              button.innerHTML = 'Fehler, bitte erneut versuchen';
+              button.disabled = false;
+              }
+              });
+              </script>
+            {% endif %}
+        </div>
+      </div><!-- End Pricing Item -->
+
+    </div>
+
+  </div>
+
+</section><!-- /Pricing Section -->
+
 <!-- Alt Pricing Section -->
 <section id="alt-pricing" class="alt-pricing section">
 
