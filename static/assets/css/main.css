@@ -2009,14 +2009,11 @@ section,
 /*--------------------------------------------------------------
 # Starter Section Section
 --------------------------------------------------------------*/
-.starter-section {
-  /* Add your styles here */
-}
 
 .container_icon_and_text{
   display: flex;
   flex-direction: row;
-  gap: 0.5em;
+  gap: 1em;
   align-items: center;
   width: fit-content;
   border-radius: 3px;
