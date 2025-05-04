@@ -61,7 +61,7 @@ def calculate_improvement_count(results):
 def count_false_in_card(card):
     false_count = 0
     for category in card.values():
-        if isinstance(category, dict) and 'content' in category:
+        if isinstance(category, dict) and 'content' in category: 
             false_count += count_false_in_category(category)
     return false_count
 
@@ -78,6 +78,26 @@ class Content:
             'bool': self.bool,
             'text': self.text
         }
+    
+class ChartContent:
+    def __init__(self, chart_type, threshold1, threshold2, threshold_unit, value):
+        self.is_chart = True
+        self.chart_type = chart_type
+        self.threshold1 = threshold1
+        self.threshold2 = threshold2
+        self.threshold_unit = threshold_unit
+        self.value = value
+
+    def to_dict(self):
+        return {
+            'bool': '', # exclude it from the the point calculation
+            'isChart': self.is_chart,
+            'chartType': self.chart_type,
+            'threshold1': self.threshold1,
+            'threshold2': self.threshold2,
+            'thresholdUnit': self.threshold_unit,
+            'value': self.value
+        }
 
 class Category:
     def __init__(self, category_name):
@@ -86,6 +106,9 @@ class Category:
 
     def add_content(self, bool, text):
         self.content.append(Content(bool, text).to_dict())
+
+    def add_chart_content(self, chart_type, threshold1, threshold2, threshold_unit, value):
+        self.content.append(ChartContent(chart_type, threshold1, threshold2, threshold_unit, value).to_dict())
 
     def to_dict(self):
         return {
@@ -134,49 +157,6 @@ class Card:
 
         points_percentage = (true_count / total_points) * 100 if total_points != 0 else 0
         self.update_points(points_percentage)
-
-
-# Snippet retriever
-
-import json
-import os
-
-class TextProvider:
-    def __init__(self, file_path):
-        """
-        Initialize the TextProvider with the path to the JSON file containing the texts.
-
-        :param file_path: Path to the JSON file.
-        """
-        self.file_path = file_path
-        self.texts = {}
-        self._load_texts()
-
-    def _load_texts(self):
-        """
-        Load texts from the JSON file into memory.
-        """
-        if not os.path.exists(self.file_path):
-            raise FileNotFoundError(f"File not found: {self.file_path}")
-        with open(self.file_path, "r", encoding="utf-8") as f:
-            self.texts = json.load(f)
-
-    def get_text(self, category, key, **kwargs):
-        """
-        Retrieve a specific text from the JSON structure.
-
-        :param category: The top-level category in the JSON file.
-        :param key: The specific key within the category.
-        :param kwargs: Optional placeholders to be replaced in the text.
-        :return: The formatted text.
-        """
-        try:
-            text = self.texts[category][key]
-            return text.format(**kwargs)
-        except KeyError as e:
-            raise KeyError(f"Missing key: {e}") from e
-        except ValueError as e:
-            raise ValueError(f"Formatting error with placeholders: {e}") from e
 
 # User hierarchy
 

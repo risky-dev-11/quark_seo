@@ -45,7 +45,7 @@ def analyze_website(user_uuid, url, db, is_premium_user):
     
     # Weitere Karten (Metadaten, Seitenqualität, Seitenstruktur, Links, Server, KI-Analyse) erstellen
     build_all_cards(results, soup, formatted_url, response, is_premium_user)
-    
+
     # SERP-Vorschau und Gesamtbewertung erstellen
     results['serp_preview'] = build_serp_preview(soup, formatted_url, response)
     results['overall_results'] = build_overall_results(results)

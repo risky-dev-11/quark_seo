@@ -494,24 +494,24 @@ def get_redirecting_history_text(url):
     """
     return f"A redirection occurred to the page: {url}."
 
-def get_compression_text(compression, compression_bool):
+def get_compression_text(compression: str | None, compression_bool: bool) -> str:
     """
     Indicates if web server compression (like gzip or brotli) is enabled for transferring the webpage.
 
     Args:
-        compression (str | None): The compression method detected (e.g., 'gzip', 'br') or None.
+        compression (str | None): The formatted compression method (e.g., 'Brotli (br)', 'Unknown (xyz)'), or 'None'.
         compression_bool (bool): True if compression is enabled, False otherwise.
 
     Returns:
         str: A text stating whether compression is used and, if so, which type.
     """
-    if compression_bool and compression:
-        return f"The web server uses {compression} for compressed transfer of the webpage."
-    elif compression_bool and not compression:
-         # Fallback if bool is True but type is unknown
-         return "The web server uses compression for webpage transfer."
+    if compression_bool and compression and compression.lower() != 'None':
+        return f"The web server uses {compression} for compressed transmission of the webpage."
+    elif compression_bool:
+        return "The web server uses compression for the transmission of the webpage."
     else:
-        return "The web server does not use compression for webpage transfer."
+        return "The web server does not use compression for the transmission of the webpage."
+
 
 def get_overall_rating_text(overall_rating):
     """

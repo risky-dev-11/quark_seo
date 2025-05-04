@@ -67,7 +67,7 @@ function createCard(cardName, points, subcategories) {
   const titleLink = document.createElement('a');
     titleLink.className = 'stretched-link';
     titleLink.href = '#'; // tbd...
-    titleLink.textContent = cardName;
+    titleLink.innerHTML = cardName;
 
   // create the title of the card
   const title = document.createElement('h3');
@@ -90,7 +90,7 @@ function createCard(cardName, points, subcategories) {
           tdTitle.className = 'td-title';
 
         // Get the category name & set it as the title
-        tdTitle.textContent = subcategories[key].category_name;
+        tdTitle.innerHTML = subcategories[key].category_name;
           delete subcategories[key].category_name; // Remove the property
 
         // add the title to the row & the row to the table
@@ -99,63 +99,72 @@ function createCard(cardName, points, subcategories) {
 
         // Iterate over the content
         subcategories[key].content.forEach(item => {
-            
-            // bool can be true, false or empty
-            const bool = item.bool;
-            // string value
-            const text = item.text;
+            // Check if the subcategory is a chart
+            if (item.isChart) {
+              const chart = createChart(item.chartType, item.threshold1, item.threshold2, item.thresholdUnit, item.value);
+              const trChart = document.createElement('tr');
+              const tdChart = document.createElement('td');
+                tdChart.appendChild(chart);
+                trChart.appendChild(tdChart);
+                table.appendChild(trChart);
+            }else{
+              // bool can be true, false or empty
+              const bool = item.bool;
+              // string value
+              const text = item.text;
 
-            // create the row & cell
-            const tr = document.createElement('tr');
-            const td = document.createElement('td');
-              td.className = 'container_icon_and_text mb-2';
+              // create the row & cell
+              const tr = document.createElement('tr');
+              const td = document.createElement('td');
+                td.className = 'container_icon_and_text mb-2';
 
-            // create the paragraph element
-            const p = document.createElement('p');
-              p.className = 'card-text mb-0';
+              // create the paragraph element
+              const p = document.createElement('p');
+                p.className = 'card-text mb-0';
 
-            // check if bool value was passed from the server or if it's empty
-            if (bool === true || bool === false) {
-              // if a bool value was passed, create a row with the text & a icon matching the bool value
-              const icon = document.createElement('i');
-                // set the icon class & color based on the bool value
-                icon.className = bool ? 'bi bi-check-circle' : 'bi bi-x-circle';
-                icon.style.color = bool ? 'green' : 'red';
-                
-                // if the bool value is false, set the background color of the cell to a light red
-                if (!bool) {
-                  td.style = "background: #F7D1CD;";
-                }
+              // check if bool value was passed from the server or if it's empty
+              if (bool === true || bool === false) {
+                // if a bool value was passed, create a row with the text & a icon matching the bool value
+                const icon = document.createElement('i');
+                  // set the icon class & color based on the bool value
+                  icon.className = bool ? 'bi bi-check-circle' : 'bi bi-x-circle';
+                  icon.style.color = bool ? 'green' : 'red';
+                  
+                  // if the bool value is false, set the background color of the cell to a light red
+                  if (!bool) {
+                    td.style = "background: #F7D1CD;";
+                  }
 
-              // add the icon to the cell & set the text
-              td.appendChild(icon);
-              p.textContent = text;
-            } else if (bool == "improvement") {
-              // if the provided text is an improvement, create a row with the text & a lightbulb icon
-              const icon = document.createElement('i');
-                // set the icon class & color based on the bool value
-                icon.className = 'bi bi-lightbulb-fill';
-                icon.style.color = 'yellow';
-                td.style.backgroundColor = 'var(--accent-color)';
+                // add the icon to the cell & set the text
+                td.appendChild(icon);
+                p.innerHTML = text;
+              } else if (bool == "improvement") {
+                // if the provided text is an improvement, create a row with the text & a lightbulb icon
+                const icon = document.createElement('i');
+                  // set the icon class & color based on the bool value
+                  icon.className = 'bi bi-lightbulb-fill';
+                  icon.style.color = 'yellow';
+                  td.style.backgroundColor = 'var(--accent-color)';
 
-                p.style = "color: white; font-weight: bold;";
+                  p.style = "color: white; font-weight: bold;";
 
-              // add the icon to the cell & set the text
-              td.appendChild(icon);
-              p.textContent = text;
-            } else {
-              // if no bool value or improvement was passed, create a row with the text only
-              p.textContent = text;
+                // add the icon to the cell & set the text
+                td.appendChild(icon);
+                p.innerHTML = text;
+              } else {
+                // if no bool value or improvement was passed, create a row with the text only
+                p.innerHTML = text;
 
-              // and style it to differentitate between text with icon and without
-              p.style = "font-style: italic; font-size: 0.8em;";
+                // and style it to differentitate between text with icon and without
+                p.style = "font-style: italic; font-size: 0.8em;";
 
-              td.style.paddingTop = "0"; // make it closer to the element above, because this is mostly used to add basic information to the element above
-            } 
+                td.style.paddingTop = "0"; // make it closer to the element above, because this is mostly used to add basic information to the element above
+              } 
 
-            td.appendChild(p);
-            tr.appendChild(td);
-            table.appendChild(tr);
+              td.appendChild(p);
+              tr.appendChild(td);
+              table.appendChild(tr);
+              }
         });
     });
 
@@ -191,7 +200,7 @@ function applyOverallResults(result) {
 
   try {
       // add the text to the paragraph
-      document.getElementById("overallRatingText").innerText = result.overall_rating_text;
+      document.getElementById("overallRatingText").innerHTML = result.overall_rating_text;
 
       // Update the overall rating circle progress
       const overallRatingCircle = document.querySelector("#overallRatingCircle");
@@ -202,7 +211,7 @@ function applyOverallResults(result) {
       overallRatingCircle.setAttribute("animation-duration", "1200");
 
       // add the text to the paragraph
-      document.getElementById("improvementCountText").innerText = result.improvement_count_text;
+      document.getElementById("improvementCountText").innerHTML = result.improvement_count_text;
 
       // Update the improvement circle progress
       const maximum_expected_improvements = 15; 
@@ -243,19 +252,19 @@ function applyGeneralResults(result) {
   try {
     // Populate HTML elements with the data
     document.getElementById('generalResultsResponseTimeTitle').innerHTML += ` <span style="color: #0d42ff;">${result.website_response_time}</span>`;
-    document.getElementById('generalResultsResponseTimeText').innerText = result.website_response_time_text;
+    document.getElementById('generalResultsResponseTimeText').innerHTML = result.website_response_time_text;
     
     document.getElementById('generalResultsFileSizeTitle').innerHTML += ` <span style="color: #0d42ff;">${result.file_size}</span>`;
-    document.getElementById('generalResultsFileSizeText').innerText = result.file_size_text;
+    document.getElementById('generalResultsFileSizeText').innerHTML = result.file_size_text;
     
     document.getElementById('generalResultsWordCountTitle').innerHTML += ` <span style="color: #0d42ff;">${result.word_count}</span>`;
-    document.getElementById('generalResultsWordCountText').innerText = result.word_count_text;
+    document.getElementById('generalResultsWordCountText').innerHTML = result.word_count_text;
     
     document.getElementById('generalResultsMediaCountTitle').innerHTML += ` <span style="color: #0d42ff;">${result.media_count}</span>`;
-    document.getElementById('generalResultsMediaCountText').innerText = result.media_count_text;
+    document.getElementById('generalResultsMediaCountText').innerHTML = result.media_count_text;
     
     document.getElementById('generalResultsLinkCountTitle').innerHTML += ` <span style="color: #0d42ff;">${result.link_count}</span>`;
-    document.getElementById('generalResultsLinkCountText').innerText = result.link_count_text;
+    document.getElementById('generalResultsLinkCountText').innerHTML = result.link_count_text;
 
     
   } catch (error) {
@@ -284,4 +293,110 @@ function applySerpPreview(result){
   } catch (error) {
     console.error('Error in SERP preview results:', error);
   }
+}
+
+/**
+ * @param {string} chartType – type of chart, either "decline" or "range"
+ * @param {number} threshold1  – first threshold (e.g. 1.8)
+ * @param {number} threshold2  – second threshold (e.g. 3.0), must be ≥ threshold1
+ * @param {string} thresholdUnit – unit string (e.g. "s")
+ * @param {string} value – current value _with_ unit (e.g. "0.953s")
+ * @returns {HTMLElement} the fully built .chart-container element
+ */
+function createChart(chartType, threshold1, threshold2, thresholdUnit, value) {
+  const numericValue = parseFloat(value);
+  let container = document.createElement('div');
+  container.className = 'chart-container';
+
+  if (chartType === 'decline') {
+    container.classList.add('decline-chart');
+    const total = threshold2 + threshold1;
+    const pct = x => (x / total * 100) + '%';
+    const goodW = pct(threshold1);
+    const okayL = pct(threshold1);
+    const okayW = pct(threshold2 - threshold1);
+    const badL = pct(threshold2);
+    const badW = pct(threshold1);
+    const clampedValue = Math.min(Math.max(numericValue, 0), total);
+    const markerLeft = pct(clampedValue);
+
+    let markerColor = numericValue <= threshold1 ? 'green'
+                    : numericValue <= threshold2 ? 'orange'
+                    : 'red';
+
+    container.innerHTML = `
+      <div class="good" style="width:${goodW}"></div>
+      <div class="okay" style="left:${okayL}; width:${okayW};"></div>
+      <div class="bad" style="left:${badL}; width:${badW};"></div>
+
+      <div class="marker-current-value-icon" style="left:${markerLeft}"></div>
+      <p class="marker-current-value-text" style="left:${markerLeft}; color:${markerColor};">
+        ${numericValue.toFixed(2)} ${thresholdUnit}
+      </p>
+
+      <div class="chart-labels">
+        <div class="chart-label-icon" style="left:${goodW}"></div>
+        <div class="chart-label-icon" style="left:${badL}"></div>
+        <p class="chart-label-text" style="left:${goodW}">
+          ${threshold1.toFixed(2)} ${thresholdUnit}
+        </p>
+        <p class="chart-label-text" style="left:${badL}">
+          ${threshold2.toFixed(2)} ${thresholdUnit}
+        </p>
+      </div>
+    `;
+  } else if (chartType === 'range') {
+    container.classList.add('range-chart');
+  
+    const greenWidth = threshold2 - threshold1;
+    const okayWidth = threshold1;
+    const badWidth = greenWidth;
+    const total = okayWidth + greenWidth + badWidth;
+  
+    const pct = x => (x / total * 100) + '%';
+  
+    const okayW = pct(okayWidth);
+    const greenL = pct(okayWidth);
+    const greenW = pct(greenWidth);
+    const badL = pct(okayWidth + greenWidth);
+    const badW = pct(badWidth);
+  
+    // Position des Markers
+    const clampedValue = Math.min(Math.max(numericValue, 0), threshold2 + greenWidth);
+    const markerLeft = pct(clampedValue);
+  
+    // Farbe des Markers
+    let markerColor;
+    if (numericValue < threshold1) {
+      markerColor = 'orange';
+    } else if (numericValue <= threshold2) {
+      markerColor = 'green';
+    } else {
+      markerColor = 'red';
+    }
+  
+    container.innerHTML = `
+      <div class="okay" style="width:${okayW}"></div>
+      <div class="good" style="left:${greenL}; width:${greenW};"></div>
+      <div class="bad" style="left:${badL}; width:${badW};"></div>
+  
+      <div class="marker-current-value-icon" style="left:${markerLeft}"></div>
+      <p class="marker-current-value-text" style="left:${markerLeft}; color:${markerColor};">
+        ${numericValue.toFixed(2)} ${thresholdUnit}
+      </p>
+  
+      <div class="chart-labels">
+        <div class="chart-label-icon" style="left:${greenL}"></div>
+        <div class="chart-label-icon" style="left:${badL}"></div>
+        <p class="chart-label-text" style="left:${greenL}">
+          ${threshold1.toFixed(2)} ${thresholdUnit}
+        </p>
+        <p class="chart-label-text" style="left:${badL}">
+          ${threshold2.toFixed(2)} ${thresholdUnit}
+        </p>
+      </div>
+    `;
+  }
+  
+  return container;
 }
