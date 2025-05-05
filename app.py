@@ -16,7 +16,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('POSTGRES_DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = os.getenv('FLASK_SECRET_KEY')
-    app.config['JSON_SORT_KEYS'] = False
+    app.json.sort_keys = False
 
     db.init_app(app)
 

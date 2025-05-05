@@ -1935,8 +1935,8 @@ section,
   align-items: center;
   justify-content: center;
   background: color-mix(in srgb, var(--default-color), transparent 97%);
-  padding: 30px;
-  height: 100%;
+  padding: 30px 100px;
+  width: max-content;
 }
 
 @media (max-width: 575px) {

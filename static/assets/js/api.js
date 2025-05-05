@@ -218,7 +218,7 @@ function applyOverallResults(result) {
 
       const improvementCircle = document.querySelector("#improvementCircle");
       if (result.improvement_count > maximum_expected_improvements) {
-        improvementCircle.setAttribute("max", result.improvementCount); 
+        improvementCircle.setAttribute("max", result.improvement_count); 
       } else {
         improvementCircle.setAttribute("max", maximum_expected_improvements);
       }

@@ -18,10 +18,9 @@
 </div><!-- End Page Title -->
 
 <section id="login-signup-section" class="login-signup-section section">
-  <div class="container">
+  <div class="container" style="display: flex; align-items: center; justify-content: center;">
     <div class="row g-0" data-aos="fade-up" data-aos-delay="100">
-      <div class="col-lg-5 quote-bg" style="background-image: url(../static/assets/img/login-register.png);"></div>
-      <div class="col-lg-7" data-aos="fade-up" data-aos-delay="200">
+      <div class="col-lg" data-aos="fade-up" data-aos-delay="200">
         <form id="signup-form" class="login-signup-form">
           <h3>Registrieren</h3>
           <p>Erstellen Sie jetzt Ihren Account...</p>
@@ -147,6 +146,8 @@
     const pwdErr   = document.getElementById('password-error');
     emailErr.textContent = '';
     pwdErr.textContent   = '';
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[a-z])[A-Za-z\d]{8,}$/; // At least 8 characters, 1 uppercase letter, 1 lowercase letter, and 1 number
 
     // Client-seitige Passwortprüfung
     if (!passwordRegex.test(password)) {

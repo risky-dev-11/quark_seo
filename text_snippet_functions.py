@@ -28,11 +28,11 @@ def get_file_size_text(file_size):
     # Optional: Convert bytes to KB for potentially clearer thresholds if desired
     # file_size_kb = file_size / 1024
     if file_size < 50000: # Thresholds kept in bytes as per original logic
-        return "The website file size is very good."
+        return "The website HTML file size is very good."
     elif 50000 <= file_size < 100000:
-        return "The website file size is good."
+        return "The website HTML file size is good."
     else:
-        return "The website file size could be improved."
+        return "The website HTML file size could be improved."
 
 def get_media_count_text(media_count):
     """

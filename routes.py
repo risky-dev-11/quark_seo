@@ -91,7 +91,6 @@ def register_routes(app, db, bcrypt):
         try: 
             uuid = analyze_website(user_uuid, url, db, is_premium_user)
         except Exception as e:
-            print(e)
             return jsonify({"message": "There was an error while analyzing the website", "error": str(e)}), 400
         return jsonify({"message": "Website successfully analyzed", "uuid": uuid}), 200
 
