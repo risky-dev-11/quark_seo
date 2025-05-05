@@ -5,6 +5,10 @@ from flask_login import login_user, login_required, logout_user
 from analyzer import analyze_website
 from flask_login import current_user
 
+from flask import Response, stream_with_context
+import time
+import threading
+
 def register_routes(app, db, bcrypt):
 
     @app.route('/check_email')
@@ -93,6 +97,22 @@ def register_routes(app, db, bcrypt):
         except Exception as e:
             return jsonify({"message": "There was an error while analyzing the website", "error": str(e)}), 400
         return jsonify({"message": "Website successfully analyzed", "uuid": uuid}), 200
+
+    @app.route('/api/analyze/stream/<path:url>', methods=['GET'])
+    def stream_analyze_url(url):
+        if not current_user.is_authenticated:
+            user_uuid = None
+            is_premium_user = False
+        else:
+            user_uuid = current_user.uuid
+            is_premium_user = UserHierarchy.is_higher_than_basic(current_user)
+
+        @stream_with_context
+        def generate():
+            yield from analyze_website(user_uuid, url, db, is_premium_user, send_progress=True)
+
+        return Response(generate(), mimetype='text/event-stream')
+
 
     # Endpoint for retrieving the results
     @app.route('/api/get_results/<uuid:uuid>', methods=['GET'])

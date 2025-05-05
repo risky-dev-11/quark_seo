@@ -87,6 +87,11 @@ h6 {
   color: var(--heading-color);
   font-family: var(--heading-font);
 }
+
+#progress-description {
+  color: var(--heading-color);
+  font-family: var(--heading-font);
+}
 /* Pulsating Play Button
 ------------------------------*/
 .pulsating-play-btn {

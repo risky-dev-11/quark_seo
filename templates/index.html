@@ -11,54 +11,94 @@
   <div class="container">
     <div class="row gy-4 d-flex justify-content-between">
       <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
-        <h2 data-aos="fade-up">Analyze Your Website with Our SEO Checker!</h2>
+        <h2 data-aos="fade-up" style="margin-top: auto;">Analyze Your Website with Our SEO Checker!</h2>
         <p data-aos="fade-up" data-aos-delay="100">Boost your website's visibility in search engines with our powerful tool! It automatically evaluates key SEO factors and provides actionable recommendations to help you rank higher in search results and attract more potential customers.</p>
 
         <form id="url-form" class="form-search d-flex align-items-stretch mb-3" data-aos="fade-up" data-aos-delay="200">
             <input type="text" id="url-input" class="form-control" placeholder="Enter your website URL" required>
           <button type="submit" class="btn btn-primary">Analyse starten</button>
         </form>
-        <script>
-          document.getElementById('url-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            
-            // Get the URL input value
-            let inputUrl = document.getElementById('url-input').value;
-            
-            // open the loading page
-            if (inputUrl) {
-              const submitButton = document.querySelector('#url-form button[type="submit"]');
-              submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-              submitButton.disabled = true;
+        <div class="progress" style="opacity: 0;">
+          <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+        </div> 
+        <p class="mt-3" id="progress-description" style="opacity: 0; margin-bottom: 0">
+          The analysis is in progress. Please wait...
+        </p>
+        <style>
+          .progress.drop-in {
+            animation: dropIn 0.5s ease-out forwards;
+          }
+          #progress-description.drop-in {
+            animation: dropIn 0.5s ease-out forwards;
+          }
 
-              const encodedUrl = encodeURIComponent(inputUrl);
-
-              await fetch(`/api/analyze/${encodedUrl}`, { 
-                method: 'GET',
-                headers: {
-                  'Accept': 'application/json'
-                }
-              })
-              .then(response => {
-                if (response.status === 200) {
-                  return response.json().then(data => {
-                    window.location.href = `/results/${encodedUrl}/${data.uuid}`;
-                  });
-                } else {
-                  window.location.href = `/results/${encodedUrl}/error`;
-                }
-              })
-              .catch(error => {
-                window.location.href = `/results/${encodedUrl}/error`;
-              });
+          @keyframes dropIn {
+            0% {
+              transform: translateY(-20px);
+              opacity: 0;
             }
+            100% {
+              transform: translateY(0);
+              opacity: 1;
+            }
+          }
+        </style>
+        <script>
+            document.getElementById('url-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const inputUrl = document.getElementById('url-input').value.trim();
+            if (!inputUrl) return;
 
             const submitButton = document.querySelector('#url-form button[type="submit"]');
-              submitButton.innerHTML = 'Analyse starten';
-              submitButton.disabled = false;
-          });
+            const progressBarContainer = document.querySelector('.progress');
+            const progressBar = document.querySelector('.progress-bar');
+            const progressDescription = document.getElementById('progress-description');
 
+            const setButtonState = (isLoading) => {
+              submitButton.innerHTML = isLoading 
+              ? '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' 
+              : 'Analyse starten';
+              submitButton.disabled = isLoading;
+            };
 
+            const resetProgressBar = () => {
+              progressBarContainer.classList.remove('drop-in');
+              progressBar.style.width = '0%';
+              progressDescription.classList.remove('drop-in');
+              progressDescription.innerHTML = 'The analysis is in progress. Please wait...';
+            };
+
+            setButtonState(true);
+            progressBarContainer.classList.add('drop-in');
+            progressDescription.classList.add('drop-in');
+
+            const encodedUrl = encodeURIComponent(inputUrl);
+            const evtSource = new EventSource(`/api/analyze/stream/${encodedUrl}`);
+
+            evtSource.onmessage = function(event) {
+              const [progress, message] = event.data.split('|');
+
+              if (progress === 'DONE' || progress === 'ERROR') {
+              evtSource.close();
+              setButtonState(false);
+              resetProgressBar();
+              const resultPath = progress === 'DONE' ? message : 'error';
+              window.location.href = `/results/${encodedUrl}/${resultPath}`;
+              } else {
+              const targetWidth = parseFloat(progress);
+              let currentWidth = parseFloat(progressBar.style.width) || 0;
+              
+              progressDescription.innerHTML = message;
+
+              const interval = setInterval(() => {
+                currentWidth = Math.min(currentWidth + 1, targetWidth);
+                progressBar.style.width = `${currentWidth}%`;
+                if (currentWidth >= targetWidth) clearInterval(interval);
+              }, 25);
+              }
+            };
+            });
         </script>
       </div>
 

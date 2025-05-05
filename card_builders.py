@@ -104,6 +104,8 @@ def build_all_cards(results: dict, soup: BeautifulSoup, url: str, response: requ
     lighthouse_metrics = None
     stack_packs = None
 
+    yield "data: 25|Computing Lighthouse metrics (approx. 30sec)...\n\n"
+
     # Fetch PageSpeed data once if premium (needed for Performance, Technical, Accessibility)
     if is_premium_user:
         try:
@@ -112,16 +114,18 @@ def build_all_cards(results: dict, soup: BeautifulSoup, url: str, response: requ
                 lighthouse_metrics = pagespeed_data.get("lighthouseResult", {}).get("audits", {})
                 stack_packs = pagespeed_data.get("lighthouseResult", {}).get("stackPacks", [])
         except Exception as e:
-            print(f"Failed to fetch PageSpeed data: {e}")
-            results['pagespeed_error'] = f"Could not retrieve detailed analysis data: {e}"
-
-    # Build cards in the new order, passing lighthouse_metrics where needed
+            raise RuntimeError(f"Error fetching PageSpeed data: {e}")
+            
+    yield "data: 40|Analyzing Content Quality and Social Tags...\n\n"
     build_meta_social_card(soup, url).add_to_results(results, index=1)
     build_content_quality_card(soup).add_to_results(results, index=2)
+
+    yield "data: 45|Analyzing Structured Data, Links, and Accessibility...\n\n"
     build_structured_data_card(soup, url).add_to_results(results, index=3)
     build_linking_card(soup, url).add_to_results(results, index=4)
     build_mobile_accessibility_card(soup, lighthouse_metrics).add_to_results(results, index=5) # Pass metrics
 
+    yield "data: 55|Analyzing Core Web Vitals...\n\n"
     # --- Performance Card (Premium) ---
     if is_premium_user:
         performance_card = build_performance_card(url, soup, response, pagespeed_data, lighthouse_metrics) # Pass metrics
@@ -133,9 +137,11 @@ def build_all_cards(results: dict, soup: BeautifulSoup, url: str, response: requ
             message='Performance metrics, including Core Web Vitals and PageSpeed insights, are only available for premium users.'
         ).add_to_results(results, manual_points=100, index=6)
 
+    yield "data: 70|Analyzing Technical Configuration...\n\n"
     # --- Technical Configuration Card ---
     build_technical_config_card(url, response, lighthouse_metrics, stack_packs).add_to_results(results, index=7) # Pass metrics & stacks
 
+    yield "data: 75|Conducting AI Analysis...\n\n"
     # --- AI Analysis Card (Premium) ---
     if is_premium_user:
         build_ai_card(soup).add_to_results(results, index=8)
@@ -1034,7 +1040,12 @@ def build_technical_config_card(url: str, response: requests.Response, lighthous
             lh_checks_category.add_content(False, f"{len(error_items)} browser errors found in the console.")
             # List first few errors
             for item in error_items[:3]:
-                 lh_checks_category.add_content("", f"- {item.get('description', 'N/A')} (Source: {item.get('source', {}).get('url', 'N/A')})")
+                source = item.get('source', {})
+                if isinstance(source, dict):
+                    source_url = source.get('url', 'N/A')
+                    lh_checks_category.add_content("", f"- {item.get('description', 'N/A')} (Source: {source_url})")
+                else:
+                    lh_checks_category.add_content("", f"- {item.get('description', 'N/A')} (Source: {source})")
             lh_checks_category.add_content("improvement", "Fix JavaScript errors reported in the browser console to ensure proper page functionality.")
 
         # Deprecations

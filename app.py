@@ -5,6 +5,7 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 import os
+from gevent.pywsgi import WSGIServer
 
 from models import db, User
 from routes import register_routes
@@ -38,6 +39,7 @@ def create_app():
 if __name__ == "__main__":
     flask_app = create_app()
 
-    #from waitress import serve
-    #serve(flask_app, host="0.0.0.0", port=5000) # for prod
-    flask_app.run(debug=True) #for development
+    http_server = WSGIServer(("0.0.0.0", 5000), flask_app)
+    http_server.serve_forever()
+    
+    #flask_app.run(debug=True) #for development
