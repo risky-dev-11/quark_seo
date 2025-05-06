@@ -54,7 +54,7 @@ DESC_MAX_LENGTH_PX = 960
 
 # --- Content & Linking Thresholds ---
 MIN_CONTENT_WORD_COUNT = 300
-MAX_LINK_TEXT_LENGTH = 30 # Arbitrary threshold for link text length
+MAX_LINK_TEXT_LENGTH = 30 # Threshold for link text length
 
 # --- AI Analysis Thresholds ---
 AI_RATING_THRESHOLD = 80 # Minimum rating (out of 100) to be considered "good"
@@ -425,7 +425,7 @@ def build_content_quality_card(soup: BeautifulSoup) -> Card:
     card.add_category(content_category)
     return card
 
-# --- Structured Data Card (No changes needed) ---
+# --- Structured Data Card ---
 def build_structured_data_card(soup: BeautifulSoup, url: str) -> Card:
     # (This function remains the same as in the previous version)
     card = Card('Structured Data (Schema.org)')
@@ -653,11 +653,11 @@ def build_mobile_accessibility_card(soup: BeautifulSoup, lighthouse_metrics: dic
 
 
         # Note on Color Contrast
-        # contrast_audit = get_audit_details(lighthouse_metrics, 'color-contrast')
-        # contrast_score = get_audit_score(contrast_audit)
-        # if contrast_score is not None and contrast_score < 1.0:
-        #     lh_a11y_category.add_content(False, "Potential color contrast issues found between text and background.")
-        #     lh_a11y_category.add_content("improvement", "Verify text has sufficient contrast against its background (WCAG AA standard: 4.5:1 for normal text, 3:1 for large text). Requires manual verification or specialized tools.")
+        contrast_audit = get_audit_details(lighthouse_metrics, 'color-contrast')
+        contrast_score = get_audit_score(contrast_audit)
+        if contrast_score is not None and contrast_score < 1.0:
+            lh_a11y_category.add_content(False, "Potential color contrast issues found between text and background.")
+            lh_a11y_category.add_content("improvement", "Verify text has sufficient contrast against its background (WCAG AA standard: 4.5:1 for normal text, 3:1 for large text). Requires manual verification or specialized tools.")
 
     card.add_category(lh_a11y_category)
 
@@ -1059,20 +1059,20 @@ def build_technical_config_card(url: str, response: requests.Response, lighthous
                  lh_checks_category.add_content("", f"- {item.get('value', 'N/A')}")
             lh_checks_category.add_content("improvement", "Replace deprecated browser APIs with modern alternatives to prevent future breakage.")
 
-        # # HTTP Status Code (might be redundant with response.status_code, but explicit check)
-        # status_code_audit = get_audit_details(lighthouse_metrics, 'http-status-code')
-        # status_score = get_audit_score(status_code_audit)
-        # if status_score is not None and status_score < 1.0:
-        #     lh_checks_category.add_content(False, "Page may not return a successful HTTP status code (2xx).")
-        #     # Details might contain the actual code if available in the audit
-        # else:
-        #      lh_checks_category.add_content(True, "Page returns a successful HTTP status code (2xx).")
+        # HTTP Status Code (might be redundant with response.status_code, but explicit check)
+        status_code_audit = get_audit_details(lighthouse_metrics, 'http-status-code')
+        status_score = get_audit_score(status_code_audit)
+        if status_score is not None and status_score < 1.0:
+            lh_checks_category.add_content(False, "Page may not return a successful HTTP status code (2xx).")
+            # Details might contain the actual code if available in the audit
+        else:
+              lh_checks_category.add_content(True, "Page returns a successful HTTP status code (2xx).")
 
-        # # Is Crawlable (might be redundant with robots.txt check)
-        # crawlable_audit = get_audit_details(lighthouse_metrics, 'is-crawlable')
-        # crawlable_score = get_audit_score(crawlable_audit)
-        # if crawlable_score is not None:
-        #      lh_checks_category.add_content(crawlable_score == 1.0, "Page appears to be crawlable by search engines." if crawlable_score == 1.0 else "Page may be blocked from crawling (check robots.txt and meta tags).")
+        # Is Crawlable (might be redundant with robots.txt check)
+        crawlable_audit = get_audit_details(lighthouse_metrics, 'is-crawlable')
+        crawlable_score = get_audit_score(crawlable_audit)
+        if crawlable_score is not None:
+            lh_checks_category.add_content(crawlable_score == 1.0, "Page appears to be crawlable by search engines." if crawlable_score == 1.0 else "Page may be blocked from crawling (check robots.txt and meta tags).")
 
 
     card.add_category(lh_checks_category)
