@@ -1,28 +1,10 @@
-# Classes for the database
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin
-import uuid
 from sqlalchemy.dialects.postgresql import JSON
+import uuid
 
-db = SQLAlchemy()
+from . import db        
 
-class User(db.Model, UserMixin):
-    __tablename__ = 'users'
-    uuid = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String)
-    last_name = db.Column(db.String)
-    email = db.Column(db.String, nullable=False, unique=True)
-    password = db.Column(db.String, nullable=False)
-    role = db.Column(db.String)
-    authenticated = db.Column(db.Boolean, default=False)
-
-    def __repr__(self):
-        return f'<User {self.email}, Role {self.role}>'
-    
-    def get_id(self):
-        return (self.uuid)
-
-class AnalyzedWebsite(db.Model, UserMixin):
+class AnalyzedWebsite(db.Model):
     __tablename__ = 'analyzed_websites'
     user_uuid = db.Column(db.Integer, db.ForeignKey('users.uuid'))
     uuid = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -36,37 +18,7 @@ class AnalyzedWebsite(db.Model, UserMixin):
         return f'<AnalyzedWebsite {self.website}>'
 
     def get_id(self):
-        return (self.uuid)
-    
-###########################################################
-
-# Classes for the analyzer
-
-def calculate_overall_points(results):
-    overall_points = 0
-    achieved_points = 0
-    for card in results.values():
-        if 'points' in card:
-            overall_points += 100
-            achieved_points += int(card.get('points', 0) or 0)
-    return round((achieved_points / overall_points) * 100) if overall_points != 0 else 0
-
-def calculate_improvement_count(results):
-    false_count = 0
-    for _, card in results.items():
-        if card.get('isCard', False):
-            false_count += count_false_in_card(card)
-    return false_count
-
-def count_false_in_card(card):
-    false_count = 0
-    for category in card.values():
-        if isinstance(category, dict) and 'content' in category: 
-            false_count += count_false_in_category(category)
-    return false_count
-
-def count_false_in_category(category):
-    return sum(1 for content in category['content'] if content['bool'] is False)
+        return self.uuid
 
 class Content:
     def __init__(self, bool, text):
@@ -90,7 +42,7 @@ class ChartContent:
 
     def to_dict(self):
         return {
-            'bool': '', # exclude it from the the point calculation
+            'bool': '',  # exclude it from the point calculation
             'isChart': self.is_chart,
             'chartType': self.chart_type,
             'threshold1': self.threshold1,
@@ -157,24 +109,3 @@ class Card:
 
         points_percentage = (true_count / total_points) * 100 if total_points != 0 else 0
         self.update_points(points_percentage)
-
-# User hierarchy
-
-class UserHierarchy:
-    ROLES = {
-        'basic': 1,
-        'premium': 2,
-        'admin': 3
-    }
-
-    @staticmethod
-    def is_higher_than_basic(user):
-        """
-        Check if the given user's role is higher than a basic user.
-        If the user's role is unknown, assign 'basic'.
-
-        :param user: The user object to check.
-        :return: True if the user's role is higher than 'basic', False otherwise.
-        """
-        role = user.role if user.role in UserHierarchy.ROLES else 'basic'
-        return UserHierarchy.ROLES.get(role, 0) > UserHierarchy.ROLES['basic']

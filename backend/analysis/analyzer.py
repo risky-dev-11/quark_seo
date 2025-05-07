@@ -1,6 +1,6 @@
 import datetime
 from bs4 import BeautifulSoup
-from backend.models.models import AnalyzedWebsite
+from backend.models.results import AnalyzedWebsite
 from backend.analysis.fetcher import format_url, fetch_website_content
 from backend.analysis.card_builders import build_all_cards, build_serp_preview, build_overall_results
 import time

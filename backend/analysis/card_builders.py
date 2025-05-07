@@ -6,7 +6,6 @@
 import asyncio
 import json
 import socket
-import os
 import re
 from urllib.parse import urlparse, urljoin
 
@@ -14,20 +13,19 @@ from urllib.parse import urlparse, urljoin
 import requests
 from bs4 import BeautifulSoup, Tag # Added Tag for type hinting
 from langdetect import detect_langs, DetectorFactory, LangDetectException
-import dotenv
 
 # Local Application/Library Specific Imports
 # NOTE: text_snippet_functions are no longer used directly.
 #       English text is generated inline in this file.
-from backend.models.models import Card, Category, calculate_improvement_count, calculate_overall_points
+from backend.models.results import Card, Category
+from backend.models.calc import Calc
 from backend.analysis.ai_analyzer import ai_analyzer # Assuming ai_analyzer is an async function
 
 # ############################################################################ #
 #                              ENVIRONMENT SETUP                               #
 # ############################################################################ #
 
-dotenv.load_dotenv()
-GOOGLE_PAGESPEED_API_KEY = os.getenv("GOOGLE_PAGESPEED_API_KEY")
+from backend.config.env import GOOGLE_PAGESPEED_API_KEY
 
 # ############################################################################ #
 #                                 CONSTANTS                                    #
@@ -104,10 +102,9 @@ def build_all_cards(results: dict, soup: BeautifulSoup, url: str, response: requ
     lighthouse_metrics = None
     stack_packs = None
 
-    yield "data: 25|Computing Lighthouse metrics (approx. 30sec)...\n\n"
-
     # Fetch PageSpeed data once if premium (needed for Performance, Technical, Accessibility)
     if is_premium_user:
+        yield "data: 25|Computing Lighthouse metrics (approx. 30sec)...\n\n"
         try:
             pagespeed_data = fetch_pagespeed_data(url)
             if pagespeed_data:
@@ -115,6 +112,8 @@ def build_all_cards(results: dict, soup: BeautifulSoup, url: str, response: requ
                 stack_packs = pagespeed_data.get("lighthouseResult", {}).get("stackPacks", [])
         except Exception as e:
             raise RuntimeError(f"Error fetching PageSpeed data: {e}")
+    else:
+        yield "data: 25|Computing Lighthouse metrics...\n\n"
             
     yield "data: 40|Analyzing Content Quality and Social Tags...\n\n"
     build_meta_social_card(soup, url).add_to_results(results, index=1)
@@ -1182,8 +1181,9 @@ def get_improvement_count_text(count: int) -> str:
 def build_overall_results(results: dict) -> dict:
     """ Calculates overall rating and improvement count. (Translated) """
     card_results = {k: v for k, v in results.items() if isinstance(v, dict) and v.get('isCard', True)}
-    overall_rating = calculate_overall_points(card_results)
-    improvement_count = calculate_improvement_count(card_results)
+    calc = Calc(results=card_results)
+    overall_rating = calc.calculate_overall_points()
+    improvement_count = calc.calculate_improvement_count()
     return {'isCard': False, 'overall_rating': overall_rating, 'overall_rating_text': get_overall_rating_text(overall_rating), 'improvement_count': improvement_count, 'improvement_count_text': get_improvement_count_text(improvement_count)}
 
 # ############################################################################ #

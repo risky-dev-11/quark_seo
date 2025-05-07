@@ -2,6 +2,8 @@ import asyncio
 import json
 from openai import OpenAI
 
+from backend.config.env import OPENAI_API_KEY
+
 # Tool for AI-Feedback for the description
 description = [{
     "type": "function",
@@ -67,8 +69,8 @@ title = [{
     }
 }]
 
-async def ai_analyzer(website_description, website_title, openai_api_key):
-    client = OpenAI(api_key=openai_api_key, max_retries=1)
+async def ai_analyzer(website_description, website_title):
+    client = OpenAI(api_key=OPENAI_API_KEY, max_retries=1)
 
     description_message = [{
         "role": "user",
