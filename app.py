@@ -7,16 +7,16 @@ from dotenv import load_dotenv
 import os
 from gevent.pywsgi import WSGIServer
 
-from models import db, User
-from routes import register_routes
+from backend.models.models import db, User
+from backend.routes.routes import register_routes
 
 load_dotenv()
 
 def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('POSTGRES_DATABASE_URL')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = os.getenv('FLASK_SECRET_KEY')
+    
     app.json.sort_keys = False
 
     db.init_app(app)
