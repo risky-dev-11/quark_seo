@@ -5,6 +5,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 
 def format_url(url: str) -> str:
     url = url.replace("https://", "http://").replace("www.", "")
@@ -15,9 +16,12 @@ def format_url(url: str) -> str:
     return url
 
 def get_driver():
-    service = Service()
+    driver_path = ChromeDriverManager().install()
+    service = Service(driver_path)
+
     options = Options()
     options.add_argument("--headless=new")
+
     driver = webdriver.Chrome(service=service, options=options)
     return driver
 
@@ -28,7 +32,7 @@ def fetch_website_content(url: str):
     """
     # Get the static response first
     response = requests.get(url, allow_redirects=True)
-    
+
     driver = get_driver()
     try:
         driver.get(url)
@@ -44,5 +48,5 @@ def fetch_website_content(url: str):
         ) from e
     finally:
         driver.quit()
-    
+
     return response, page_source, screenshot
