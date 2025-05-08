@@ -16,14 +16,14 @@ def format_url(url: str) -> str:
     return url
 
 def get_driver():
-    driver_path = ChromeDriverManager().install()
-    service = Service(driver_path)
-
     options = Options()
     options.add_argument("--headless=new")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
 
-    driver = webdriver.Chrome(service=service, options=options)
+    driver = webdriver.Chrome(executable_path="/usr/bin/chromedriver", options=options)
     return driver
+
 
 def fetch_website_content(url: str):
     """
