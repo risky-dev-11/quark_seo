@@ -5,7 +5,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
 
 def format_url(url: str) -> str:
     url = url.replace("https://", "http://").replace("www.", "")
@@ -21,9 +20,9 @@ def get_driver():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    driver = webdriver.Chrome(executable_path="/usr/bin/chromedriver", options=options)
+    service = Service("/usr/bin/chromedriver")
+    driver = webdriver.Chrome(service=service, options=options)
     return driver
-
 
 def fetch_website_content(url: str):
     """
@@ -42,7 +41,6 @@ def fetch_website_content(url: str):
         page_source = driver.page_source
         screenshot = driver.get_screenshot_as_png()
     except Exception as e:
-        # Log or handle error as needed.
         raise requests.exceptions.RequestException(
             'Unser Server konnte die Webseite nicht erreichen. Bitte überprüfen Sie die URL und versuchen Sie es erneut.'
         ) from e
