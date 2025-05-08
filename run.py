@@ -1,15 +1,13 @@
 from backend.server import create_app
-from gevent.pywsgi import WSGIServer
 
 from backend.config.env import FLASK_ENV
 
+flask_app = create_app()
+
 if __name__ == "__main__":
-    
-    flask_app = create_app()
 
     if FLASK_ENV == "prod":
-        http_server = WSGIServer(("0.0.0.0", 5000), flask_app)
-        http_server.serve_forever()
+        raise RuntimeError("This script should not be executed in production. The Flask app is served by Gunicorn via Docker, which imports the flask_app from this file.")
     elif FLASK_ENV == "dev":
         flask_app.run(debug=True)
     else:
