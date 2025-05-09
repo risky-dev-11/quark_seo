@@ -34,4 +34,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose port and run the app using Gunicorn
-CMD ["gunicorn", "-b", ":8080", "run:flask_app"]
+CMD ["gunicorn", "-b", ":8080", "--timeout", "120", "run:flask_app"]
