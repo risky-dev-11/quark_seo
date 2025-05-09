@@ -5,6 +5,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from backend.config.env import FLASK_ENV
+from webdriver_manager.chrome import ChromeDriverManager
 
 def format_url(url: str) -> str:
     url = url.replace("https://", "http://").replace("www.", "")
@@ -20,8 +22,13 @@ def get_driver():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    service = Service("/usr/bin/chromedriver")
-    driver = webdriver.Chrome(service=service, options=options)
+    if FLASK_ENV == "dev":
+        driver_path = ChromeDriverManager().install()
+        driver = webdriver.Chrome(service=Service(driver_path), options=options)
+    elif FLASK_ENV == "prod":
+        driver = webdriver.Chrome(service=Service("/usr/bin/chromedriver"), options=options)
+    else:
+        raise ValueError("Invalid FLASK_ENV value. Expected 'dev' or 'prod'!")
     return driver
 
 def fetch_website_content(url: str):

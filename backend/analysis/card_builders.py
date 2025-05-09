@@ -1108,9 +1108,9 @@ def build_ai_card(soup: BeautifulSoup) -> Card:
     if not title_text and not description_content:
         error_category = Category("Missing Data"); error_category.add_content(False, "No title or description found for AI analysis."); card.add_category(error_category); return card
     try:
-        try: loop = asyncio.get_running_loop()
-        except RuntimeError: loop = asyncio.new_event_loop(); asyncio.set_event_loop(loop)
-        ai_results = loop.run_until_complete(ai_analyzer(description_content, title_text))
+        ai_results = ai_results = asyncio.run(
+            ai_analyzer(description_content, title_text)
+        )
         if description_content:
             ai_desc_category = Category('AI Analysis: Description')
             ai_desc_category.add_content("", f'Original Description: "{description_content}"')

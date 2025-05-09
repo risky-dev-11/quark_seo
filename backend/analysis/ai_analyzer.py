@@ -70,7 +70,7 @@ title = [{
 }]
 
 async def ai_analyzer(website_description, website_title):
-    client = OpenAI(api_key=OPENAI_API_KEY, max_retries=1)
+    client = OpenAI(api_key=OPENAI_API_KEY)
 
     description_message = [{
         "role": "user",
