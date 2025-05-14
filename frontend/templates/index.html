@@ -1,289 +1,242 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="de">
 
-{% block title %}Quark SEO{% endblock %}
-{% block content %}
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-<!-- Hero Section -->
-<section id="hero" class="hero section dark-background">
+  <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="f311211a-2351-405a-bfcb-dd5eb74e9abb" type="text/javascript" async></script>
 
-  <img src="../static/assets/img/world-dotted-map.png" alt="" class="hero-bg" data-aos="fade-in">
+  <!-- Google Ads -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3157743838672635"
+     crossorigin="anonymous"></script>
 
-  <div class="container">
-    <div class="row gy-4 d-flex justify-content-between">
-      <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
-        <h2 data-aos="fade-up" style="margin-top: auto;">Analyze Your Website with Our SEO Checker!</h2>
-        <p data-aos="fade-up" data-aos-delay="100">Boost your website's visibility in search engines with our powerful tool! It automatically evaluates key SEO factors and provides actionable recommendations to help you rank higher in search results and attract more potential customers.</p>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
 
-        <form id="url-form" class="form-search d-flex align-items-stretch mb-3" data-aos="fade-up" data-aos-delay="200">
-            <input type="text" id="url-input" class="form-control" placeholder="Enter your website URL" required>
-          <button type="submit" class="btn btn-primary">Analyse starten</button>
-        </form>
-        <div class="progress" style="opacity: 0;">
-          <div class="progress-bar" role="progressbar" style="width: 0%"></div>
-        </div> 
-        <p class="mt-3" id="progress-description" style="opacity: 0; margin-bottom: 0">
-          The analysis is in progress. Please wait...
-        </p>
-        <style>
-          .progress.drop-in {
-            animation: dropIn 0.5s ease-out forwards;
-          }
-          #progress-description.drop-in {
-            animation: dropIn 0.5s ease-out forwards;
-          }
+  <title>ASEOTOOL</title>
+  <!-- Favicons -->
+  <link href="{{ url_for('static', filename='assets/img/favicon.png') }}" rel="icon">
+  <link href="{{ url_for('static', filename='assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 
-          @keyframes dropIn {
-            0% {
-              transform: translateY(-20px);
-              opacity: 0;
-            }
-            100% {
-              transform: translateY(0);
-              opacity: 1;
-            }
-          }
-        </style>
-        <script>
-            document.getElementById('url-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
-            const inputUrl = document.getElementById('url-input').value.trim();
-            if (!inputUrl) return;
+  <!-- Vendor CSS Files -->
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/aos/aos.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
 
-            const submitButton = document.querySelector('#url-form button[type="submit"]');
-            const progressBarContainer = document.querySelector('.progress');
-            const progressBar = document.querySelector('.progress-bar');
-            const progressDescription = document.getElementById('progress-description');
+  <!-- Main CSS File -->
+  <link href="{{ url_for('static', filename='assets/css/main.css') }}" rel="stylesheet">
 
-            const setButtonState = (isLoading) => {
-              submitButton.innerHTML = isLoading 
-              ? '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' 
-              : 'Analyse starten';
-              submitButton.disabled = isLoading;
-            };
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PDLXF0YFP4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-            const resetProgressBar = () => {
-              progressBarContainer.classList.remove('drop-in');
-              progressBar.style.width = '0%';
-              progressDescription.classList.remove('drop-in');
-              progressDescription.innerHTML = 'The analysis is in progress. Please wait...';
-            };
+    gtag('config', 'G-PDLXF0YFP4');
+  </script>
+</head>
 
-            setButtonState(true);
-            progressBarContainer.classList.add('drop-in');
-            progressDescription.classList.add('drop-in');
+<body class="/-page">
 
-            const encodedUrl = encodeURIComponent(inputUrl);
-            const evtSource = new EventSource(`/api/analyze/stream/${encodedUrl}`);
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
 
-            evtSource.onmessage = function(event) {
-              const [progress, message] = event.data.split('|');
+      <a href="/" class="logo d-flex align-items-center me-auto">
+        <img src="{{ url_for('static', filename='assets/img/logo.png') }}" alt="logo">
+        <h1 class="sitename">ASEOTOOL</h1>
+      </a>
 
-              if (progress === 'DONE' || progress === 'ERROR') {
-              evtSource.close();
-              setButtonState(false);
-              resetProgressBar();
-              const resultPath = progress === 'DONE' ? message : 'error';
-              window.location.href = `/results/${encodedUrl}/${resultPath}`;
-              } else {
-              const targetWidth = parseFloat(progress);
-              let currentWidth = parseFloat(progressBar.style.width) || 0;
-              
-              progressDescription.innerHTML = message;
-
-              const interval = setInterval(() => {
-                currentWidth = Math.min(currentWidth + 1, targetWidth);
-                progressBar.style.width = `${currentWidth}%`;
-                if (currentWidth >= targetWidth) clearInterval(interval);
-              }, 25);
-              }
-            };
-            });
-        </script>
-      </div>
-
-        <div class="col-lg-5 order-1 order-lg-2 hero-img d-flex align-items-center" data-aos="zoom-out">
-        <img src="../static/assets/img/hero-img.png" class="img-fluid mb-3 mb-lg-0" alt="">
-      </div>
-
-    </div>
-  </div>
-
-</section><!-- /Hero Section -->
-
-<!-- Featured Services Section -->
-<section id="featured-services" class="featured-services section">
-
-  <div class="container">
-
-    <div class="row gy-4">
-
-      <div class="col-lg-4 col-md-6 service-item d-flex">
-        <div class="icon flex-shrink-0"><i class="fa-sharp fa-solid fa-s"></i></div>
-        <div>
-          <h4 class="title">Search</h4>
-          <p class="description">Gain valuable insights into your website's performance and identify key areas that impact search engine rankings. Discover the best keywords to enhance your visibility and attract more visitors.</p>
-          <a href="#" class="readmore stretched-link"><span>Learn More</span><i class="bi bi-arrow-right"></i></a>
-        </div>
-      </div>
-      <!-- End Service Item -->
-      
-      <div class="col-lg-4 col-md-6 service-item d-flex">
-        <div class="icon flex-shrink-0"><i class="fa-sharp fa-solid fa-e"></i></div>
-        <div>
-          <h4 class="title">Engine</h4>
-          <p class="description">Leverage our automated tools to unlock untapped potential. We provide detailed recommendations to improve your website's performance and boost its visibility in search results.</p>
-          <a href="#" class="readmore stretched-link"><span>Learn More</span><i class="bi bi-arrow-right"></i></a>
-        </div>
-      </div>
-      <!-- End Service Item -->
-      
-      <div class="col-lg-4 col-md-6 service-item d-flex">
-        <div class="icon flex-shrink-0"><i class="fa-sharp fa-solid fa-o"></i></div>
-        <div>
-          <h4 class="title">Optimization</h4>
-          <p class="description">Enhance your website using advanced SEO techniques to ensure better indexing by search engines. Increase your chances of being discovered by your target audience effectively.</p>
-          <a href="#" class="readmore stretched-link"><span>Learn More</span><i class="bi bi-arrow-right"></i></a>
-        </div>
-      </div>
-      <!-- End Service Item -->
-      
-
-    </div>
-
-  </div>
-
-</section><!-- /Featured Services Section -->
-
-<!-- About Section -->
-<section id="about" class="about section">
-
-  <div class="container">
-
-    <div class="row gy-4">
-
-      <div class="col-lg-6 position-relative align-self-start order-lg-last order-first" data-aos="fade-up" data-aos-delay="200">
-        <img src="../static/assets/img/about.jpg" class="img-fluid" alt="">
-      </div>
-
-      <div class="col-lg-6 content order-last  order-lg-first" data-aos="fade-up" data-aos-delay="100">
-        <h3>Über uns</h3>
-        <p>
-          Quark steht für Quality, Universal, Automation, Results und Knowledge – unser Leitbild für erfolgreiche SEO-Optimierung.
-        </p>
+      <nav id="navmenu" class="navmenu">
         <ul>
-          <li>
-          <i class="fa-sharp fa-solid fa-q" style="align-self: center;"></i>
-          <div>
-          <h5>Quality</h5>
-          <p>Wir bieten höchste Qualität für eine nachhaltige und erfolgreiche Webpräsenz.</p>
-          </div>
-          </li>
-          <li>
-          <i class="fa-sharp fa-solid fa-u" style="align-self: center;"></i>
-            <div>
-            <h5>Universal</h5>
-            <p>Unsere Lösungen sind vielseitig und plattformübergreifend einsetzbar.</p>
-            </div>
-          </li>
-          <li>
-          <i class="fa-sharp fa-solid fa-a" style="align-self: center;"></i>
-          <div>
-          <h5>Automation</h5>
-          <p>Unsere automatisierten Prozesse sparen Ihnen wertvolle Zeit und Ressourcen.</p>
-          </div>
-          </li>
-          <li>
-          <i class="fa-sharp fa-solid fa-r" style="align-self: center;"></i>
-          <div>
-          <h5>Results</h5>
-          <p>Wir legen den Fokus auf messbare und nachhaltige Erfolge.</p>
-          </div>
-          </li>
-          <li>
-          <i class="fa-sharp fa-solid fa-k" style="align-self: center;"></i>
-          <div>
-          <h5>Knowledge</h5>
-          <p>Unser umfassendes SEO-Wissen sorgt für optimalen Traffic und Sichtbarkeit.</p>
-          </div>
+            <li><a href="/" class="{% if request.endpoint == 'index' or request.endpoint == '' %}active{% endif %}">Home</a></li>
+          <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
+          <li><a href="{{ url_for('pricing') }}" class="{% if request.endpoint == 'pricing' %}active{% endif %}">Pricing</a></li>
+          <li class="dropdown">
+        <a href="#" class="{% if 'dropdown' in request.endpoint %}active{% endif %}">
+          <span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i>
+        </a>
+        <ul>
+          <li><a href="#" class="{% if request.endpoint == 'dropdown1' %}active{% endif %}">Dropdown 1</a></li>
+          <li class="dropdown">
+            <a href="#" class="{% if 'deep_dropdown' in request.endpoint %}active{% endif %}">
+          <span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i>
+            </a>
+            <ul>
+          <li><a href="#" class="{% if request.endpoint == 'deep_dropdown2' %}active{% endif %}">Deep Dropdown 2</a></li>
+            </ul>
           </li>
         </ul>
-      </div>          
+          </li>
+          <li><a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}">Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+      {% if current_user.is_authenticated %}
+      <a class="btn-getstarted" href="{{ url_for('profile') }}">Hallo, {{ current_user.first_name }}!</a>
+      <a class="btn-getstarted" href="{{ url_for('logout') }}" style="margin-left: 1rem;"><i class="bi bi-box-arrow-right"></i></a>
+      {% else %}
+      <a class="btn-getstarted" href="{{ url_for('login') }}">Anmelden </a>
+      <a class="btn-getstarted" href="{{ url_for('signup') }}" style="margin-left: 1rem;">Registrieren </a>
+      {% endif %}
     </div>
-  </div>
-</section><!-- /About Section -->
+  </header>
 
-<!-- Faq Section -->
-<section id="faq" class="faq section">
+  <main class="main">
 
-  <!-- Section Title -->
-  <div class="container section-title" data-aos="fade-up">
-    <span>Häufig gestellte Fragen</span>
-    <h2>Häufig gestellte Fragen</h2>
-    <p>Hier findest du Antworten auf die häufigsten Fragen zu unseren Dienstleistungen und Produkten.</p>
-  </div><!-- End Section Title -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        VANTA.GLOBE({
+          el: "#test",
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: window.innerHeight,
+          minWidth: window.innerWidth,
+          scale: 0.50,
+          scaleMobile: 1.00,
+          size: 0.50,
+          color: 0x0d41ff,
+            color2: 0xffffff,
+          backgroundColor: 0x23153c,
+        });
+        // Ensure position remains static
+        document.getElementById("test").style.position = "static";
+      });
 
-  <div class="container">
-
-    <div class="row justify-content-center">
-
-      <div class="col-lg-10">
-
-        <div class="faq-container">
-
-          <div class="faq-item faq-active" data-aos="fade-up" data-aos-delay="200">
-            <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Was ist Quark SEO und wie funktioniert es?</h3>
-            <div class="faq-content">
-                <p>Quark SEO ist ein fortschrittliches Tool zur Verbesserung deiner Online-Sichtbarkeit. Es analysiert umfassend die SEO-Elemente deiner Website und liefert dir präzise Empfehlungen zur Optimierung. So kannst du gezielt Schwachstellen beheben und deine Position in den Suchergebnissen nachhaltig verbessern.</p>
-            </div>
-            <i class="faq-toggle bi bi-chevron-right"></i>
-          </div><!-- End Faq item-->
-
-          <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
-            <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Welche Funktionen sind im Freemium-Modell enthalten?</h3>
-            <div class="faq-content">
-              <p>Im Freemium-Modell sind die meisten Analysefunktionen kostenlos verfügbar. Um detaillierte Optimierungsvorschläge zu erhalten und weitere Funktionen freizuschalten, kannst du ein Upgrade auf die Premium-Version durchführen.</p>
-            </div>
-            <i class="faq-toggle bi bi-chevron-right"></i>
-          </div><!-- End Faq item-->
-
-          <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
-            <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Wie unterscheiden sich die Analyse- und Optimierungsfunktionen?</h3>
-            <div class="faq-content">
-              <p>Die Analysefunktionen überprüfen die SEO-Aspekte deiner Website und identifizieren Verbesserungspotenziale. Die Optimierungsfunktionen liefern konkrete Vorschläge zur Verbesserung dieser Aspekte, die dir helfen, deine Website in Suchmaschinen sichtbarer zu machen.</p>
-            </div>
-            <i class="faq-toggle bi bi-chevron-right"></i>
-          </div><!-- End Faq item-->
-
-          <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
-            <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Benötige ich SEO-Kenntnisse, um Quark SEO zu nutzen?</h3>
-            <div class="faq-content">
-              <p>Nein, Quark SEO ist so gestaltet, dass es sowohl für SEO-Neulinge als auch für erfahrene Anwender leicht verständlich ist. Unser Tool bietet dir klare Anleitungen und Erklärungen, sodass du auch ohne Vorkenntnisse deine Website optimieren kannst.</p>
-            </div>
-            <i class="faq-toggle bi bi-chevron-right"></i>
-          </div><!-- End Faq item-->
-
-          <div class="faq-item" data-aos="fade-up" data-aos-delay="600">
-            <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Wie schnell sehe ich Verbesserungen in meinem Ranking?</h3>
-            <div class="faq-content">
-              <p>Die Verbesserung des Suchmaschinenrankings hängt von vielen Faktoren ab, einschließlich der Umsetzung der Optimierungsvorschläge. In der Regel können erste Ergebnisse innerhalb weniger Wochen sichtbar werden, je nachdem wie stark die SEO-Maßnahmen sind und wie oft Suchmaschinen deine Website crawlen.</p>
-            </div>
-            <i class="faq-toggle bi bi-chevron-right"></i>
-          </div><!-- End Faq item-->
-
-        </div><!-- End Faq container -->
-
+    </script>
+    <section>
+      <div id="test" style="position: static !important;"></div>
+    </section>
+    <section style="position: relative !important; background: transparent !important; display: flex; align-items: center; justify-content: center; min-height: 80vh;">
+      <div class="container">
+      <div class="row gy-4">
+        <div class="col-lg-6 d-flex flex-column justify-content-center">
+        <form id="url-form" class="form-search d-flex align-items-stretch mb-4" data-aos="fade-up" data-aos-delay="200" style="gap: 10px;">
+          <input type="text" id="url-input" class="form-control" placeholder="Enter your website URL" required style="padding: 15px; font-size: 1rem; border-radius: 5px; border: 1px solid #ccc;">
+          <button type="submit" class="btn btn-primary" style="padding: 15px 30px; font-size: 1rem; border-radius: 5px;">Analyse starten</button>
+        </form>
+        <div class="progress" style="opacity: 0; height: 20px; border-radius: 10px; overflow: hidden; background-color: #f1f1f1;">
+          <div class="progress-bar" role="progressbar" style="width: 0%; background-color: #007bff;"></div>
+        </div>
+        <p class="mt-4 text-center" id="progress-description" style="opacity: 0; margin-bottom: 0; font-size: 1rem; color: #555;">
+          The analysis is in progress. Please wait...
+        </p>
+        </div>
       </div>
+      
+      </div>
+    </section>
 
-    </div>
+  <style>
+    .progress.drop-in {
+      animation: dropIn 0.5s ease-out forwards;
+    }
+    #progress-description.drop-in {
+      animation: dropIn 0.5s ease-out forwards;
+    }
 
-  </div>
+    @keyframes dropIn {
+      0% {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+  <script>
+      document.getElementById('url-form').addEventListener('submit', async function(event) {
+      event.preventDefault();
 
-</section><!-- /Faq Section -->
+      const inputUrl = document.getElementById('url-input').value.trim();
+      if (!inputUrl) return;
 
-{% endblock %}
+      const submitButton = document.querySelector('#url-form button[type="submit"]');
+      const progressBarContainer = document.querySelector('.progress');
+      const progressBar = document.querySelector('.progress-bar');
+      const progressDescription = document.getElementById('progress-description');
+
+      const setButtonState = (isLoading) => {
+        submitButton.innerHTML = isLoading 
+        ? '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' 
+        : 'Analyse starten';
+        submitButton.disabled = isLoading;
+      };
+
+      const resetProgressBar = () => {
+        progressBarContainer.classList.remove('drop-in');
+        progressBar.style.width = '0%';
+        progressDescription.classList.remove('drop-in');
+        progressDescription.innerHTML = 'The analysis is in progress. Please wait...';
+      };
+
+      setButtonState(true);
+      progressBarContainer.classList.add('drop-in');
+      progressDescription.classList.add('drop-in');
+
+      const encodedUrl = encodeURIComponent(inputUrl);
+      const evtSource = new EventSource(`/api/analyze/stream/${encodedUrl}`);
+
+      evtSource.onmessage = function(event) {
+        const [progress, message] = event.data.split('|');
+
+        if (progress === 'DONE' || progress === 'ERROR') {
+        evtSource.close();
+        setButtonState(false);
+        resetProgressBar();
+        const resultPath = progress === 'DONE' ? message : 'error';
+        window.location.href = `/results/${encodedUrl}/${resultPath}`;
+        } else {
+        const targetWidth = parseFloat(progress);
+        let currentWidth = parseFloat(progressBar.style.width) || 0;
+        
+        progressDescription.innerHTML = message;
+
+        const interval = setInterval(() => {
+          currentWidth = Math.min(currentWidth + 1, targetWidth);
+          progressBar.style.width = `${currentWidth}%`;
+          if (currentWidth >= targetWidth) clearInterval(interval);
+        }, 25);
+        }
+      };
+      });
+  </script>
+</div>
+
+  </main>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="{{ url_for('static', filename='assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/php-email-form/validate.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/aos/aos.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/purecounter/purecounter_vanilla.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-circle-progress/dist/circle-progress.min.js" type="module"></script>
+
+  <!-- Main JS File -->
+  <script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
+
+</body>
+
+</html>
