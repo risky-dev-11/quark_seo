@@ -50,9 +50,8 @@
 
 #submit-button {
   padding: 15px 30px;
-  font-size: 1rem;
   border-radius: 5px;
-  width: 30%;
+  width: 25%;
   background-color: #0d42ff;
   color: white;
   border: none;
@@ -64,7 +63,7 @@
 
 #submit-button span.button-label {
   font-family: 'Poppins', sans-serif;
-  font-size: x-large;
+  font-size: large;
 }
 
 #progress-container {
