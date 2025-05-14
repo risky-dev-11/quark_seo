@@ -1,0 +1,98 @@
+/*--------------------------------------------------------------
+# Chart
+--------------------------------------------------------------*/
+
+.chart-container { 
+  height: 2em; 
+  position: relative;
+  width: 90%;
+  justify-self: center;
+  margin-top: 16px;
+  margin-bottom: 16px;
+} 
+
+
+.chart-container.decline-chart .good  { 
+  background-color: #0dce6b; 
+  height: 16px;
+} 
+
+.chart-container.decline-chart .okay  { 
+  background-color: #ffa400; 
+  height: 16px; 
+  position: absolute; 
+  top: 0;
+} 
+
+.chart-container.decline-chart .bad  { 
+  background-color: #ff4e42; 
+  height: 16px; 
+  right: 0; 
+  position: absolute; 
+  top: 0;
+}
+
+.chart-container.range-chart .okay { 
+  background-color: #ffa400; 
+  height: 16px;
+} 
+
+.chart-container.range-chart .good  { 
+  background-color: #0dce6b; 
+  height: 16px; 
+  position: absolute; 
+  top: 0;
+} 
+
+.chart-container.range-chart .bad  { 
+  background-color: #ff4e42; 
+  height: 16px; 
+  right: 0; 
+  position: absolute; 
+  top: 0;
+} 
+
+
+.chart-container .marker-current-value-icon  { 
+  width: 0; 
+  height: 0; 
+  border-left: 4px solid transparent; 
+  border-right: 4px solid transparent; 
+  border-top: 4px solid #000; 
+  position: absolute; 
+  top: -4px;
+  margin-left: -4px;
+} 
+
+.chart-container .marker-current-value-text  { 
+  font-size: 12px; 
+  position: absolute; 
+  text-align: center; 
+  top: -32px; 
+  margin-left: -44px;
+  font-weight: bold;
+  width: max-content;
+} 
+
+.chart-container .chart-labels  { 
+  position: relative; 
+  top: 2px;
+} 
+
+.chart-container .chart-label-icon  { 
+  background-color: #000; 
+  height: 6px; 
+  position: absolute; 
+  text-align: center; 
+  top: 0; 
+  width: 1px;
+} 
+
+.chart-container .chart-label-text  { 
+  font-size: 12px; 
+  padding-left: 2px; 
+  position: absolute; 
+  text-align: center; 
+  top: 7px; 
+  margin-left: -50px;
+} 

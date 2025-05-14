@@ -3,13 +3,12 @@
 {% block title %}Anmelden{% endblock %}
 {% block content %}
 <!-- CSS Imports -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css">
 <link href="https://cdn.datatables.net/v/bs5/dt-2.2.2/cr-2.0.4/rg-1.5.1/rr-1.5.0/sb-1.8.2/sp-2.3.3/datatables.min.css" rel="stylesheet" integrity="sha384-Z9fVgEHPJlPO209VwdwcMQYh1Rg3cFttWR+xjB1A79P6jA2CgERjwuj50l4mNYWc" crossorigin="anonymous">
+<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/profile.css') }}">
  
 <!-- JS Imports -->
 <script rel="preload" src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-<script rel="preload" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script rel="preload" src="https://cdn.datatables.net/v/bs5/dt-2.2.2/cr-2.0.4/rg-1.5.1/rr-1.5.0/sb-1.8.2/sp-2.3.3/datatables.min.js" integrity="sha384-V0AmCX4Ej/ttFhiwc54YdMcngyF3Oubb4Wi5byVAbTJhac9CQJUz7PMi+UQ1F6+M" crossorigin="anonymous"></script>
 <script rel="preload" src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
 

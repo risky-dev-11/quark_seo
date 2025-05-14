@@ -1,0 +1,98 @@
+.button-progress-bar {
+  background-color: rgba(255, 255, 255, 0.3); /* semi-transparent white */
+  height: 100%;
+  transition: width 0.3s ease;
+  z-index: 1;
+}
+
+.button-label {
+  position: relative;
+  z-index: 2;
+}
+
+#background-canvas {
+  position: static !important;
+}
+
+#content-landing-page {
+  position: relative !important;
+  background: transparent !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+#content-landing-page h3 {
+  color: #0d42ff;
+  font-weight: 500;
+}
+
+#content-landing-page h2 {
+  font-size: 4em;
+  color: white;
+  margin-bottom: 0.7em;
+}
+
+#url-form {
+  gap: 30px;
+  height: 5em;
+}
+
+#url-input {
+  width: 70%;
+  padding: 15px 30px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-family: 'Poppins';
+}
+
+#submit-button {
+  padding: 15px 30px;
+  font-size: 1rem;
+  border-radius: 5px;
+  width: 30%;
+  background-color: #0d42ff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#submit-button span.button-label {
+  font-family: 'Poppins', sans-serif;
+  font-size: x-large;
+}
+
+#progress-container {
+  margin-top: 0.5em;
+  margin-bottom: 0.7em;
+  opacity: 0;
+}
+
+#progress-bar {
+  height: 7px;
+  width: 0;
+  background-color: #0d42ff;
+  display: flex;
+  align-items: center;
+  color: white;
+  border-radius: 5px;
+  margin-bottom: 0.3em;
+}
+
+#progress-description {
+  color: white;
+  margin-bottom: 0;
+  font-size: smaller;
+}
+
+.landing-page-p {
+  font-size: 1.2em;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom:0;
+}

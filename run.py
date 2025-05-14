@@ -7,7 +7,7 @@ flask_app = create_app()
 if __name__ == "__main__":
 
     if FLASK_ENV == "prod":
-        raise RuntimeError("This script should not be executed in production. The Flask app is served by Gunicorn via Docker, which imports the flask_app from this file.")
+        raise RuntimeError("This script should not be executed in production -> The Flask app is served by Gunicorn via Docker, which imports the flask_app from this file.")
     elif FLASK_ENV == "dev":
         flask_app.run(debug=True)
     else:
