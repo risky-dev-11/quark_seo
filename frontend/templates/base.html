@@ -75,12 +75,16 @@
           </li>
           <li><a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}">Contact</a></li>
           {% if current_user.is_authenticated %}
-          <li><a class="btn-getstarted" href="{{ url_for('profile') }}">Hallo, {{ current_user.first_name }}!</a></li>
-          <li><a class="btn-getstarted" href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right"></i></a></li>
-          {% else %}
-          <li><a class="btn-getstarted" href="{{ url_for('login') }}">Anmelden </a></li>
-          <li><a class="btn-getstarted" href="{{ url_for('signup') }}">Registrieren </a></li>
-          {% endif %}
+            <li>
+              <a class="btn-getstarted" href="{{ url_for('profile') }}">Hallo, {{ current_user.first_name }}!</a>
+            </li>
+            <li>
+                <a class="btn-getstarted" href="{{ url_for('logout') }}"><i class="icon bi bi-box-arrow-right"></i>Logout</a>
+            </li>
+            {% else %}
+            <li><a class="btn-getstarted" href="{{ url_for('login') }}">Anmelden</a></li>
+            <li><a class="btn-getstarted" href="{{ url_for('signup') }}">Registrieren</a></li>
+            {% endif %}
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>

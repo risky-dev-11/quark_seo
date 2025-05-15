@@ -273,6 +273,15 @@ h6 {
   background: color-mix(in srgb, var(--accent-color), transparent 15%);
 }
 
+.btn-getstarted .icon {
+  margin-right: 6px;
+  margin-left: 0; 
+  font-size: 14px !important;
+  width: auto;
+  height: auto;
+}
+
+
 @media (max-width: 1200px) {
   .header .logo {
     order: 1;
