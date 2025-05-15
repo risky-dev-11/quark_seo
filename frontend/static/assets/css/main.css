@@ -92,6 +92,11 @@ h6 {
   color: var(--heading-color);
   font-family: var(--heading-font);
 }
+
+.navmenu ul {
+  height: fit-content;
+}
+
 /* Pulsating Play Button
 ------------------------------*/
 .pulsating-play-btn {
@@ -275,7 +280,6 @@ h6 {
 
   .header .btn-getstarted {
     order: 2;
-    margin: 0 15px 0 0;
     padding: 6px 15px;
   }
 
@@ -337,10 +341,6 @@ h6 {
     line-height: 0;
     margin-left: 5px;
     transition: 0.3s;
-  }
-
-  .navmenu li:last-child a {
-    padding-right: 0;
   }
 
   .navmenu li:hover>a,
@@ -420,6 +420,11 @@ h6 {
   .navmenu {
     padding: 0;
     z-index: 9997;
+  }
+
+  .navmenu .btn-getstarted {
+    margin: 10px 20px;
+    width: fit-content;
   }
 
   .navmenu ul {

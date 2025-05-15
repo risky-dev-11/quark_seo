@@ -7,6 +7,8 @@
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
   <script>
    document.addEventListener("DOMContentLoaded", function() {
+
+
     VANTA.GLOBE({
      el: "#background-canvas",
      mouseControls: true,
@@ -20,12 +22,16 @@
      color: 0x0d42ff,
      color2: 0xffffff,
      backgroundColor: 0x23153c,
+     showDots: false,
+     spacing: 20,
     });
 
     // Ensure position remains static
     document.getElementById("background-canvas").style.position = "static";
-   });
 
+    // Initialize AOS
+    AOS.init();
+   });
   </script>
 
   <section>
@@ -35,13 +41,13 @@
   <section id="content-landing-page">
    <div class="container">
    <div class="row gy-4">
-    <div class="col-lg-8 d-flex flex-column justify-content-center">
-      <h3>Boost Your Website's Visibility</h3>
-      <h2>Search Engine Optimization Made Easy</h2>
-     <div>
+    <div class="col-12 col-lg-8 d-flex flex-column justify-content-center mx-auto" data-aos="fade-up">
+      <h3 data-aos="fade-right" data-aos-delay="100">Boost Your Website's Visibility</h3>
+      <h2 data-aos="fade-right" data-aos-delay="200">Search Engine Optimization Made Easy</h2>
+     <div data-aos="fade-up" data-aos-delay="300">
      <form
       id="url-form"
-      class="form-search d-flex align-items-stretch"
+      class="form-search"
      >
       <input
        type="text"
@@ -55,7 +61,7 @@
        type="submit"
        class="btn btn-primary"
       >
-       <span class="button-label">Analyse starten</span>
+        <span class="button-label">Analyze<wbr> Now</span>
       </button>
      </form>
      <div id="progress-container">
@@ -65,7 +71,7 @@
       <p id="progress-description">The analysis is in progress. Please wait...</p>
     </div>
     </div>
-    <p class="landing-page-p">Instantly analyze your website for SEO issues, get actionable recommendations, and track your progress. ASEOTOOL helps you improve your rankings, drive more traffic, and grow your online presence — all in just a few clicks.</p>
+    <p class="landing-page-p" data-aos="fade-up" data-aos-delay="400">Instantly analyze your website for SEO issues, get actionable recommendations, and track your progress. ASEOTOOL helps you improve your rankings, drive more traffic, and grow your online presence — all in just a few clicks.</p>
     </div>
    </div>
    </div>
