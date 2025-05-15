@@ -3,21 +3,21 @@
 {% block title %}Deine SEO Analyseergebnisse{% endblock %}
 {% block content %}
 
+<style>
+  .header { /* On other sites these styles are only applied once scrolled*/
+  --background-color: #23153c;
+  padding: 10px 0;
+  box-shadow: 0px 0 18px rgba(0, 0, 0, 0.1);
+  }
+  #seo-analyse-container > .section {
+    padding: 140px 0 60px 0;
+  
+  }
+</style>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/seo-analytics-page.css') }}">
 <!-- Serp Preview CSS File -->
 <link href="{{ url_for('static', filename='assets/css/serp-preview.css') }}" rel="stylesheet">
-
-<!-- Page Title -->
-<div class="page-title dark-background" data-aos="fade">
-  <style>
-    .page-title {
-      background-image: url("{{ url_for('static', filename='assets/img/page-title-bg.jpg') }}");
-    }
-  </style>
-  <div class="container position-relative">
-    <h1>SEO Analyse von {{ url }}</h1>
-    <p>Wir haben die Webseite unter die Lupe genommen und sind zu folgenden Ergebnissen gekommen</p>
-  </div>
-</div><!-- End Page Title -->
 
 <div id="seo-analyse-container">
 
