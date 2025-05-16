@@ -12,7 +12,7 @@
 --------------------------------------------------------------*/
 /* Fonts */
 :root {
-  --default-font: "Roboto",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --default-font: "Poppins",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --heading-font: "Poppins",  sans-serif;
   --nav-font: "Poppins",  sans-serif;
   --improvement-circle-color: #0d6efd;
@@ -550,7 +550,6 @@ h6 {
 --------------------------------------------------------------*/
 .footer {
   color: var(--default-color);
-  background-color: var(--background-color);
   font-size: 14px;
   position: relative;
 }
@@ -1262,7 +1261,7 @@ section,
 .pricing .pricing-item {
   background-color: var(--surface-color);
   box-shadow: 0 3px 20px -2px rgba(0, 0, 0, 0.1);
-  border-top: 4px solid var(--background-color);
+  border-top: 10px solid var(--background-color);
   padding: 60px 40px;
   height: 100%;
   border-radius: 5px;
@@ -1304,6 +1303,9 @@ section,
   display: flex;
   align-items: center;
 }
+.pricing ul li:last-child {
+  margin-bottom: 2em;
+}
 
 .pricing ul i {
   color: #059652;
@@ -1332,7 +1334,8 @@ section,
   font-size: 16px;
   font-weight: 500;
   font-family: var(--heading-font);
-  transition: 0.3s;
+  bottom: 60px;
+  position: absolute;
   border: 1px solid var(--accent-color);
 }
 

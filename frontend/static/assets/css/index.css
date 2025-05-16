@@ -14,18 +14,14 @@
   z-index: 2;
 }
 
-#background-canvas {
-  position: static !important;
-}
-
 #content-landing-page {
   position: relative !important;
   background: transparent !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 80vh;
-  max-height: 80vh;
+  min-height: 100vh;
+  max-height: 100vh;
 }
 
 #content-landing-page h3 {
@@ -52,7 +48,7 @@
   font-size: 1rem;
   border-radius: 5px;
   border: 1px solid #ccc;
-  font-family: 'Poppins';
+  font-family: 'Poppins', sans-serif;
 }
 #url-input,
 #submit-button {

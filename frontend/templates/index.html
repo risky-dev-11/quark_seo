@@ -5,10 +5,39 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/index.css') }}">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+
+  <style>
+    .header {
+      background-color: transparent;
+      padding: 10px 0;
+      box-shadow: 0px 0 18px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (min-width: 1200px) {
+      #main-col-landing-page {
+      justify-content: flex-start !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      }
+    }
+    @media (min-width: 992px) {
+      #content-landing-page {
+       align-items: center !important;
+       padding-bottom: 0 !important;
+      }
+    }
+
+    @media (max-width: 1199px) {
+      #main-col-landing-page {
+      justify-content: center !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      }
+    }
+  </style>
+
   <script>
    document.addEventListener("DOMContentLoaded", function() {
-
-
     VANTA.GLOBE({
      el: "#background-canvas",
      mouseControls: true,
@@ -27,21 +56,21 @@
     });
      
     // Ensure position remains static
-    document.getElementById("background-canvas").style.position = "static";
+    document.getElementById("background-canvas").style.position = "fixed";
 
     // Initialize AOS
     AOS.init();
    });
   </script>
 
-  <section>
+  <section style="padding: 0;">
    <div id="background-canvas"></div>
   </section>
 
-  <section id="content-landing-page">
+  <section id="content-landing-page" style="display: flex; align-items: end; padding: 0 0 10% 0;">
    <div class="container">
    <div class="row gy-4">
-    <div class="col-12 col-lg-8 d-flex flex-column justify-content-center mx-auto" data-aos="fade-up">
+    <div id="main-col-landing-page" class="col-12 col-lg-8 d-flex flex-column" data-aos="fade-up">
       <h3 data-aos="fade-right" data-aos-delay="100">Boost Your Website's Visibility</h3>
       <h2 data-aos="fade-right" data-aos-delay="200">Search Engine Optimization Made Easy</h2>
      <div data-aos="fade-up" data-aos-delay="300">

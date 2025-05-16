@@ -3,177 +3,247 @@
 {% block title %}Anmelden{% endblock %}
 {% block content %}
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.fog.min.js"></script>
+
 <style>
-  .header { /* On other sites these styles are only applied once scrolled*/
-  --background-color: #23153c;
-  padding: 10px 0;
-  box-shadow: 0px 0 18px rgba(0, 0, 0, 0.1);
+  .header {
+    background-color: transparent;
   }
-  #pricing{
-    padding: 140px 0 60px 0;
-  
+
+  .scrolled .header {
+    background-color: rgba(35, 21, 60, 0.85);
+    padding: 10px 0;
+    box-shadow: 0px 0 18px rgba(0, 0, 0, 0.1);
   }
+
+  #content-pricing-page {
+    box-shadow: 0 3px 20px -2px rgba(0, 0, 0, 0.1);
+    border-top: 4px solid var(--background-color);
+    border-radius: 5px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .container.section-title h2{
+    color: white;
+  }
+   .container.section-title p{
+    color: white;
+  }
+
+  .faq .faq-container .faq-item .faq-icon{
+    color: white;
+  }
+  .faq .faq-container .faq-item .faq-toggle {
+    color: white;
+  }
+
+  .faq-item h3{
+    color: white;
+  }
+
+  .faq .faq-container .faq-active{
+    background: rgba(35, 21, 60, 0.4) !important;
+  }
+
 </style>
 
-<!-- Pricing Section -->
-<section id="pricing" class="pricing section">
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
 
-  <!-- Section Title -->
-  <div class="container section-title" data-aos="fade-up">
-    <h2>Pricing</h2>
-    <p>Choose the plan that best fits your needs. All plans include comprehensive SEO analysis to help you grow your website.</p>
-  </div><!-- End Section Title -->
 
-  <div class="container">
+    VANTA.FOG({
+      el: "#background-canvas",
+      mouseControls: false,
+      touchControls: false,
+      gyroControls: false,
+      minHeight: document.body.scrollHeight,
+      minWidth: window.innerWidth,
+      blurFactor: 0.2,
+      speed: 0.80,
+      zoom: 1.60,
+      higlightColor: 0x0d42ff,
+      midtoneColor: 0x0d42ff,
+      lowlightColor: 0x0d42ff,
+      baseColor: 0x23153c,
+    });
+     
+    // Ensure position remains static
+    document.getElementById("background-canvas").style.position = "fixed";
 
-    <div class="row gy-4">
+    // Initialize AOS
+    AOS.init();
+   });
+</script>
 
-      <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
-        <div class="pricing-item">
-          <h3>Visitor</h3>
-            <h4><sup>$</sup>0<span> / month</span></h4>
-            <ul>
-                <li style="margin-bottom: 8px;"><i class="bi bi-info text-success"></i> <span class="text-success">No user account required!</span></li>
-              <li><i class="bi bi-check"></i> <span>Comprehensive SEO Audit</span></li>
-              <li><i class="bi bi-check"></i> <span>Specific Improvement Recommendations</span></li>
-              <li><i class="bi bi-check"></i> <span>Metadata & Content Analysis</span></li>
-              <li><i class="bi bi-check"></i> <span>Accessibility & Technical Configuration</span></li>
-              <li><i class="bi bi-check"></i> <span>SERP Preview</span></li>
-              <li class="na"><i class="bi bi-x"></i> <span>Performance Metrics & Opportunities</span></li>
-              <li class="na"><i class="bi bi-x"></i> <span>AI Analysis</span></li>
-            </ul>
-          </ul>
-            {% if current_user.role == 'premium' %}
-            
-            {% elif current_user.role == 'basic' %}
-            
-            {% else %}
-            <a href="#" class="buy-btn">Your Plan</a>
-            {% endif %}
+  <section style="padding: 0;">
+   <div id="background-canvas"></div>
+  </section>
+
+  <div id="content-pricing-page" style="padding: 60px 0;">
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Pricing</h2>
+        <p>Choose the plan that best fits your needs. All plans include comprehensive SEO analysis to help you grow your website.</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
+            <div class="pricing-item">
+              <h3>Visitor</h3>
+                <h4><sup>$</sup>0<span> / month</span></h4>
+                <ul>
+                    <li style="margin-bottom: 8px;"><i class="bi bi-info text-primary"></i> <span class="text-primary">No user account required!</span></li>
+                  <li><i class="bi bi-check"></i> <span>Comprehensive SEO Audit</span></li>
+                  <li><i class="bi bi-check"></i> <span>Specific Improvement Recommendations</span></li>
+                  <li><i class="bi bi-check"></i> <span>Metadata & Content Analysis</span></li>
+                  <li><i class="bi bi-check"></i> <span>Accessibility & Technical Configuration</span></li>
+                  <li><i class="bi bi-check"></i> <span>SERP Preview</span></li>
+                  <li class="na"><i class="bi bi-x"></i> <span>Performance Metrics & Opportunities</span></li>
+                  <li class="na"><i class="bi bi-x"></i> <span>AI Analysis</span></li>
+                </ul>
+              </ul>
+                {% if current_user.role == 'premium' %}
+                
+                {% elif current_user.role == 'basic' %}
+                
+                {% else %}
+                <a href="#" class="buy-btn">Your Plan</a>
+                {% endif %}
+            </div>
+          </div><!-- End Pricing Item -->
+
+          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="200">
+            <div class="pricing-item featured">
+              <h3>Member</h3>
+              <h4><sup>$</sup>0<span> / month</span></h4>
+              <ul>
+                <li style="margin-bottom: 8px;"><i class="bi bi-info text-primary"></i> <span class="text-primary">Requires a User account</span></li>
+                <li><i class="bi bi-check"></i> <span>Comprehensive SEO Audit</span></li>
+                <li><i class="bi bi-check"></i> <span>Progress tracking & charts</span></li>
+                <li><i class="bi bi-check"></i> <span>Schedule regular analysis</span></li>
+                <li><i class="bi bi-check"></i> <span>Email notifications</span></li>
+                <li><i class="bi bi-check"></i> <span>Performance Metrics & Opportunities</span></li>
+                <li class="na"><i class="bi bi-x"></i> <span>AI Analysis</span></li>
+                <li class="na"><i class="bi bi-x"></i> <span>Early access to new features</span></li>
+              </ul>
+              {% if current_user.role == 'premium' %}
+                
+              {% elif current_user.role == 'basic' %}
+                <a href="#" class="buy-btn">Your Plan</a>
+              {% else %}
+                <a href="#" class="buy-btn">Log in to unlock</a>
+              {% endif %}
+            </div>
+          </div><!-- End Pricing Item -->
+
+          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
+            <div class="pricing-item position-relative" style="opacity: 0.6;">
+              <h3>Premium</h3>
+              <h4><sup>$</sup>12<span> / month</span></h4>
+              <ul>
+                <li style="margin-bottom: 8px;"><i class="bi bi-info text-primary"></i> <span class="text-primary">Requires a User account</span></li>
+                <li><i class="bi bi-check"></i> <span>Comprehensive SEO Audit</span></li>
+                <li><i class="bi bi-check"></i> <span>AI Analysis</span></li>
+                <li><i class="bi bi-check"></i> <span>Performance Metrics & Opportunities</span></li>
+                <li><i class="bi bi-check"></i> <span>Early access to new features</span></li>
+                <li><i class="bi bi-check"></i> <span>In-depth analysis of subpages</span></li>
+                <li><i class="bi bi-check"></i> <span>Keyword Suggestions & Optimization</span></li>
+                <li><i class="bi bi-check"></i> <span>Ad-free experience</span></li>
+              </ul>
+              <a href="#" class="buy-btn disabled">Coming Soon</a>
+
+            </div>
+          </div> <!-- End Pricing Item -->
+
         </div>
-      </div><!-- End Pricing Item -->
-
-      <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="200">
-        <div class="pricing-item featured">
-          <h3>Member</h3>
-          <h4><sup>$</sup>0<span> / month</span></h4>
-          <ul>
-            <li style="margin-bottom: 8px;"><i class="bi bi-info text-warning"></i> <span class="text-warning">User account required!</span></li>
-            <li><i class="bi bi-check"></i> <span>Comprehensive SEO Audit</span></li>
-            <li><i class="bi bi-check"></i> <span>Progress tracking & charts</span></li>
-            <li><i class="bi bi-check"></i> <span>Schedule regular analysis</span></li>
-            <li><i class="bi bi-check"></i> <span>Email notifications</span></li>
-            <li><i class="bi bi-check"></i> <span>Performance Metrics & Opportunities</span></li>
-            <li class="na"><i class="bi bi-x"></i> <span>AI Analysis</span></li>
-            <li class="na"><i class="bi bi-x"></i> <span>Early access to new features</span></li>
-          </ul>
-          {% if current_user.role == 'premium' %}
-            
-          {% elif current_user.role == 'basic' %}
-            <a href="#" class="buy-btn">Your Plan</a>
-          {% else %}
-            <a href="#" class="buy-btn">Log in to unlock</a>
-          {% endif %}
-        </div>
-      </div><!-- End Pricing Item -->
-
-       <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
-        <div class="pricing-item position-relative opacity-50">
-          <h3>Premium</h3>
-          <h4><sup>$</sup>12<span> / month</span></h4>
-          <ul>
-            <li style="margin-bottom: 8px;"><i class="bi bi-info text-warning"></i> <span class="text-warning">User account required!</span></li>
-            <li><i class="bi bi-check"></i> <span>Comprehensive SEO Audit</span></li>
-            <li><i class="bi bi-check"></i> <span>AI Analysis</span></li>
-            <li><i class="bi bi-check"></i> <span>Performance Metrics & Opportunities</span></li>
-            <li><i class="bi bi-check"></i> <span>Early access to new features</span></li>
-            <li><i class="bi bi-check"></i> <span>In-depth analysis of subpages</span></li>
-            <li><i class="bi bi-check"></i> <span>Keyword Suggestions & Optimization</span></li>
-            <li><i class="bi bi-check"></i> <span>Ad-free experience</span></li>
-          </ul>
-          <a href="#" class="buy-btn disabled">Coming Soon</a>
-
-        </div>
-      </div> <!-- End Pricing Item -->
-
-    </div>
-
-  </div>
-
-</section><!-- /Pricing Section -->
-
-<!-- Faq Section -->
-<section id="faq" class="faq section">
-
-  <!-- Section Title -->
-  <div class="container section-title" data-aos="fade-up">
-    <h2>Frequently Asked Questions</h2>
-    <p>Find answers to the most common questions about our services and plans. If you need more help, feel free to contact our support team.</p>
-  </div><!-- End Section Title -->
-
-  <div class="container">
-
-    <div class="row justify-content-center">
-
-      <div class="col-lg-10">
-
-        <div class="faq-container">
-
-          <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
-            <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Do I need SEO knowledge to use aseotool?</h3>
-            <div class="faq-content">
-              <p>No — aseotool is designed to be intuitive for both beginners and experts. Our clear instructions and explanations guide you through each step of the optimization process.</p>
-            </div>
-            <i class="faq-toggle bi bi-chevron-right"></i>
-          </div><!-- End Faq item-->
-
-            <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
-            <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Which features are included in the Visitor (free) plan?</h3>
-            <div class="faq-content">
-              <p>The Visitor plan lets anyone run a full SEO audit without creating an account. You get metadata & content checks, technical configuration and accessibility scans, plus a SERP snippet preview. No login required.</p>
-            </div>
-            <i class="faq-toggle bi bi-chevron-right"></i>
-            </div><!-- End Faq item-->
-
-            <div class="faq-item" data-aos="fade-up" data-aos-delay="600">
-            <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Which features are included in the Member (free) plan?</h3>
-            <div class="faq-content">
-              <p>As a signed-in Member, you keep all Visitor features and also unlock progress tracking with charts, scheduled audits, and email notifications. Additionally, the Member plan provides performance metrics and highlights performance opportunities to help you further optimize your site — all at no cost.</p>
-            </div>
-            <i class="faq-toggle bi bi-chevron-right"></i>
-            </div><!-- End Faq item-->
-
-          <div class="faq-item" data-aos="fade-up" data-aos-delay="700">
-            <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Can I schedule automated reports and alerts?</h3>
-            <div class="faq-content">
-              <p>Yes — Member and Premium users can set up daily, weekly, or monthly audits. You’ll receive concise email summaries of your site’s performance and any new issues, so you stay informed without having to log in.</p>
-            </div>
-            <i class="faq-toggle bi bi-chevron-right"></i>
-          </div><!-- End Faq item-->
-
-          <div class="faq-item" data-aos="fade-up" data-aos-delay="800">
-            <i class="faq-icon bi bi-question-circle"></i>
-            <h3>How quickly will I see improvements in my ranking?</h3>
-            <div class="faq-content">
-              <p>SEO improvements depend on many factors, including your website's current state and how quickly search engines re-crawl your site. Results may take several weeks to become noticeable.</p>
-            </div>
-            <i class="faq-toggle bi bi-chevron-right"></i>
-          </div><!-- End Faq item-->
-
-
-      </div><!-- End Faq container -->
-
 
       </div>
 
-    </div>
+    </section><!-- /Pricing Section -->
 
+    <!-- Faq Section -->
+    <section id="faq" class="faq section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Frequently Asked Questions</h2>
+        <p>Find answers to the most common questions about our services and plans. If you need more help, feel free to contact our support team.</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row justify-content-center">
+
+          <div class="col-lg-10">
+
+            <div class="faq-container">
+
+              <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
+                <i class="faq-icon bi bi-question-circle"></i>
+                <h3>Do I need SEO knowledge to use aseotool?</h3>
+                <div class="faq-content">
+                  <p>No — aseotool is designed to be intuitive for both beginners and experts. Our clear instructions and explanations guide you through each step of the optimization process.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
+                <i class="faq-icon bi bi-question-circle"></i>
+                <h3>Which features are included in the Visitor (free) plan?</h3>
+                <div class="faq-content">
+                  <p>The Visitor plan lets anyone run a full SEO audit without creating an account. You get metadata & content checks, technical configuration and accessibility scans, plus a SERP snippet preview. No login required.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+                </div><!-- End Faq item-->
+
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="600">
+                <i class="faq-icon bi bi-question-circle"></i>
+                <h3>Which features are included in the Member (free) plan?</h3>
+                <div class="faq-content">
+                  <p>As a signed-in Member, you keep all Visitor features and also unlock progress tracking with charts, scheduled audits, and email notifications. Additionally, the Member plan provides performance metrics and highlights performance opportunities to help you further optimize your site — all at no cost.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+                </div><!-- End Faq item-->
+
+              <div class="faq-item" data-aos="fade-up" data-aos-delay="700">
+                <i class="faq-icon bi bi-question-circle"></i>
+                <h3>Can I schedule automated reports and alerts?</h3>
+                <div class="faq-content">
+                  <p>Yes — Member and Premium users can set up daily, weekly, or monthly audits. You’ll receive concise email summaries of your site’s performance and any new issues, so you stay informed without having to log in.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+              <div class="faq-item" data-aos="fade-up" data-aos-delay="800">
+                <i class="faq-icon bi bi-question-circle"></i>
+                <h3>How quickly will I see improvements in my ranking?</h3>
+                <div class="faq-content">
+                  <p>SEO improvements depend on many factors, including your website's current state and how quickly search engines re-crawl your site. Results may take several weeks to become noticeable.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+
+          </div><!-- End Faq container -->
+
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- /Faq Section -->
   </div>
 
-</section><!-- /Faq Section -->
 
 {% endblock %}
