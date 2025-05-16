@@ -20,7 +20,6 @@
 
   <!-- Section Title -->
   <div class="container section-title" data-aos="fade-up">
-    <span>Pricing</span>
     <h2>Pricing</h2>
     <p>Choose the plan that best fits your needs. All plans include comprehensive SEO analysis to help you grow your website.</p>
   </div><!-- End Section Title -->
@@ -34,7 +33,7 @@
           <h3>Visitor</h3>
             <h4><sup>$</sup>0<span> / month</span></h4>
             <ul>
-              <li><i class="bi bi-info-circle"></i> <span>No user account required</span></li>
+                <li style="margin-bottom: 8px;"><i class="bi bi-info text-success"></i> <span class="text-success">No user account required!</span></li>
               <li><i class="bi bi-check"></i> <span>Comprehensive SEO Audit</span></li>
               <li><i class="bi bi-check"></i> <span>Specific Improvement Recommendations</span></li>
               <li><i class="bi bi-check"></i> <span>Metadata & Content Analysis</span></li>
@@ -59,7 +58,7 @@
           <h3>Member</h3>
           <h4><sup>$</sup>0<span> / month</span></h4>
           <ul>
-            <li><i class="bi bi-info-circle"></i> <span>User account required</span></li>
+            <li style="margin-bottom: 8px;"><i class="bi bi-info text-warning"></i> <span class="text-warning">User account required!</span></li>
             <li><i class="bi bi-check"></i> <span>Comprehensive SEO Audit</span></li>
             <li><i class="bi bi-check"></i> <span>Progress tracking & charts</span></li>
             <li><i class="bi bi-check"></i> <span>Schedule regular analysis</span></li>
@@ -78,12 +77,12 @@
         </div>
       </div><!-- End Pricing Item -->
 
-      <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
-        <div class="pricing-item">
+       <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
+        <div class="pricing-item position-relative opacity-50">
           <h3>Premium</h3>
           <h4><sup>$</sup>12<span> / month</span></h4>
           <ul>
-            <li><i class="bi bi-info-circle"></i> <span>User account required</span></li>
+            <li style="margin-bottom: 8px;"><i class="bi bi-info text-warning"></i> <span class="text-warning">User account required!</span></li>
             <li><i class="bi bi-check"></i> <span>Comprehensive SEO Audit</span></li>
             <li><i class="bi bi-check"></i> <span>AI Analysis</span></li>
             <li><i class="bi bi-check"></i> <span>Performance Metrics & Opportunities</span></li>
@@ -92,15 +91,10 @@
             <li><i class="bi bi-check"></i> <span>Keyword Suggestions & Optimization</span></li>
             <li><i class="bi bi-check"></i> <span>Ad-free experience</span></li>
           </ul>
-          {% if current_user.role == 'premium' %}
-            <a href="#" class="buy-btn">Your Plan</a>
-            {% elif current_user.role == 'basic' %}
-            <a href="#" class="buy-btn">Upgrade to paid plan</a>
-            {% else %}
-            <a href="#" class="buy-btn">Log in &amp; subscribe</a>
-          {% endif %}
+          <a href="#" class="buy-btn disabled">Coming Soon</a>
+
         </div>
-      </div><!-- End Pricing Item -->
+      </div> <!-- End Pricing Item -->
 
     </div>
 
@@ -113,9 +107,8 @@
 
   <!-- Section Title -->
   <div class="container section-title" data-aos="fade-up">
-    <span>Häufig gestellte Fragen</span>
-    <h2>Häufig gestellte Fragen</h2>
-    <p>Hier findest du Antworten auf die häufigsten Fragen zu unseren Dienstleistungen und Produkten.</p>
+    <h2>Frequently Asked Questions</h2>
+    <p>Find answers to the most common questions about our services and plans. If you need more help, feel free to contact our support team.</p>
   </div><!-- End Section Title -->
 
   <div class="container">
@@ -126,52 +119,54 @@
 
         <div class="faq-container">
 
-          <div class="faq-item faq-active" data-aos="fade-up" data-aos-delay="200">
-            <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Was ist Quark SEO und wie funktioniert es?</h3>
-            <div class="faq-content">
-                <p>Quark SEO ist ein fortschrittliches Tool zur Verbesserung deiner Online-Sichtbarkeit. Es analysiert umfassend die SEO-Elemente deiner Website und liefert dir präzise Empfehlungen zur Optimierung. So kannst du gezielt Schwachstellen beheben und deine Position in den Suchergebnissen nachhaltig verbessern.</p>
-            </div>
-            <i class="faq-toggle bi bi-chevron-right"></i>
-          </div><!-- End Faq item-->
-
-          <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
-            <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Welche Funktionen sind im Freemium-Modell enthalten?</h3>
-            <div class="faq-content">
-              <p>Im Freemium-Modell sind die meisten Analysefunktionen kostenlos verfügbar. Um detaillierte Optimierungsvorschläge zu erhalten und weitere Funktionen freizuschalten, kannst du ein Upgrade auf die Premium-Version durchführen.</p>
-            </div>
-            <i class="faq-toggle bi bi-chevron-right"></i>
-          </div><!-- End Faq item-->
-
           <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
             <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Wie unterscheiden sich die Analyse- und Optimierungsfunktionen?</h3>
+            <h3>Do I need SEO knowledge to use aseotool?</h3>
             <div class="faq-content">
-              <p>Die Analysefunktionen überprüfen die SEO-Aspekte deiner Website und identifizieren Verbesserungspotenziale. Die Optimierungsfunktionen liefern konkrete Vorschläge zur Verbesserung dieser Aspekte, die dir helfen, deine Website in Suchmaschinen sichtbarer zu machen.</p>
+              <p>No — aseotool is designed to be intuitive for both beginners and experts. Our clear instructions and explanations guide you through each step of the optimization process.</p>
             </div>
             <i class="faq-toggle bi bi-chevron-right"></i>
           </div><!-- End Faq item-->
 
-          <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
+            <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
             <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Benötige ich SEO-Kenntnisse, um Quark SEO zu nutzen?</h3>
+            <h3>Which features are included in the Visitor (free) plan?</h3>
             <div class="faq-content">
-              <p>Nein, Quark SEO ist so gestaltet, dass es sowohl für SEO-Neulinge als auch für erfahrene Anwender leicht verständlich ist. Unser Tool bietet dir klare Anleitungen und Erklärungen, sodass du auch ohne Vorkenntnisse deine Website optimieren kannst.</p>
+              <p>The Visitor plan lets anyone run a full SEO audit without creating an account. You get metadata & content checks, technical configuration and accessibility scans, plus a SERP snippet preview. No login required.</p>
             </div>
             <i class="faq-toggle bi bi-chevron-right"></i>
-          </div><!-- End Faq item-->
+            </div><!-- End Faq item-->
 
-          <div class="faq-item" data-aos="fade-up" data-aos-delay="600">
+            <div class="faq-item" data-aos="fade-up" data-aos-delay="600">
             <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Wie schnell sehe ich Verbesserungen in meinem Ranking?</h3>
+            <h3>Which features are included in the Member (free) plan?</h3>
             <div class="faq-content">
-              <p>Die Verbesserung des Suchmaschinenrankings hängt von vielen Faktoren ab, einschließlich der Umsetzung der Optimierungsvorschläge. In der Regel können erste Ergebnisse innerhalb weniger Wochen sichtbar werden, je nachdem wie stark die SEO-Maßnahmen sind und wie oft Suchmaschinen deine Website crawlen.</p>
+              <p>As a signed-in Member, you keep all Visitor features and also unlock progress tracking with charts, scheduled audits, and email notifications. Additionally, the Member plan provides performance metrics and highlights performance opportunities to help you further optimize your site — all at no cost.</p>
+            </div>
+            <i class="faq-toggle bi bi-chevron-right"></i>
+            </div><!-- End Faq item-->
+
+          <div class="faq-item" data-aos="fade-up" data-aos-delay="700">
+            <i class="faq-icon bi bi-question-circle"></i>
+            <h3>Can I schedule automated reports and alerts?</h3>
+            <div class="faq-content">
+              <p>Yes — Member and Premium users can set up daily, weekly, or monthly audits. You’ll receive concise email summaries of your site’s performance and any new issues, so you stay informed without having to log in.</p>
             </div>
             <i class="faq-toggle bi bi-chevron-right"></i>
           </div><!-- End Faq item-->
 
-        </div><!-- End Faq container -->
+          <div class="faq-item" data-aos="fade-up" data-aos-delay="800">
+            <i class="faq-icon bi bi-question-circle"></i>
+            <h3>How quickly will I see improvements in my ranking?</h3>
+            <div class="faq-content">
+              <p>SEO improvements depend on many factors, including your website's current state and how quickly search engines re-crawl your site. Results may take several weeks to become noticeable.</p>
+            </div>
+            <i class="faq-toggle bi bi-chevron-right"></i>
+          </div><!-- End Faq item-->
+
+
+      </div><!-- End Faq container -->
+
 
       </div>
 

@@ -119,13 +119,30 @@
 
         <!-- empty placeholder -->
         <div class="col-lg-2 col-6 footer-links"> 
+            <h4>Navigation</h4>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('pricing') }}">Pricing</a></li>
+                {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('profile') }}">Your Profile</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                <li><a href="{{ url_for('signup') }}">Register</a></li>
+                {% endif %}
+            </ul>
         </div>
         <!-- empty placeholder -->
         <div class="col-lg-2 col-6 footer-links">
+          <h4>About us</h4>
+            <ul>
+              <li><a href="{{ url_for('about') }}">About</a></li>
+              <li><a href="{{ url_for('contact') }}">Contact</a></li>
+              <li><a href="{{ url_for('imprint') }}">Imprint</a></li>
+            </ul>
         </div>
 
         <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-          <h4>Kontakt</h4>
+          <h4>Contact</h4>
           <p>Vischerstraße 2</p>
           <p>70563 Stuttgart</p>
           <p>Germany</p>
@@ -136,7 +153,7 @@
     </div>
 
     <div class="container copyright text-center mt-4">
-      <p>© <span>Quark GmbH</span></p>
+      <p>© <span>aseotool.com</span></p>
     </div>
 
   </footer>

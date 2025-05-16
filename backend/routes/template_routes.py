@@ -34,11 +34,7 @@ def register_template_routes(app):
     @app.route('/pricing')
     def pricing():
         return render_template('pricing.html')
-
-    @app.route('/service-details')
-    def service_details():
-        return render_template('service-details.html')
-
-    @app.route('/starter-page')
-    def starter_page():
-        return render_template('starter-page.html')
+    
+    @app.route('/imprint')
+    def imprint():
+        return render_template('imprint.html')

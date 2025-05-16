@@ -36,14 +36,14 @@
    <div id="background-canvas"></div>
   </section>
 
-  <section id="content-unauthorized-page">
+  <section id="content-under-construction-page">
    <div class="container">
    <div class="row gy-4">
     <div class="col-12 col-lg-8 d-flex flex-column justify-content-center mx-auto" data-aos="fade-up">
-      <h3 data-aos="fade-right" data-aos-delay="100">You must be logged in to access this page.</h3>
-      <h2 data-aos="fade-right" data-aos-delay="200">ACCESS DENIED</h2>
-      <p class="unauthorized-page-p" data-aos="fade-up" data-aos-delay="300">
-        This page is accessible only to authenticated users.<br>Please log in or create an account to continue.
+      <h3 data-aos="fade-right" data-aos-delay="100">This Site is Under Construction</h3>
+      <h2 data-aos="fade-right" data-aos-delay="200">{% block title %}{% endblock %}</h2>
+      <p class="under-construction-page-p" data-aos="fade-up" data-aos-delay="300">
+        {% block text %}{% endblock %}
       </p>
     </div>
    </div>
@@ -60,7 +60,7 @@
       position: static !important;
     }
 
-    #content-unauthorized-page {
+    #content-under-construction-page {
       position: relative !important;
       background: transparent !important;
       display: flex;
@@ -70,12 +70,12 @@
       max-height: 80vh;
     }
 
-    #content-unauthorized-page h3 {
+    #content-under-construction-page h3 {
       color: #0d42ff;
       font-weight: 500;
     }
 
-    #content-unauthorized-page h2 {
+    #content-under-construction-page h2 {
       font-size: 4em;
       color: white;
       margin-bottom: 0.7em;
@@ -88,7 +88,7 @@
       gap: 1rem;
     }
 
-    .unauthorized-page-p {
+    .under-construction-page-p {
       font-size: 1.2em;
       color: white;
       font-family: 'Poppins', sans-serif;
@@ -102,7 +102,7 @@
       h3 {
         font-size: 1.5em !important;
       }
-      .unauthorized-page-p {
+      .under-construction-page-p {
         font-size: 1em !important;
       }
 
@@ -115,7 +115,7 @@
       h3 {
         font-size: 1.5em !important;
       }
-      .unauthorized-page-p {
+      .under-construction-page-p {
         font-size: 1em !important;
       }
     }
